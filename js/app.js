@@ -64,7 +64,10 @@
   }
 
   function paintTime() {
-    const d = audio.duration;
+    /* Before play is pressed the <audio> element holds no file, so its duration
+       is unknown — but the tracklist probe already read it. Show that instead of
+       a dash next to a row that plainly states the running time. */
+    const d = Number.isFinite(audio.duration) ? audio.duration : Number(rows[i].dataset.dur);
     const t = audio.currentTime;
     pos.textContent = fmt(t);
     dur.textContent = fmt(d);
@@ -140,7 +143,9 @@
     const probe = new Audio();
     probe.preload = 'metadata';
     probe.addEventListener('loadedmetadata', () => {
+      r.dataset.dur = String(probe.duration);
       r.querySelector('.d').textContent = fmt(probe.duration);
+      paintTime();
     });
     probe.addEventListener('error', () => {
       r.dataset.broken = 'true';

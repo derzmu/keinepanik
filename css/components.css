@@ -19,7 +19,15 @@
   justify-content:center;
 }
 
-.panel{background:var(--surface-panel-90);max-width:var(--block-max);margin:0 auto}
+/* The card carries its own vertical breathing room — above the heading and below
+   whatever ends it — so the player and the press block stay in step. Horizontal
+   padding stays at 0 so rows and their rules run the full width. */
+.panel{
+  background:var(--surface-panel-90);
+  max-width:var(--block-max);
+  margin:0 auto;
+  padding:var(--space-7) 0;
+}
 
 /* ---------- shared primitives ---------- */
 .caps{
@@ -38,7 +46,7 @@
 .glyph-sm{width:var(--size-icon-sm);height:var(--size-icon-sm)}
 
 /* ---------- player ---------- */
-.player__title{padding:var(--space-5) var(--space-5) 0}
+.player__title{padding:0 var(--space-5)}
 .player__head{display:flex;align-items:stretch;gap:var(--space-5);padding:var(--space-5)}
 .player__art{position:relative;flex:0 0 auto}
 .player__cover{width:var(--size-cover);aspect-ratio:1;object-fit:cover;display:block}
@@ -260,8 +268,8 @@
 }
 
 /* ---------- press downloads ---------- */
-.press__title{padding:var(--space-5) var(--space-5) var(--space-4)}
-.press__contact{padding:var(--space-3) var(--space-5);font-size:var(--type-caption);color:var(--text-muted)}
+.press__title{padding:0 var(--space-5) var(--space-4)}
+.press__contact{padding:var(--space-4) var(--space-5) 0;font-size:var(--type-caption);color:var(--text-muted)}
 .dl{
   display:flex;
   align-items:center;

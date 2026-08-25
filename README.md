@@ -21,7 +21,7 @@ keine-panik-website/
 └─ assets/
    ├─ logo-offwhite.svg  brand logo (drawn as a CSS mask — see note)
    ├─ heartakreis.svg    the rotating hand-drawn mark
-   ├─ icons/             the five platform glyphs
+   ├─ icons/             the four platform glyphs
    ├─ fonts/             Sue Ellen Francisco (headings), Heebo (copy)
    └─ img/magnolia.jpg   the one photograph the whole page runs on
 ```
@@ -146,7 +146,9 @@ means fixing those two lines.
 - **Fully offline.** Nothing loads from a CDN: both webfonts and all five platform
   glyphs are in `assets/`.
 - **Platform glyphs** are the band's own SVGs in `assets/icons/`, drawn pre-filled in
-  off-white — they belong on the sky band and the black footer, not on cream.
+  off-white — they belong on the sky band and the black footer, not on cream. Both
+  rows link to the same four destinations; changing one means changing the other.
+  Tidal was dropped — the glyph is recoverable from git history if it returns.
 - **The standing photograph** is a `position: fixed` layer (`#backdrop`), not
   `background-attachment: fixed` — iOS Safari ignores the latter. Because that layer sits
   at `z-index: -1`, `body` must stay `background: transparent`; the sky fallback lives on
@@ -154,6 +156,7 @@ means fixing those two lines.
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
 - **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`),
-  the press contact address, and the social links.
-- **The tracklist holds only released songs.** "83329", "Song 3" and "Song 4" were
-  removed while they have no audio; add a row back together with its file.
+  and the press contact address.
+- **Unreleased songs** sit in the tracklist without a `data-src`, which shows them as
+  "bald" and makes them unclickable. Giving one a file and a `data-src` is all it
+  takes to release it.
