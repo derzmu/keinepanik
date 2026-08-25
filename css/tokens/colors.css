@@ -1,0 +1,43 @@
+:root{
+/* --- base palette (brand-confirmed) --- */
+--kp-sky:#5daacd;          /* the blue of the magnolia photo's sky — the brand's signature */
+--kp-sky-deep:#3f8fb4;
+--kp-sky-soft:#9ccbe1;
+--kp-cream:#fffcf4;        /* brand light — paper / long-form reading surface */
+--kp-cream-2:#f7f1e4;
+--kp-mint:#eff4f1;         /* the pale panel used for the player card */
+--kp-mint-90:rgba(239,244,241,.9);  /* the same panel at 90%, so the photo reads through */
+--kp-ink:#231c17;          /* brand dark — body copy and the live band */
+--kp-black:#000000;        /* footer only */
+--kp-ink-70:rgba(35,28,23,.7);
+--kp-ink-40:rgba(35,28,23,.4);
+--kp-ink-12:rgba(35,28,23,.12);
+--kp-white:#ffffff;
+--kp-white-70:rgba(255,255,255,.7);
+--kp-white-40:rgba(255,255,255,.4);
+--kp-white-12:rgba(255,255,255,.12);
+--kp-magnolia:#c25a78;     /* petal pink, pulled from the photo */
+--kp-magnolia-deep:#a64b74;
+--kp-blossom:#f2c7ce;
+
+/* --- semantic aliases --- */
+--surface-page:var(--kp-cream);
+--surface-sky:var(--kp-sky);
+--surface-panel:var(--kp-mint);
+--surface-panel-90:var(--kp-mint-90);
+--surface-dark:var(--kp-ink);
+--surface-footer:var(--kp-black);
+--surface-card:var(--kp-white);
+
+--text-body:var(--kp-ink);
+--text-muted:var(--kp-ink-70);
+--text-on-dark:var(--kp-cream);
+--text-on-sky:var(--kp-white);
+--text-accent:var(--kp-magnolia-deep);
+
+--line-ink:var(--kp-ink);
+--line-hairline:var(--kp-ink-12);
+--line-on-dark:var(--kp-white);
+
+--focus-ring:var(--kp-magnolia);
+}

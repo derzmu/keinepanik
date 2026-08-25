@@ -1,0 +1,38 @@
+:root{
+/* families */
+--font-hand:"Sue Ellen Francisco","Bradley Hand","Segoe Print",cursive;
+--font-sans:"Heebo","Helvetica Neue",Helvetica,system-ui,sans-serif;
+
+/* sizes — hand-lettered headings.
+   Every section heading is one size, and that size shrinks on narrow viewports
+   without ever breaking rank: 28px on a phone, 42px from ~700px up. */
+--type-hand-section:clamp(28px,6vw,42px);
+--type-hand-hero:clamp(40px,9vw,64px);
+
+/* legacy step scale — kept for one-off display type, not for section headings */
+--type-hand-xl:64px;
+--type-hand-lg:44px;
+--type-hand-md:34px;
+--type-hand-sm:26px;
+
+/* sizes — sans copy */
+--type-body-lg:19px;
+--type-body:17px;
+--type-body-sm:15px;
+--type-caption:13px;
+
+/* leading */
+--leading-hand:1.05;
+--leading-body:1.55;
+--leading-tight:1.25;
+
+/* tracking */
+--track-hand:0.02em;
+--track-body:0; /* @kind other */
+--track-caps:0.08em;
+
+/* weights — the sans is used at 400 and 700 only */
+--weight-regular:400;
+--weight-medium:500;
+--weight-bold:700;
+}

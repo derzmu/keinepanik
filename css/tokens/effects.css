@@ -1,0 +1,25 @@
+:root{
+/* Corners are square. The only round things in this brand are drawn by hand. */
+--radius-none:0px;
+--radius-pill:999px;
+
+/* Borders are 1px hairline rules, ink on light / white on dark. */
+--border-hairline:1px solid var(--line-ink);
+--border-on-dark:1px solid var(--line-on-dark);
+--border-soft:1px solid var(--line-hairline);
+
+/* No drop shadows anywhere in the brand. Elevation is done with flat panels. */
+--shadow-none:none;
+--overlay-photo-scrim:linear-gradient(180deg,rgba(35,31,32,0) 0%,rgba(35,31,32,.35) 100%); /* @kind other */
+
+/* Motion: slow, plain fades. Nothing bounces. */
+--ease-brand:cubic-bezier(.4,0,.2,1); /* @kind other */
+--dur-fast:120ms; /* @kind other */
+--dur-base:220ms; /* @kind other */
+--dur-slow:600ms; /* @kind other */
+--dur-rotate:24s; /* @kind other */
+
+/* Photo bands stand still while the page scrolls. Implemented as a position:fixed
+   layer behind the content — background-attachment:fixed is ignored on iOS Safari. */
+--photo-attachment:fixed; /* @kind other */ /* Heartakreis mark full rotation */
+}
