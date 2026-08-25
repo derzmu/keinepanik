@@ -180,10 +180,13 @@ means fixing those two lines.
   band (wrecked the top). A scrolling background was built and rejected on looks: it has
   to cover the whole 3604px document, which scales the photograph to 2403px wide, so a
   phone sees a 16% centre slice with no magnolia branches on the first screen.
-  Nothing removes it: the page carries a thin sky-coloured band at the top and the
-  bottom on iOS. A blurred, stretched copy of the photograph on the root background was
-  tried — it does reach both bands, since a root background is painted onto the canvas —
-  and rejected on looks.
+  Nothing lets page content in there. What does reach them is the **root** background,
+  because that is painted onto the canvas — so on phones `html` carries the photograph
+  itself. iOS gives a root background no way to stand still, so it scrolls with the page:
+  that is the trade, real picture in the bands rather than a flat colour, moving.
+  One canvas serves both bands, so this shows at the top as well as the bottom. There is
+  no way to give one band the photograph and leave the other blue.
+  A blurred, stretched copy was tried here first and rejected on looks.
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.

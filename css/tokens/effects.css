@@ -9,9 +9,6 @@
 --border-on-dark:1px solid var(--line-on-dark);
 --border-on-dark-soft:1px solid var(--line-on-dark-soft);
 
-/* A mask stencil, not a brand colour: in a mask, opaque means "keep this pixel". */
---mask-keep:#000;
-
 /* No drop shadows anywhere in the brand. Elevation is done with flat panels. */
 --shadow-none:none;
 --overlay-photo-scrim:linear-gradient(180deg,rgba(35,31,32,0) 0%,rgba(35,31,32,.35) 100%); /* @kind other */

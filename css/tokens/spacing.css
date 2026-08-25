@@ -37,7 +37,6 @@
 --size-wordmark-sm:clamp(112px,32vw,160px);  /* the footer sits quieter than the gate */
 --size-action-min:72px;         /* press actions all match the widest label, "Laden" */
 --backdrop-drop:120px;          /* how far the photograph hangs below the fold on a phone */
---backdrop-fade:120px;          /* over how much of its top edge it dissolves into the sky */
 --band-mark-h:340px;            /* the height the rotating mark stands in, on a phone */
 --band-mark-h-lg:460px;         /* from 648px up, where the mark reaches full size */
 --ratio-wordmark:1.969;         /* intrinsic aspect of logo-offwhite.svg */
