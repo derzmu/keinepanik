@@ -71,14 +71,16 @@ body{
    It sits behind the content, so the fade happens under the bands, not over them.
    Phones only — a desktop browser has neither the toolbar strip nor the problem.
    Breakpoints are literal: a media query cannot read a custom property. */
-/* On phones the photograph is ALSO the body's background, sized and placed to match
-   #backdrop exactly. Not for the screen — #backdrop covers that — but for the two
-   strips iOS paints outside the page area. Those take the nearest background in the
-   ancestor chain, and a background image counts (measured); an element in front never
-   does, which is why #backdrop alone could never fill them.
-   js/edgephoto.js holds this background against the scroll so it lines up with the
-   still photograph in front. iOS cannot pin a background itself. Any jitter in that
-   tracking shows only in the strips; the screen keeps the crisp, motionless layer. */
+/* On phones the photograph is the BODY'S BACKGROUND, not a layer in front of the page.
+   That is the whole point: only a background reaches the two strips iOS paints outside
+   the page area — behind the status bar and behind the bottom toolbar — and a background
+   image counts there (measured). An element in front never does, however it is sized,
+   stacked or positioned.
+   iOS cannot pin a background, so js/edgephoto.js moves it against the scroll. Rather
+   than fight that, it drifts on purpose at --parallax-speed: the motion is the design,
+   and it is also what makes the tracking's own lag read as parallax instead of a fault.
+   The script refines background-size — the picture has to cover its own drift as well as
+   the screen — so the value here is only what shows before it runs. */
 @media (max-width:647px){
   body{
     background-image:url(../assets/img/magnolia.jpg);
@@ -87,12 +89,7 @@ body{
     background-position:center top;
     background-repeat:no-repeat;
   }
-  #backdrop{
-    height:calc(100vh + var(--backdrop-drop));
-    height:calc(100lvh + var(--backdrop-drop));
-    -webkit-mask-image:linear-gradient(to bottom,transparent 0,var(--mask-keep) var(--backdrop-fade));
-    mask-image:linear-gradient(to bottom,transparent 0,var(--mask-keep) var(--backdrop-fade));
-  }
+  #backdrop{display:none}
 }
 
 

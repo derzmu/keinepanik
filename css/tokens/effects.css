@@ -23,6 +23,7 @@
 --dur-base:220ms; /* @kind other */
 --dur-slow:600ms; /* @kind other */
 --dur-tick:1000ms; /* @kind other */ /* one second of playback on the progress rail */
+--parallax-speed:0.1; /* @kind other */ /* how fast the photograph drifts against the scroll, on phones */
 --dur-rotate:24s; /* @kind other */ /* Heartakreis mark, one full rotation */
 
 /* The standing photograph is a position:fixed layer, not background-attachment:fixed
