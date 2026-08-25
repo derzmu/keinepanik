@@ -2,8 +2,8 @@
 <link rel="stylesheet" href="css/styles.css">
 <style>
 *{box-sizing:border-box}
-html{background:#5daacd}
-body{margin:0;font-family:var(--font-sans);color:var(--text-body);background:var(--kp-sky)}
+html{background:var(--kp-sky)}  /* the only sky fill: it is the canvas fallback behind the photo */
+body{margin:0;font-family:var(--font-sans);color:var(--text-body);background:transparent}
 /* A position:fixed layer, not background-attachment:fixed — iOS Safari ignores that property. */
 #backdrop{position:fixed;inset:0;z-index:-1;background:url(assets/img/magnolia.jpg) center top/cover no-repeat;pointer-events:none}
 a{color:var(--kp-magnolia-deep)}a:hover{color:var(--kp-ink)}
