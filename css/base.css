@@ -72,6 +72,16 @@ body{
    Phones only — a desktop browser has neither the toolbar strip nor the problem.
    Breakpoints are literal: a media query cannot read a custom property. */
 @media (max-width:647px){
+  /* The two bands iOS fills from the root background get the photograph too — just a
+     blurred, stretched copy of it. 96x144px, under 3KB, pulled over the whole document,
+     so the blur hides both the stretching and the fact that it scrolls with the page.
+     #backdrop still covers everything actually visible; this only ever shows in the
+     bands the page cannot paint. */
+  html{
+    background-image:url(../assets/img/magnolia-blur.jpg);
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+  }
   #backdrop{
     height:calc(100vh + var(--backdrop-drop));
     height:calc(100lvh + var(--backdrop-drop));
