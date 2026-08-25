@@ -2,32 +2,13 @@
 
 *{box-sizing:border-box}
 
-/* The canvas — and on iOS, the strip behind the bottom toolbar.
-   That strip is NOT page content: measured on a real iPhone, #backdrop already
-   overshoots the visible area by 40px and still does not paint there. iOS fills the
-   region from the ROOT background, which is why no amount of sizing #backdrop ever
-   touched it. But a root background can be an image, and the canvas is painted over
-   the whole surface — so the photograph itself reaches down there, rather than a
-   colour standing in for it.
-
-   background-attachment:fixed puts the positioning area on the viewport, so this
-   matches #backdrop instead of scrolling away. If a browser refuses fixed here it
-   falls back to scroll, and html{height:100%} keeps that fallback at viewport scale
-   rather than document scale — worst case it is the colour again, never a wrongly
-   zoomed picture.
-
-   The colour underneath still matters: js/underpage.js drops the image and swaps in
-   the band's own colour whenever the bottom of the screen is an opaque band, so the
-   strip continues the cream band or the dark one rather than the photograph. */
-html{
-  height:100%;
-  background-color:var(--surface-underpage);
-  background-image:url(../assets/img/magnolia.jpg);
-  background-position:center top;
-  background-size:cover;
-  background-repeat:no-repeat;
-  background-attachment:fixed;
-}
+/* The canvas fill — and on iOS, the strip behind the bottom toolbar.
+   That strip is NOT page content: measured on a real iPhone, the backdrop already
+   overshoots the visible area by 40px and still does not paint there, because iOS
+   fills the region from this colour instead. So the bottom edge is fixed here, not
+   by sizing #backdrop. js/underpage.js keeps it matched to whatever band is at the
+   bottom of the screen; this value is what shows without JS. */
+html{background:var(--surface-underpage)}
 
 /* #backdrop sits at z-index:-1, so body must stay transparent — giving body a
    background hides the photograph completely. */

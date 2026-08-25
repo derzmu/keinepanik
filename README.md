@@ -157,16 +157,17 @@ means fixing those two lines.
   browser bars slide.
 - **The strip behind the iOS bottom toolbar is not page content.** Measured on a device,
   `#backdrop` already overshoots the visible area by 40px and still does not paint there:
-  iOS fills that region from the **root** background, and `theme-color` is ignored. Sizing
-  `#backdrop` cannot reach it; do not try.
-  The photograph is therefore on `html` as well, `background-attachment: fixed` so it lines
-  up with `#backdrop` instead of scrolling away — measured at 0.281/255 mean deviation
-  between the two, so there is no seam at the fold. That is what carries the picture into
-  the strip. `html { height: 100% }` only matters if a browser refuses `fixed` here: it
-  keeps the fallback at viewport scale instead of document scale.
-  `js/underpage.js` then drops that root image and swaps in the band's own colour whenever
-  an opaque band reaches the fold, so the strip continues the cream band or the dark one
-  rather than jumping back to blossoms.
+  iOS fills that region from the root background colour, and `theme-color` is ignored. So
+  it is controlled by `html`'s background — `--surface-underpage`, sampled from the
+  photograph where it slides under the toolbar — and `js/underpage.js` keeps that colour
+  matched to whichever band is at the bottom of the screen. Sizing `#backdrop` cannot fix
+  it; do not try.
+  **Nor can the photograph itself go there.** Putting it on `html` with
+  `background-attachment: fixed` was tried and reverted: iOS treats `fixed` on the root as
+  `scroll`, so the picture scrolled with the page and left a moving band along the bottom.
+  It is the same iOS limitation that `#backdrop` exists to work around, one layer further
+  down — and there is no layer below the root to work around it with. A matched colour is
+  the most that region can hold.
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
 - **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`),

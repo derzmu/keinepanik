@@ -1,22 +1,17 @@
-/* Keeps the canvas matched to whatever sits at the bottom of the screen.
+/* Keeps the canvas colour matched to whatever sits at the bottom of the screen.
  *
- * iOS fills the strip behind its bottom toolbar from the root background, and page
- * content cannot paint there — measured on a device, #backdrop overshoots the visible
- * area by 40px and still does not reach it. css/base.css therefore puts the photograph
- * on the root itself, so the picture carries on into that strip instead of stopping
- * at the fold.
+ * iOS fills the strip behind its bottom toolbar from the root background colour.
+ * Page content cannot paint there — measured on a device, #backdrop overshoots the
+ * visible area by 40px and still does not reach it — so the only way to control that
+ * strip is this colour. Safari samples the top of the page for the status bar by
+ * itself; this does the same job at the bottom.
  *
- * That is right wherever the photograph is what shows above the fold. Over the cream
- * band, the dark band or the footer it would be wrong — the strip would jump from an
- * opaque band straight back to blossoms. So over those, this drops the root image and
- * puts the band's own colour there instead.
- *
- * Safari does this for the status bar at the top by itself. This is the same job at
- * the bottom. Without JS the CSS stands: the photograph everywhere, which is right for
- * the see-through bands and merely imperfect elsewhere.
+ * Without JS the CSS value stands: the tone the photograph has where it slides under
+ * the toolbar, which is right for every see-through band and close enough elsewhere.
  */
 (() => {
   const root = document.documentElement;
+  const fallback = getComputedStyle(root).backgroundColor;
   const opaque = c => {
     const m = /^rgba?\(([^)]+)\)$/.exec(c || '');
     if (!m) return false;
@@ -24,7 +19,6 @@
     return parts.length < 4 || parts[3] === 1;
   };
 
-  /* The opaque band at the fold, or null when the photograph reaches it. */
   function bottomColour() {
     /* Sampled one pixel above the fold, at the centre so a narrow element at the
        edge cannot speak for the whole width. */
@@ -35,19 +29,14 @@
          the photograph, so the band behind them is the honest answer. */
       if (opaque(c)) return c;
     }
-    return null;
+    return fallback;
   }
 
   let queued = false;
   function sync() {
     queued = false;
     const c = bottomColour();
-    /* null means the photograph is what reaches the fold: hand the strip back to the
-       root image by clearing the override. */
-    const image = c ? 'none' : '';
-    if (root.style.backgroundImage !== image) root.style.backgroundImage = image;
-    const colour = c || '';
-    if (root.style.backgroundColor !== colour) root.style.backgroundColor = colour;
+    if (c && c !== root.style.backgroundColor) root.style.backgroundColor = c;
   }
   const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(sync); } };
 
