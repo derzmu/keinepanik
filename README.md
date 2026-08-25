@@ -153,5 +153,7 @@ means fixing those two lines.
   `html`. Giving `body` a background hides the photo completely.
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
-- **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`), the press contact address,
-  ticket links, social links, and the track titles "Song 3" / "Song 4".
+- **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`),
+  the press contact address, and the social links.
+- **The tracklist holds only released songs.** "83329", "Song 3" and "Song 4" were
+  removed while they have no audio; add a row back together with its file.

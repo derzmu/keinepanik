@@ -42,8 +42,11 @@
     /* Re-checked on every paint, not once at startup: a file that turns out to
        be missing takes its track down with it, and the last one takes the
        transport. */
-    const anyPlayable = playableRows().length > 0;
-    [play, prev, next].forEach(b => { b.disabled = !anyPlayable; });
+    const count = playableRows().length;
+    [play, prev, next].forEach(b => { b.disabled = count === 0; });
+    /* With a single song there is nothing to skip to, so skip buttons that would
+       only restart it are not shown at all. They come back with the next track. */
+    [prev, next].forEach(b => { b.hidden = count < 2; });
 
     const row = rows[i];
     now.textContent = row.querySelector('.t').textContent;
