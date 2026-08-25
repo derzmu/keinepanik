@@ -149,8 +149,10 @@ means fixing those two lines.
   off-white — they belong on the sky band and the black footer, not on cream. Both
   rows link to the same four destinations; changing one means changing the other.
   Tidal was dropped — the glyph is recoverable from git history if it returns.
-- **The standing photograph** is a `position: fixed` layer (`#backdrop`), not
-  `background-attachment: fixed` — iOS Safari ignores the latter. Because that layer sits
+- **The standing photograph** is a `position: fixed` `<img>` (`#backdrop`) behind the
+  content at `z-index: -1`, not `background-attachment: fixed` — iOS Safari ignores the
+  latter. An element rather than a CSS background: it is the construction iOS reliably
+  keeps still, and `object-fit: cover` does the job `background-size: cover` would. Because that layer sits
   at `z-index: -1`, `body` must stay `background: transparent`; the sky fallback lives on
   `html`. Giving `body` a background hides the photo completely.
   It is sized with `height: 100lvh`, **not** `inset: 0`, so it stops rescaling as the iOS
