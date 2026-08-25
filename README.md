@@ -153,6 +153,10 @@ means fixing those two lines.
   `background-attachment: fixed` — iOS Safari ignores the latter. Because that layer sits
   at `z-index: -1`, `body` must stay `background: transparent`; the sky fallback lives on
   `html`. Giving `body` a background hides the photo completely.
+  It is sized with `height: 100lvh`, **not** `inset: 0`. On iOS the layout viewport stays
+  at the height with the browser bars extended, so `inset: 0` leaves a strip uncovered when
+  they retract, and the sky fill on `html` shows through as a blue band under every
+  see-through band.
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
 - **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`),

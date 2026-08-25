@@ -18,10 +18,24 @@ body{
   background:transparent;
 }
 
-/* A position:fixed layer, not background-attachment:fixed — iOS Safari ignores that. */
+/* A position:fixed layer, not background-attachment:fixed — iOS Safari ignores that.
+   Two iOS traps, one layer:
+   1. background-attachment:fixed does nothing, hence this element.
+   2. inset:0 would size it to the LAYOUT viewport, which iOS keeps at the height
+      with the browser bars extended. When they retract, the visible area grows,
+      the layer does not, and the strip it leaves falls through to the sky fill on
+      html — a blue band under every see-through band. So it is anchored at the top
+      and given the LARGE viewport height instead. Do not put inset:0 back.
+   lvh over dvh on purpose: dvh recomputes while the bars slide, which would visibly
+   rescale the photograph on every scroll. lvh is stable and always tall enough; the
+   overhang below the fold is cropped by cover and costs nothing. */
 #backdrop{
   position:fixed;
-  inset:0;
+  top:0;
+  left:0;
+  right:0;
+  height:100vh;   /* fallback — on iOS Safari vh already means the large viewport */
+  height:100lvh;
   z-index:-1;
   background:url(../assets/img/magnolia.jpg) center top/cover no-repeat;
   pointer-events:none;
