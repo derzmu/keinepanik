@@ -70,9 +70,13 @@ Real protection is server-side, and it is usually one setting at the host:
 | Vercel | Project settings → Deployment protection |
 | Cloudflare Pages | Access policy |
 
-That matters for the legal shortcut too: skipping Impressum and Datenschutz rests on
-the site not being publicly accessible. A client-side gate does not make it
-inaccessible — the server still hands the page to anyone. Host-level auth does.
+GitHub Pages, where this is hosted, offers none of that — private Pages needs
+Enterprise — so on Pages the curtain is the only option there is.
+
+Impressum and Datenschutz in the footer point at the band's existing pages on
+`keinepanikmusik.de`, which is allowed: they only have to be easy to reach, not to
+live on this domain. Note that the Datenschutz there predates this site and says
+nothing about the Bandsintown request — that needs a paragraph before launch.
 
 **To remove the gate before launch:** delete `js/gate.js`, its `<script>` tag, the
 `data-locked` attribute on `<html>`, the `robots` meta tag, the `#gate` block in
@@ -127,5 +131,5 @@ means fixing those two lines.
   `html`. Giving `body` a background hides the photo completely.
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
-- **Placeholders to replace:** press download links (`#`), the press contact address,
+- **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`), the press contact address,
   ticket links, social links, and the track titles "Song 3" / "Song 4".
