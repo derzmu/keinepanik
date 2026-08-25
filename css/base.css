@@ -2,8 +2,13 @@
 
 *{box-sizing:border-box}
 
-/* The sky fill on html is the canvas fallback behind the photo. */
-html{background:var(--surface-sky)}
+/* The canvas fill — and on iOS, the strip behind the bottom toolbar.
+   That strip is NOT page content: measured on a real iPhone, the backdrop already
+   overshoots the visible area by 40px and still does not paint there, because iOS
+   fills the region from this colour instead. So the bottom edge is fixed here, not
+   by sizing #backdrop. js/underpage.js keeps it matched to whatever band is at the
+   bottom of the screen; this value is what shows without JS. */
+html{background:var(--surface-underpage)}
 
 /* #backdrop sits at z-index:-1, so body must stay transparent — giving body a
    background hides the photograph completely. */
@@ -26,8 +31,8 @@ body{
       the layer does not, and the strip it leaves falls through to the sky fill on
       html — a blue band under every see-through band. So it is anchored at the top
       and given the LARGE viewport height instead. Do not put inset:0 back.
-      NOTE: this alone did NOT settle it on a real iPhone. diag.html is in the
-      repo to find out what actually paints that strip — see the README.
+      That was not the blue strip's cause — see the html rule above — but it is
+      still correct, and it stops the photograph rescaling as the bars slide.
    lvh over dvh on purpose: dvh recomputes while the bars slide, which would visibly
    rescale the photograph on every scroll. lvh is stable and always tall enough; the
    overhang below the fold is cropped by cover and costs nothing. */

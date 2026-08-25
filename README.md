@@ -109,27 +109,6 @@ A track becomes playable by pointing `data-src` at a file in `assets/audio/`:
 Adding a song is therefore two steps: drop the file in `assets/audio/`, add
 `data-src` to its row. Nothing else needs touching.
 
-## diag.html — temporary
-
-A throwaway page for one open bug: on iPhone a blue strip shows along the bottom of
-the screen wherever a band is see-through. `100lvh` on `#backdrop` did not settle it,
-and retracting browser bars cannot be reproduced in headless Chromium, so this page
-measures the real device instead of guessing at it again.
-
-It runs three tests at once, readable from a single screenshot taken while scrolled
-down on a phone:
-
-| | Meaning |
-|---|---|
-| Canvas is **magenta** | Magenta on screen = the root background showing through |
-| **Lime** strip on the backdrop's bottom edge | Lime visible = the layer simply ends on screen |
-| `theme-color` is **green** | Green browser chrome = the toolbar tint is theme-color's |
-
-Plus a live readout of `innerHeight`, `visualViewport`, all four viewport units and the
-backdrop's box. The line that matters is **LUECKE unten**: above zero means a real gap.
-
-**Delete this file once the bug is closed.**
-
 ## Live dates (Bandsintown)
 
 `js/gigs.js` fills the "Live und in Farbe" block from the Bandsintown API on every
@@ -174,10 +153,15 @@ means fixing those two lines.
   `background-attachment: fixed` — iOS Safari ignores the latter. Because that layer sits
   at `z-index: -1`, `body` must stay `background: transparent`; the sky fallback lives on
   `html`. Giving `body` a background hides the photo completely.
-  It is sized with `height: 100lvh`, **not** `inset: 0`. On iOS the layout viewport stays
-  at the height with the browser bars extended, so `inset: 0` leaves a strip uncovered when
-  they retract, and the sky fill on `html` shows through as a blue band under every
-  see-through band.
+  It is sized with `height: 100lvh`, **not** `inset: 0`, so it stops rescaling as the iOS
+  browser bars slide.
+- **The strip behind the iOS bottom toolbar is not page content.** Measured on a device,
+  `#backdrop` already overshoots the visible area by 40px and still does not paint there:
+  iOS fills that region from the root background colour, and `theme-color` is ignored. So
+  it is controlled by `html`'s background — `--surface-underpage`, sampled from the
+  photograph where it slides under the toolbar — and `js/underpage.js` keeps that colour
+  matched to whichever band is at the bottom of the screen. Sizing `#backdrop` cannot fix
+  it; do not try.
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
 - **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`),

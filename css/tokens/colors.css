@@ -22,6 +22,9 @@
 --kp-magnolia:#c25a78;     /* petal pink, pulled from the photo */
 --kp-magnolia-deep:#a64b74;
 --kp-blossom:#f2c7ce;
+/* Sampled from the photograph exactly where it slides under the iOS toolbar
+   (the 714-754px band on a phone). Not a brand colour — a colour match. */
+--kp-underpage:#6c5252;
 
 /* --- semantic aliases ---
    Components read from here, never from the palette above. Retinting the brand
@@ -33,6 +36,10 @@
 --surface-dark:var(--kp-ink);
 --surface-footer:var(--kp-black);
 --surface-card:var(--kp-white);
+/* The canvas fill. iOS paints the strip behind its toolbar from this and page
+   content cannot reach there, so it stands in for whatever sits at the bottom
+   edge — js/underpage.js keeps it in step; this is the value without JS. */
+--surface-underpage:var(--kp-underpage);
 
 /* interaction tints — flat washes, no shadows (see effects.css) */
 --state-hover-ink:var(--kp-ink-05);
