@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>background-attachment: fixed — Pfadform</title>
+<style>
+html{background:#ff00ff}
+body{margin:0;font:14px/1.5 ui-monospace,Menlo,monospace;color:#fff}
+.b{height:100lvh;display:flex;flex-direction:column;justify-content:space-between;
+   padding:16px;box-sizing:border-box;
+   background-repeat:no-repeat;background-position:center center;
+   background-size:cover;background-attachment:fixed}
+.kopf,.fuss{background:rgba(0,0,0,.75);padding:8px 10px;font-weight:700}
+.fuss{font-weight:400}
+.kontrolle{background:#00c853}
+</style>
+</head>
+<body>
+<div class="b" id="a">
+  <div class="kopf">1 · relativer Pfad<br>assets/img/…</div>
+  <div class="fuss">Bleibt das Foto stehen, wenn du scrollst?</div>
+</div>
+<div class="b" id="b">
+  <div class="kopf">2 · absoluter Pfad mit /<br><span id="pb"></span></div>
+  <div class="fuss">Der Reddit-Tipp. Bleibt es hier stehen?</div>
+</div>
+<div class="b" id="c">
+  <div class="kopf">3 · volle https-URL<br><span id="pc"></span></div>
+  <div class="fuss">Bleibt es hier stehen?</div>
+</div>
+<div class="b kontrolle">
+  <div class="kopf">4 · Kontrolle ohne Bild</div>
+  <div class="fuss">Nur damit du weißt, dass du am Ende bist.</div>
+</div>
+<script>
+/* Pfad zur Seite selbst ermitteln, damit der Test auch unter /keinepanik/ stimmt. */
+const datei = 'assets/img/magnolia-1200.jpg';
+const ordner = location.pathname.replace(/[^/]*$/, '');
+const absolut = ordner + datei;                    // z. B. /keinepanik/assets/img/…
+const voll = location.origin + absolut;
+document.getElementById('a').style.backgroundImage = `url("${datei}")`;
+document.getElementById('b').style.backgroundImage = `url("${absolut}")`;
+document.getElementById('c').style.backgroundImage = `url("${voll}")`;
+document.getElementById('pb').textContent = absolut;
+document.getElementById('pc').textContent = voll;
+</script>
+</body>
+</html>
