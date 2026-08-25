@@ -72,12 +72,26 @@
 <h2>Live und in Farbe</h2>
 <div class="gigs">
 <div class="gigs__head caps">
-<span>Termine · 3</span><a href="#">Folgen</a>
+<span id="gig-count">Termine</span><a id="gig-follow" href="https://www.bandsintown.com/a/15633413" target="_blank" rel="noopener">Folgen</a>
 </div>
-<a class="gig" href="#"><span class="day"><b>13</b><span>MÄR 26</span></span><span class="v"><b>Bacchus</b><span>Waging am See</span></span><span class="pill caps">Tickets</span></a>
-<a class="gig" href="#"><span class="day"><b>25</b><span>APR 26</span></span><span class="v"><b>MuK Studios</b><span>Traunstein</span></span><span class="pill pill--off caps">Ausverkauft</span></a>
-<a class="gig" href="#"><span class="day"><b>02</b><span>MAI 26</span></span><span class="v"><b>Traunbar</b><span>Traunstein</span></span><span class="pill caps">Tickets</span></a>
-<a class="gigs__all caps" href="#">Alle Termine</a>
+
+<div class="gigs__list" id="gig-list" aria-live="polite"></div>
+
+<p class="gigs__note" id="gig-loading">Termine werden geladen.</p>
+
+<p class="gigs__note" id="gig-empty" hidden>Gerade keine Shows geplant. Wenn ihr uns wollt: sagt Bescheid.</p>
+
+<p class="gigs__note" id="gig-error" hidden>Die Termine lassen sich gerade nicht laden.
+<a id="gig-error-link" href="https://www.bandsintown.com/a/15633413" target="_blank" rel="noopener">Auf Bandsintown ansehen</a></p>
+
+<a class="gigs__all caps" id="gig-request" href="https://www.bandsintown.com/a/15633413" target="_blank" rel="noopener">Show anfragen</a>
+
+<div class="gigs__past" id="gig-past" hidden>
+<button class="gigs__toggle caps" id="gig-past-toggle" type="button" aria-expanded="false" aria-controls="gig-past-list">
+<span>Vergangene Termine · <span id="gig-past-count">0</span></span><span class="gigs__chevron" aria-hidden="true">▾</span>
+</button>
+<div class="gigs__list" id="gig-past-list" hidden></div>
+</div>
 </div>
 </section>
 
@@ -126,5 +140,6 @@
 
 </main>
 <script src="js/app.js"></script>
+<script src="js/gigs.js" type="module"></script>
 </body>
 </html>

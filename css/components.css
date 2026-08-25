@@ -144,7 +144,50 @@
   text-align:center;
   color:var(--text-on-dark);
   text-decoration:none;
+  border-top:var(--border-on-dark-soft);
+  transition:background-color var(--dur-base) var(--ease-brand);
 }
+.gigs__all:hover{background:var(--state-hover-on-dark);color:var(--text-on-dark)}
+/* Status lines: loading, nothing booked, API unreachable. */
+.gigs__note{
+  margin:0;
+  padding:var(--space-5);
+  text-align:center;
+  font-size:var(--type-body-sm);
+  line-height:var(--leading-body);
+  color:var(--text-on-dark-muted);
+}
+.gigs__note a{color:var(--text-on-dark);text-decoration:underline;text-underline-offset:3px}
+
+/* Past dates, collapsed by default. */
+.gigs__past{border-top:var(--border-on-dark-soft)}
+.gigs__toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--space-4);
+  padding:var(--space-3) var(--space-5);
+  background:none;
+  border:none;
+  border-radius:var(--radius-none);
+  font-family:var(--font-sans);
+  font-size:var(--type-caps);
+  font-weight:var(--weight-bold);
+  letter-spacing:var(--track-caps);
+  text-transform:uppercase;
+  color:var(--text-on-dark-muted);
+  cursor:pointer;
+  transition:color var(--dur-base) var(--ease-brand);
+}
+.gigs__toggle:hover{color:var(--text-on-dark)}
+.gigs__chevron{transition:transform var(--dur-base) var(--ease-brand)}
+.gigs__toggle[aria-expanded=true] .gigs__chevron{transform:rotate(180deg)}
+.gigs__past .gig{border-top:var(--border-on-dark-soft);border-bottom:none}
+/* A played show is a record, not an offer — it reads back a step. */
+.gig--past{color:var(--text-on-dark-muted)}
+.gig--past:hover{color:var(--text-on-dark)}
+.gig__note{flex:0 0 auto;white-space:nowrap;color:var(--text-on-dark-faint)}
 .gig{
   display:flex;
   align-items:center;
@@ -156,6 +199,8 @@
   transition:background-color var(--dur-base) var(--ease-brand);
 }
 .gig:hover{background:var(--state-hover-on-dark);color:var(--text-on-dark)}
+/* The rows below carry their own top rule, so the list must not double it up. */
+.gigs__list .gig:last-child{border-bottom:none}
 .gig .day{flex:0 0 var(--size-gig-day);text-align:center;line-height:var(--leading-none)}
 .gig .day b{display:block;font-size:var(--type-numeral);font-variant-numeric:tabular-nums}
 .gig .day span{
