@@ -171,14 +171,16 @@ means fixing those two lines.
   chain at that screen edge — and a background **image** counts there, measured on a
   device. An element in front never does, which is why `#backdrop` alone could not fill
   them however it was sized, stacked or positioned.
-  So on phones the photograph **is** `body`'s background rather than a layer in front,
-  and `js/edgephoto.js` drifts it against the scroll at `--parallax-speed` (0.1). iOS
-  cannot pin a background at all, and pinning one from JS looks broken — scroll events
-  arrive late during a flick and the picture lurches. Letting it drift on purpose turns
-  that same lag into a little more or less parallax, which reads as intent rather than
-  fault. The script also sets `background-size`: the picture has to cover its own drift
-  as well as the screen, which costs crop — at 0.1 a phone sees 52% of the image width
-  instead of 70%. Desktop keeps the fixed `#backdrop` layer and is untouched.
+  So on phones the photograph **is** `body`'s background rather than a layer in front —
+  and the page scrolls **inside `main`** rather than at the document level, so that
+  background never has to move. iOS cannot pin a background, and pinning one from
+  JavaScript repaints the whole thing every frame, which it cannot do smoothly; that
+  stutter is what the inner scroller replaces. Nothing moves, so nothing can stutter, and
+  no script runs on scroll at all.
+  The cost: Safari's address bar no longer retracts, since it only does that for
+  document-level scrolling. In exchange the viewport stops changing size, which is what
+  made the photograph rescale in the first place.
+  Desktop keeps the ordinary document scroll and the fixed `#backdrop` layer, untouched.
   Dead ends, measured, so nobody repeats them: `inset: 0`, `100lvh`, a 120px overscan,
   `z-index: -1`, `position: sticky`, `viewport-fit=cover`; the photograph on `html`
   (a root background is painted onto the canvas, so it reaches — but stretched over the

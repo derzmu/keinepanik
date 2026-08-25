@@ -74,20 +74,32 @@ body{
 /* On phones the photograph is the BODY'S BACKGROUND, not a layer in front of the page.
    That is the whole point: only a background reaches the two strips iOS paints outside
    the page area — behind the status bar and behind the bottom toolbar — and a background
-   image counts there (measured). An element in front never does, however it is sized,
-   stacked or positioned.
-   iOS cannot pin a background, so js/edgephoto.js moves it against the scroll. Rather
-   than fight that, it drifts on purpose at --parallax-speed: the motion is the design,
-   and it is also what makes the tracking's own lag read as parallax instead of a fault.
-   The script refines background-size — the picture has to cover its own drift as well as
-   the screen — so the value here is only what shows before it runs. */
+   image counts there (measured on a device). An element in front never does, however it
+   is sized, stacked or positioned.
+
+   And the page scrolls INSIDE main rather than at the document level, so that background
+   never has to move. iOS cannot pin a background, and pinning one from JavaScript means
+   repainting the whole thing every frame, which it cannot do smoothly — that stutter is
+   exactly what this replaces. Nothing moves, so nothing can stutter, and no script runs
+   on scroll at all.
+
+   The cost is that Safari's address bar no longer retracts, since it only does so for
+   document-level scrolling. In exchange the viewport stops changing size, which is what
+   made the photograph rescale and half of the rest of this file necessary. */
 @media (max-width:647px){
+  html,
+  body{height:100%;overflow:hidden}
   body{
     background-image:url(../assets/img/magnolia.jpg);
-    background-size:auto calc(100vh + var(--backdrop-drop));
-    background-size:auto calc(100lvh + var(--backdrop-drop));
+    background-size:cover;
     background-position:center top;
     background-repeat:no-repeat;
+  }
+  main{
+    height:100%;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:none;
   }
   #backdrop{display:none}
 }
