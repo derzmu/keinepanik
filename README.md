@@ -143,23 +143,22 @@ Font `src` URLs in `css/tokens/fonts.css` are relative to **that file**, so they
 means fixing those two lines.
 
 ## Notes
-- **Fully offline.** Nothing loads from a CDN: both webfonts and all five platform
+- **Fully offline.** Nothing loads from a CDN: both webfonts and all four platform
   glyphs are in `assets/`.
 - **Platform glyphs** are the band's own SVGs in `assets/icons/`, drawn pre-filled in
   off-white — they belong on the sky band and the black footer, not on cream. Both
   rows link to the same four destinations; changing one means changing the other.
   Tidal was dropped — the glyph is recoverable from git history if it returns.
-- **The standing photograph** is a `position: sticky` `<img>` (`#backdrop`), deliberately
-  **not** `position: fixed` and not `background-attachment: fixed`. Sticky stands still
-  like fixed does but stays in the flow, and in-flow content is what reaches under the
-  iOS status bar — the page's own bands paint there while a fixed layer in the same place
-  did not, stacked at `-1` or at `0`. It pulls its own height back out of the flow with a
-  negative `margin-bottom`, so the content still starts at the top of the document.
-  `object-fit: cover` does the job `background-size: cover` would. Because that layer sits
-  at `z-index: -1`, `body` must stay `background: transparent`; the sky fallback lives on
-  `html`. Giving `body` a background hides the photo completely.
-  It is sized with `height: 100lvh`, **not** `inset: 0`, so it stops rescaling as the iOS
-  browser bars slide.
+- **The standing photograph** is a `position: fixed` `<img>` (`#backdrop`) behind the
+  content, not `background-attachment: fixed` — iOS ignores that outright. An element
+  rather than a CSS background, and `object-fit: cover` does the job `background-size:
+  cover` would. It is sized with `height: 100lvh` plus `--backdrop-drop`, **not**
+  `inset: 0`: `inset: 0` follows the layout viewport, which is what made the picture
+  rescale as the iOS browser bars slide.
+  Nothing here runs on scroll. If you are about to add something that does, read the
+  comment above `#backdrop` in `css/base.css` first — that is where an afternoon of
+  measurements is written down.
+
 - **viewport-fit=cover is load-bearing.** Without it iOS confines the page to the safe
   area and fills the rest — the status-bar band at the top, the home-indicator band at
   the bottom — with the root background colour. That was the strip along the top. With
