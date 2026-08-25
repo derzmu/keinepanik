@@ -87,6 +87,28 @@ While the gate is up, nothing behind it runs — the Bandsintown request in part
 waits for the `kp:unlock` event, so no visitor IP reaches a US service before someone
 is actually through.
 
+## The player
+
+`js/app.js` drives a real `<audio>` element: transport, progress rail and every
+duration come from the file, not from a script pretending to play.
+
+A track becomes playable by pointing `data-src` at a file in `assets/audio/`:
+
+```html
+<button class="trk" data-src="assets/audio/wecker.mp3" data-cover="assets/img/wecker.gif">
+```
+
+- `data-cover` is optional — without one the track keeps the magnolia, and a cover
+  that fails to load falls back to it too, so a missing file never leaves a broken
+  image in the panel.
+- **Never write a duration into the markup.** It is read from the file on load.
+- A track with no `data-src`, or whose file 404s, shows "bald", is not clickable, and
+  is skipped by prev/next. If no track has a file, the transport disables itself.
+- The rail seeks: click it, or focus it and use the arrow keys.
+
+Adding a song is therefore two steps: drop the file in `assets/audio/`, add
+`data-src` to its row. Nothing else needs touching.
+
 ## Live dates (Bandsintown)
 
 `js/gigs.js` fills the "Live und in Farbe" block from the Bandsintown API on every

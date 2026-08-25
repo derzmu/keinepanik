@@ -63,6 +63,9 @@
 }
 .player__controls{display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-4)}
 .player__progress{padding:0 var(--space-5) var(--space-4)}
+/* The rail itself is a hairline; the padding around it is the hit area, so the
+   seek target is a finger wide rather than three pixels. */
+.player__seek{padding:var(--space-2) 0;cursor:pointer}
 .player__rail{height:var(--size-progress);background:var(--line-hairline)}
 .player__bar{width:0;height:100%;background:var(--surface-dark);transition:width var(--dur-tick) var(--ease-linear)}
 .player__times{
@@ -121,6 +124,11 @@
 .trk .t{flex:1}
 .trk[aria-current=true] .t{font-weight:var(--weight-bold)}
 .trk .d{font-size:var(--type-meta);color:var(--text-muted)}
+/* A song with no file yet: listed, legible, plainly not clickable. */
+.trk--soon{cursor:default;color:var(--text-muted)}
+.trk--soon:hover{background:none}
+.ctl:disabled{opacity:.35;cursor:default}
+.ctl:disabled:hover{opacity:.35}
 
 /* ---------- live dates ---------- */
 .gigs{
