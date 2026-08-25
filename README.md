@@ -109,6 +109,27 @@ A track becomes playable by pointing `data-src` at a file in `assets/audio/`:
 Adding a song is therefore two steps: drop the file in `assets/audio/`, add
 `data-src` to its row. Nothing else needs touching.
 
+## diag.html — temporary
+
+A throwaway page for one open bug: on iPhone a blue strip shows along the bottom of
+the screen wherever a band is see-through. `100lvh` on `#backdrop` did not settle it,
+and retracting browser bars cannot be reproduced in headless Chromium, so this page
+measures the real device instead of guessing at it again.
+
+It runs three tests at once, readable from a single screenshot taken while scrolled
+down on a phone:
+
+| | Meaning |
+|---|---|
+| Canvas is **magenta** | Magenta on screen = the root background showing through |
+| **Lime** strip on the backdrop's bottom edge | Lime visible = the layer simply ends on screen |
+| `theme-color` is **green** | Green browser chrome = the toolbar tint is theme-color's |
+
+Plus a live readout of `innerHeight`, `visualViewport`, all four viewport units and the
+backdrop's box. The line that matters is **LUECKE unten**: above zero means a real gap.
+
+**Delete this file once the bug is closed.**
+
 ## Live dates (Bandsintown)
 
 `js/gigs.js` fills the "Live und in Farbe" block from the Bandsintown API on every

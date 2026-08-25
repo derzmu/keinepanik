@@ -26,6 +26,8 @@ body{
       the layer does not, and the strip it leaves falls through to the sky fill on
       html — a blue band under every see-through band. So it is anchored at the top
       and given the LARGE viewport height instead. Do not put inset:0 back.
+      NOTE: this alone did NOT settle it on a real iPhone. diag.html is in the
+      repo to find out what actually paints that strip — see the README.
    lvh over dvh on purpose: dvh recomputes while the bars slide, which would visibly
    rescale the photograph on every scroll. lvh is stable and always tall enough; the
    overhang below the fold is cropped by cover and costs nothing. */
