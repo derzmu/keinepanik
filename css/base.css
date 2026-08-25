@@ -71,7 +71,22 @@ body{
    It sits behind the content, so the fade happens under the bands, not over them.
    Phones only — a desktop browser has neither the toolbar strip nor the problem.
    Breakpoints are literal: a media query cannot read a custom property. */
+/* On phones the photograph is ALSO the body's background, sized and placed to match
+   #backdrop exactly. Not for the screen — #backdrop covers that — but for the two
+   strips iOS paints outside the page area. Those take the nearest background in the
+   ancestor chain, and a background image counts (measured); an element in front never
+   does, which is why #backdrop alone could never fill them.
+   js/edgephoto.js holds this background against the scroll so it lines up with the
+   still photograph in front. iOS cannot pin a background itself. Any jitter in that
+   tracking shows only in the strips; the screen keeps the crisp, motionless layer. */
 @media (max-width:647px){
+  body{
+    background-image:url(../assets/img/magnolia.jpg);
+    background-size:auto calc(100vh + var(--backdrop-drop));
+    background-size:auto calc(100lvh + var(--backdrop-drop));
+    background-position:center top;
+    background-repeat:no-repeat;
+  }
   #backdrop{
     height:calc(100vh + var(--backdrop-drop));
     height:calc(100lvh + var(--backdrop-drop));

@@ -167,19 +167,21 @@ means fixing those two lines.
   padding in `css/components.css` is what keeps content clear of the hardware in exchange;
   the bands stay full-bleed on purpose.
 - **The strip behind the iOS bottom toolbar, and the status-bar band at the top,** are
-  filled by Safari, not by the page, and nothing has been found that puts the photograph
-  in them. They are sky-coloured, and that is where this stands.
-  What is known: they take the nearest **opaque** background in the ancestor chain at that
-  screen edge — an opaque band reaches them, which is why the footer's black runs all the
-  way down; a see-through band falls through to the root colour; `#backdrop` never counts,
-  being an element in front rather than a background behind. `theme-color` is ignored.
+  filled by Safari, not by the page. They take the nearest background in the ancestor
+  chain at that screen edge — and a background **image** counts there, measured on a
+  device. An element in front never does, which is why `#backdrop` alone could not fill
+  them however it was sized, stacked or positioned.
+  So on phones the photograph is also `body`'s background, sized and placed to match
+  `#backdrop` exactly, and `js/edgephoto.js` holds it against the scroll because iOS
+  ignores `background-attachment: fixed`. The screen keeps the crisp fixed layer, so any
+  lag in that tracking can only show in the strips.
   Dead ends, measured, so nobody repeats them: `inset: 0`, `100lvh`, a 120px overscan,
-  `z-index: -1`, `position: sticky`, `viewport-fit=cover`; the photograph on `html` with
-  `background-attachment: fixed` (iOS treats it as `scroll`, so it scrolled with the page);
-  a blurred stretched copy of it; tracking the root colour to the bottom band (browns the
-  top, since one colour serves both ends); and giving the see-through bands an opaque
-  colour under the photograph — the stacking that hides it in Chromium does not hold on
-  iOS, where the colours showed through and jumped between bands as you scrolled.
+  `z-index: -1`, `position: sticky`, `viewport-fit=cover`; the photograph on `html`
+  (a root background is painted onto the canvas, so it reaches — but stretched over the
+  document and scrolling with it); a blurred stretched copy of that; tracking the root
+  colour to the bottom band (browns the top, one colour serves both ends); and opaque
+  tint colours on the see-through bands under the photograph (the stacking that hides
+  them in Chromium does not hold on iOS).
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
