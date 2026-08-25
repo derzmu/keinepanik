@@ -31,12 +31,23 @@ body{
    ignores that outright.
 
    Do not spend another day trying to make this reach the iOS status-bar band or the
-   strip behind the bottom toolbar. Tried and measured, all of it failed: inset:0,
-   100lvh, a 120px overscan, z-index -1 and 0, position:sticky, viewport-fit=cover,
-   and the photograph on html itself (that one reaches both, but iOS treats
-   background-attachment:fixed as scroll there, so it scrolls with the page). Those
-   two bands are filled from the root background colour and page content does not
-   reach them.
+   strip behind the bottom toolbar. It cannot be done — not "has not been done yet".
+   Three requirements, and no two of them leave room for the third:
+     - to reach those bands, the picture must be the SCROLLING element's background;
+     - to stand still, a background must be repositioned every frame, because iOS
+       refuses background-attachment:fixed;
+     - to scroll smoothly, nothing may run every frame.
+   Drifting instead of standing still does not help: it is the same per-frame work and
+   the same stutter. Scrolling inside a container removes the JavaScript, but then the
+   scroller is main rather than the document, the bands fall back to the root colour,
+   and the address bar stops retracting.
+   Measured and failed, each in its own commit: inset:0, 100lvh, a 120px overscan,
+   z-index -1 and 0, position:sticky, viewport-fit=cover, the photograph on html, a
+   blurred stretched copy of it, opaque tint colours under the photograph, a
+   JS-pinned and a JS-drifted body background, and the inner scroller.
+   So the bands stay sky-coloured, and the join is hidden in the picture itself: the
+   photograph is authored to end in #5daacd. Its top row already does, to within one
+   value of green.
    Two iOS traps, one layer:
    1. background-attachment:fixed does nothing, hence this element.
    2. inset:0 would size it to the LAYOUT viewport, which iOS keeps at the height
@@ -71,43 +82,13 @@ body{
    It sits behind the content, so the fade happens under the bands, not over them.
    Phones only — a desktop browser has neither the toolbar strip nor the problem.
    Breakpoints are literal: a media query cannot read a custom property. */
-/* On phones the photograph is the BODY'S BACKGROUND, not a layer in front of the page.
-   That is the whole point: only a background reaches the two strips iOS paints outside
-   the page area — behind the status bar and behind the bottom toolbar — and a background
-   image counts there (measured on a device). An element in front never does, however it
-   is sized, stacked or positioned.
-
-   And the page scrolls INSIDE main rather than at the document level, so that background
-   never has to move. iOS cannot pin a background, and pinning one from JavaScript means
-   repainting the whole thing every frame, which it cannot do smoothly — that stutter is
-   exactly what this replaces. Nothing moves, so nothing can stutter, and no script runs
-   on scroll at all.
-
-   The cost is that Safari's address bar no longer retracts, since it only does so for
-   document-level scrolling. In exchange the viewport stops changing size, which is what
-   made the photograph rescale and half of the rest of this file necessary. */
 @media (max-width:647px){
-  html,
-  body{height:100%;overflow:hidden}
-  /* On BOTH: the strips appear to take the scrolling element's background, and main is
-     the scroller here — leaving the picture on body alone left them sky-coloured. body
-     keeps a copy so the ancestor chain carries it either way. Neither moves: nothing
-     scrolls at document level, and a scroll container's own background is anchored to
-     its box rather than to its contents, so main's stands still natively. No script. */
-  body,
-  main{
-    background-image:url(../assets/img/magnolia.jpg);
-    background-size:cover;
-    background-position:center top;
-    background-repeat:no-repeat;
+  #backdrop{
+    height:calc(100vh + var(--backdrop-drop));
+    height:calc(100lvh + var(--backdrop-drop));
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,var(--mask-keep) var(--backdrop-fade));
+    mask-image:linear-gradient(to bottom,transparent 0,var(--mask-keep) var(--backdrop-fade));
   }
-  main{
-    height:100%;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior:none;
-  }
-  #backdrop{display:none}
 }
 
 

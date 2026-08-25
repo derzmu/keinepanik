@@ -166,32 +166,22 @@ means fixing those two lines.
   it the page paints there and the photograph runs to the edge. The `env(safe-area-inset-*)`
   padding in `css/components.css` is what keeps content clear of the hardware in exchange;
   the bands stay full-bleed on purpose.
-- **The strip behind the iOS bottom toolbar, and the status-bar band at the top,** are
-  filled by Safari, not by the page. They take the nearest background in the ancestor
-  chain at that screen edge — and a background **image** counts there, measured on a
-  device. An element in front never does, which is why `#backdrop` alone could not fill
-  them however it was sized, stacked or positioned.
-  So on phones the photograph is the background of **`main` and `body`** rather than a layer in front —
-  and the page scrolls **inside `main`** rather than at the document level, so that
-  background never has to move. It sits on `main` as well as `body` because the strips
-  appear to take the *scrolling* element's background, and `main` is the scroller — with
-  the picture on `body` alone they came back sky-coloured. A scroll container's own
-  background is anchored to its box rather than its contents, so it stands still by
-  itself. iOS cannot pin a background, and pinning one from
-  JavaScript repaints the whole thing every frame, which it cannot do smoothly; that
-  stutter is what the inner scroller replaces. Nothing moves, so nothing can stutter, and
-  no script runs on scroll at all.
-  The cost: Safari's address bar no longer retracts, since it only does that for
-  document-level scrolling. In exchange the viewport stops changing size, which is what
-  made the photograph rescale in the first place.
-  Desktop keeps the ordinary document scroll and the fixed `#backdrop` layer, untouched.
-  Dead ends, measured, so nobody repeats them: `inset: 0`, `100lvh`, a 120px overscan,
-  `z-index: -1`, `position: sticky`, `viewport-fit=cover`; the photograph on `html`
-  (a root background is painted onto the canvas, so it reaches — but stretched over the
-  document and scrolling with it); a blurred stretched copy of that; tracking the root
-  colour to the bottom band (browns the top, one colour serves both ends); and opaque
-  tint colours on the see-through bands under the photograph (the stacking that hides
-  them in Chromium does not hold on iOS).
+- **The strip behind the iOS bottom toolbar, and the status-bar band at the top,** stay
+  sky-coloured, and the join is hidden in the photograph instead: it is authored to end in
+  `#5daacd`. Its top row already does, to within one value of green; the bottom is where a
+  fade has to be built into the picture. **This is settled — it cannot be solved in CSS.**
+  Three requirements, and no two leave room for the third:
+  1. to reach those bands, the picture must be the **scrolling element's** background;
+  2. to stand still, a background must be repositioned every frame, since iOS refuses
+     `background-attachment: fixed`;
+  3. to scroll smoothly, nothing may run every frame.
+  Drifting instead of standing still is the same per-frame work and the same stutter.
+  Scrolling inside a container removes the JavaScript, but then `main` is the scroller, the
+  bands fall back to the root colour, and Safari's address bar stops retracting.
+  Measured and failed, each in its own commit: `inset: 0`, `100lvh`, a 120px overscan,
+  `z-index: -1` and `0`, `position: sticky`, `viewport-fit=cover`, the photograph on `html`,
+  a blurred stretched copy of it, opaque tint colours under the photograph, a JS-pinned and
+  a JS-drifted `body` background, and the inner scroller.
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
