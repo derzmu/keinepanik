@@ -89,7 +89,13 @@ body{
 @media (max-width:647px){
   html,
   body{height:100%;overflow:hidden}
-  body{
+  /* On BOTH: the strips appear to take the scrolling element's background, and main is
+     the scroller here — leaving the picture on body alone left them sky-coloured. body
+     keeps a copy so the ancestor chain carries it either way. Neither moves: nothing
+     scrolls at document level, and a scroll container's own background is anchored to
+     its box rather than to its contents, so main's stands still natively. No script. */
+  body,
+  main{
     background-image:url(../assets/img/magnolia.jpg);
     background-size:cover;
     background-position:center top;

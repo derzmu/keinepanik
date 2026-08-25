@@ -171,9 +171,13 @@ means fixing those two lines.
   chain at that screen edge — and a background **image** counts there, measured on a
   device. An element in front never does, which is why `#backdrop` alone could not fill
   them however it was sized, stacked or positioned.
-  So on phones the photograph **is** `body`'s background rather than a layer in front —
+  So on phones the photograph is the background of **`main` and `body`** rather than a layer in front —
   and the page scrolls **inside `main`** rather than at the document level, so that
-  background never has to move. iOS cannot pin a background, and pinning one from
+  background never has to move. It sits on `main` as well as `body` because the strips
+  appear to take the *scrolling* element's background, and `main` is the scroller — with
+  the picture on `body` alone they came back sky-coloured. A scroll container's own
+  background is anchored to its box rather than its contents, so it stands still by
+  itself. iOS cannot pin a background, and pinning one from
   JavaScript repaints the whole thing every frame, which it cannot do smoothly; that
   stutter is what the inner scroller replaces. Nothing moves, so nothing can stutter, and
   no script runs on scroll at all.
