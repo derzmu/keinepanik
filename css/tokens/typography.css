@@ -5,9 +5,9 @@
 
 /* sizes — hand-lettered display.
    Every section heading is one size, and that size shrinks on narrow viewports
-   without ever breaking rank: 28px on a phone, 42px from ~700px up. */
+   without ever breaking rank: 32px on a phone, 42px from ~700px up. */
 --type-hand-hero:clamp(40px,9vw,64px);   /* reserved for a page-opening hero */
---type-hand-section:clamp(28px,6vw,42px);
+--type-hand-section:clamp(32px,6vw,42px);
 --type-hand-md:34px;                     /* the player's "now playing" line */
 
 /* sizes — sans copy */

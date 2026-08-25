@@ -18,6 +18,15 @@
   align-items:center;
   justify-content:center;
 }
+/* The mark grows with the viewport but the band did not, so it crowded the
+   edges on desktop while a phone had room to spare. 648px is where --size-mark
+   stops growing: 34vw reaches its 220px maximum there, so the band opens at the
+   same moment rather than leaving a stretch where a full-size mark sits in a
+   short band. Breakpoints are literal — a media query cannot read a custom
+   property, so this one has to be kept in step with --size-mark by hand. */
+@media (min-width:648px){
+  .band--mark{height:var(--band-mark-h-lg)}
+}
 
 /* The card carries its own vertical breathing room — above the heading and below
    whatever ends it — so the player and the press block stay in step. Horizontal
@@ -286,6 +295,10 @@
 .dl .l span{display:block;font-size:var(--type-caption);color:var(--text-muted);margin-top:var(--space-1)}
 .dl .b{
   flex:0 0 auto;
+  /* Every action in the list is the width of the widest label, so a short one
+     like "ZIP" does not shrink out of the column. */
+  min-width:var(--size-action-min);
+  text-align:center;
   padding:var(--space-2) var(--space-4);
   white-space:nowrap;
   border:var(--border-hairline);
@@ -399,6 +412,6 @@ html[data-locked] main{display:none}
 }
 /* On the gate the mark sits on a light panel, so it is painted in ink. */
 .wordmark--gate{background:var(--text-body)}
+.site-footer .wordmark{width:var(--size-wordmark-sm)}
 .footer-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-5);margin-top:var(--space-6)}
 .footer-nav a{color:var(--text-on-dark-muted);text-decoration:none}
-.footer-legal{font-size:var(--type-caption);color:var(--text-on-dark-faint);margin-top:var(--space-6)}
