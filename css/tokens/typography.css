@@ -3,28 +3,28 @@
 --font-hand:"Sue Ellen Francisco","Bradley Hand","Segoe Print",cursive;
 --font-sans:"Heebo","Helvetica Neue",Helvetica,system-ui,sans-serif;
 
-/* sizes — hand-lettered headings.
+/* sizes — hand-lettered display.
    Every section heading is one size, and that size shrinks on narrow viewports
    without ever breaking rank: 28px on a phone, 42px from ~700px up. */
+--type-hand-hero:clamp(40px,9vw,64px);   /* reserved for a page-opening hero */
 --type-hand-section:clamp(28px,6vw,42px);
---type-hand-hero:clamp(40px,9vw,64px);
-
-/* legacy step scale — kept for one-off display type, not for section headings */
---type-hand-xl:64px;
---type-hand-lg:44px;
---type-hand-md:34px;
---type-hand-sm:26px;
+--type-hand-md:34px;                     /* the player's "now playing" line */
 
 /* sizes — sans copy */
 --type-body-lg:19px;
 --type-body:17px;
 --type-body-sm:15px;
 --type-caption:13px;
+--type-meta:12px;      /* tabular numerals: track times, clock */
+--type-caps:11px;      /* the uppercase micro-label, .caps */
+--type-caps-sm:10px;   /* the same label at gig-card scale */
+--type-numeral:24px;   /* the big day-of-month figure on a gig row */
 
 /* leading */
 --leading-hand:1.05;
 --leading-body:1.55;
 --leading-tight:1.25;
+--leading-none:1;
 
 /* tracking */
 --track-hand:0.02em;

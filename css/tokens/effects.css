@@ -5,8 +5,9 @@
 
 /* Borders are 1px hairline rules, ink on light / white on dark. */
 --border-hairline:1px solid var(--line-ink);
---border-on-dark:1px solid var(--line-on-dark);
 --border-soft:1px solid var(--line-hairline);
+--border-on-dark:1px solid var(--line-on-dark);
+--border-on-dark-soft:1px solid var(--line-on-dark-soft);
 
 /* No drop shadows anywhere in the brand. Elevation is done with flat panels. */
 --shadow-none:none;
@@ -14,12 +15,13 @@
 
 /* Motion: slow, plain fades. Nothing bounces. */
 --ease-brand:cubic-bezier(.4,0,.2,1); /* @kind other */
+--ease-linear:linear; /* @kind other */
 --dur-fast:120ms; /* @kind other */
 --dur-base:220ms; /* @kind other */
 --dur-slow:600ms; /* @kind other */
---dur-rotate:24s; /* @kind other */
+--dur-tick:1000ms; /* @kind other */ /* one second of playback on the progress rail */
+--dur-rotate:24s; /* @kind other */ /* Heartakreis mark, one full rotation */
 
-/* Photo bands stand still while the page scrolls. Implemented as a position:fixed
-   layer behind the content — background-attachment:fixed is ignored on iOS Safari. */
---photo-attachment:fixed; /* @kind other */ /* Heartakreis mark full rotation */
+/* The standing photograph is a position:fixed layer, not background-attachment:fixed
+   — iOS Safari ignores that property. See #backdrop in css/base.css. */
 }

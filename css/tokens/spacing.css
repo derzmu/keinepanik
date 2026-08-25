@@ -1,4 +1,7 @@
 :root{
+/* --- spacing scale ---
+   Every padding, margin and gap on the page resolves to one of these nine steps.
+   A value that is not on the scale is a bug, not a nuance. */
 --space-1:4px;
 --space-2:8px;
 --space-3:12px;
@@ -9,10 +12,28 @@
 --space-8:64px;
 --space-9:96px;
 
-/* block rhythm: full-bleed bands stacked without gaps */
+/* block rhythm: full-bleed bands stacked without gaps.
+   Every band uses the same vertical rhythm — the bands are told apart by
+   surface colour, not by how much air they carry. */
 --band-pad-y:var(--space-8);
 --band-pad-x:var(--space-5);
---content-max:640px;
---block-max:680px;   /* player, press, live widget, newsletter — one shared measure */
+--content-max:640px;      /* running prose — the reading measure */
+--block-max:680px;        /* player, press, live widget, newsletter — one shared measure */
 --content-max-wide:1080px;
+
+/* --- component sizes ---
+   Fixed dimensions live here too, so nothing measurable is written into a rule. */
+--size-icon:34px;               /* platform glyph, sky band */
+--size-icon-sm:22px;            /* platform glyph, footer */
+--size-control:40px;            /* player skip button */
+--size-control-lg:44px;         /* player play/pause */
+--size-control-sm:16px;         /* native checkbox */
+--size-trk-num:14px;            /* tracklist index column */
+--size-gig-day:46px;            /* gig row date column */
+--size-progress:3px;            /* player progress rail */
+--size-cover:clamp(96px,26vw,132px);
+--size-mark:clamp(120px,34vw,220px);
+--size-wordmark:clamp(130px,40vw,200px);
+--band-mark-h:340px;            /* the height the rotating mark stands in */
+--ratio-wordmark:1.969;         /* intrinsic aspect of logo-offwhite.svg */
 }

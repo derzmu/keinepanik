@@ -1,62 +1,17 @@
-<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>keine Panik.</title>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>keine Panik.</title>
 <link rel="stylesheet" href="css/styles.css">
-<style>
-*{box-sizing:border-box}
-html{background:var(--kp-sky)}  /* the only sky fill: it is the canvas fallback behind the photo */
-body{margin:0;font-family:var(--font-sans);color:var(--text-body);background:transparent}
-/* A position:fixed layer, not background-attachment:fixed — iOS Safari ignores that property. */
-#backdrop{position:fixed;inset:0;z-index:-1;background:url(assets/img/magnolia.jpg) center top/cover no-repeat;pointer-events:none}
-a{color:var(--kp-magnolia-deep)}a:hover{color:var(--kp-ink)}
-@keyframes kpspin{to{transform:rotate(360deg)}}
-h2,h3{margin:0;font-family:var(--font-hand);font-weight:400;font-size:var(--type-hand-section);line-height:var(--leading-hand);letter-spacing:var(--track-hand);text-align:center}
-.band{padding:56px 24px}
-.panel{background:var(--surface-panel-90);max-width:var(--block-max);margin:0 auto}
-.caps{font-size:11px;font-weight:700;letter-spacing:var(--track-caps);text-transform:uppercase}
-.rule{border-bottom:1px solid var(--kp-ink-12)}
-.glyph{display:block;width:34px;height:34px}
-.glyph-sm{width:22px;height:22px}
-.follow{display:flex;justify-content:center;gap:14px;margin-top:24px}
-.follow a{padding:6px;opacity:1;transition:opacity var(--dur-base) var(--ease-brand)}
-.follow a:hover{opacity:.72}
-.trk{width:100%;display:flex;align-items:center;gap:12px;padding:12px 24px;background:none;border:none;border-bottom:1px solid var(--kp-ink-12);font-family:var(--font-sans);font-size:15px;color:var(--text-body);cursor:pointer;text-align:left;transition:background-color var(--dur-fast) var(--ease-brand)}
-.trk[aria-current=true]{background:rgba(35,28,23,.06)}
-.trk .n{width:14px;font-size:11px;color:var(--text-muted);font-variant-numeric:tabular-nums}
-.trk .t{flex:1}
-.trk[aria-current=true] .t{font-weight:700}
-.trk .d{font-size:12px;color:var(--text-muted);font-variant-numeric:tabular-nums}
-.ctl{width:40px;height:40px;display:grid;place-items:center;border:1px solid transparent;background:none;color:var(--kp-ink);font-size:13px;padding:0;cursor:pointer;transition:opacity var(--dur-base) var(--ease-brand)}
-.ctl:hover{opacity:.55}
-.ctl.main{width:44px;height:44px;border-color:var(--kp-ink);background:var(--kp-ink);color:var(--kp-cream);font-size:15px}
-.ctl.main:hover{opacity:1;background:var(--kp-ink-70)}
-.gig{display:flex;align-items:center;gap:24px;padding:16px 20px;border-bottom:1px solid var(--kp-white-12);color:var(--kp-cream);text-decoration:none;transition:background-color var(--dur-base) var(--ease-brand)}
-.gig:hover{background:rgba(255,255,255,.05);color:var(--kp-cream)}
-.gig .day{flex:0 0 46px;text-align:center;line-height:1}
-.gig .day b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
-.gig .day span{display:block;font-size:10px;font-weight:700;letter-spacing:var(--track-caps);margin-top:4px;color:var(--kp-white-70)}
-.gig .v{flex:1;min-width:0}
-.gig .v b{display:block;font-size:15px}
-.gig .v span{display:block;font-size:13px;color:var(--kp-white-70);margin-top:2px}
-.pill{flex:0 0 auto;padding:9px 14px;white-space:nowrap;border:1px solid var(--kp-white);transition:background-color var(--dur-base) var(--ease-brand),color var(--dur-base) var(--ease-brand)}
-.gig:hover .pill{background:var(--kp-cream);color:var(--kp-ink)}
-.pill.off{border-color:var(--kp-white-12);color:var(--kp-white-40)}
-.gig:hover .pill.off{background:transparent;color:var(--kp-white-40)}
-.dl{display:flex;align-items:center;gap:16px;padding:16px 24px;text-decoration:none;color:var(--text-body);border-bottom:1px solid var(--kp-ink-12);transition:background-color var(--dur-base) var(--ease-brand)}
-.dl:hover{background:rgba(35,28,23,.05);color:var(--text-body)}
-.dl .l{flex:1;min-width:0}
-.dl .l b{display:block;font-size:15px}
-.dl .l span{display:block;font-size:13px;color:var(--text-muted);margin-top:2px}
-.dl .b{flex:0 0 auto;padding:9px 14px;white-space:nowrap;border:1px solid var(--kp-ink);transition:background-color var(--dur-base) var(--ease-brand),color var(--dur-base) var(--ease-brand)}
-.dl:hover .b{background:var(--kp-ink);color:var(--kp-cream)}
-.field{width:100%;box-sizing:border-box;padding:12px 14px;background:transparent;color:var(--kp-ink);border:1px solid var(--kp-ink);border-radius:0;font-family:var(--font-sans);font-size:17px;outline-color:var(--focus-ring);outline-offset:2px}
-.submit{padding:14px 20px;border:1px solid transparent;background:var(--kp-ink);color:var(--kp-cream);font-family:var(--font-sans);font-size:15px;font-weight:700;letter-spacing:var(--track-caps);text-transform:uppercase;cursor:pointer;transition:opacity var(--dur-base) var(--ease-brand)}
-.submit:hover{opacity:.82}
-</style></head>
+</head>
 <body>
 <div id="backdrop" aria-hidden="true"></div>
 <main>
 
-<section style="padding:48px 24px 20px;text-align:center">
-<h2 style="color:var(--kp-white)">Folgen</h2>
+<section class="band band--sky">
+<h2>Folgen</h2>
 <div class="follow">
 <a href="#" aria-label="Spotify"><img class="glyph" src="assets/icons/spotify.svg" alt="" width="34" height="34"></a>
 <a href="#" aria-label="Apple Music"><img class="glyph" src="assets/icons/apple-music.svg" alt="" width="34" height="34"></a>
@@ -66,145 +21,110 @@ h2,h3{margin:0;font-family:var(--font-hand);font-weight:400;font-size:var(--type
 </div>
 </section>
 
-<section style="padding:20px 24px 48px">
+<section class="band band--player">
 <div class="panel">
-<h3 style="padding:24px 24px 0">Direkt reinhören</h3>
-<div style="display:flex;align-items:stretch;gap:24px;padding:24px">
-<div style="position:relative;flex:0 0 auto">
-<img src="assets/img/magnolia.jpg" alt="" style="width:clamp(96px,26vw,132px);aspect-ratio:1;object-fit:cover;display:block">
-<span id="flag" class="caps" style="position:absolute;left:0;bottom:0;background:var(--kp-ink);color:var(--kp-cream);padding:4px 8px">pause</span>
+<h3 class="player__title">Direkt reinhören</h3>
+<div class="player__head">
+<div class="player__art">
+<img class="player__cover" src="assets/img/magnolia.jpg" alt="">
+<span class="player__flag caps" id="flag">pause</span>
 </div>
-<div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between">
+<div class="player__meta">
 <div>
-<div class="caps" style="color:var(--text-muted)">Jetzt läuft</div>
-<div id="now" style="font-family:var(--font-hand);font-size:34px;line-height:1.05;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Wecker</div>
+<div class="player__label caps">Jetzt läuft</div>
+<div class="player__now" id="now">Wecker</div>
 </div>
-<div style="display:flex;align-items:center;gap:8px;margin-top:16px">
+<div class="player__controls">
 <button class="ctl" id="prev" aria-label="Zurück">❙◀</button>
-<button class="ctl main" id="play" aria-label="Abspielen">▶</button>
+<button class="ctl ctl--main" id="play" aria-label="Abspielen">▶</button>
 <button class="ctl" id="next" aria-label="Weiter">▶❙</button>
 </div>
 </div>
 </div>
-<div style="padding:0 24px 16px">
-<div style="height:3px;background:var(--kp-ink-12)"><div id="bar" style="width:0;height:100%;background:var(--kp-ink);transition:width 1s linear"></div></div>
-<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--text-muted);font-variant-numeric:tabular-nums"><span id="pos">0:00</span><span id="dur">3:18</span></div>
+<div class="player__progress">
+<div class="player__rail"><div class="player__bar" id="bar"></div></div>
+<div class="player__times num"><span id="pos">0:00</span><span id="dur">3:18</span></div>
 </div>
-<div id="tracks" class="rule" style="border-top:1px solid var(--kp-ink-12);border-bottom:none">
-<button class="trk" aria-current="true" data-d="198"><span class="n">▶</span><span class="t">Wecker</span><span class="d">3:18</span></button>
-<button class="trk" aria-current="false" data-d="224"><span class="n">2</span><span class="t">83329</span><span class="d">3:44</span></button>
-<button class="trk" aria-current="false" data-d="187"><span class="n">3</span><span class="t">Song 3</span><span class="d">3:07</span></button>
-<button class="trk" aria-current="false" data-d="212" style="border-bottom:none"><span class="n">4</span><span class="t">Song 4</span><span class="d">3:32</span></button>
+<div class="player__tracks" id="tracks">
+<button class="trk" aria-current="true" data-d="198"><span class="n num">▶</span><span class="t">Wecker</span><span class="d num">3:18</span></button>
+<button class="trk" aria-current="false" data-d="224"><span class="n num">2</span><span class="t">83329</span><span class="d num">3:44</span></button>
+<button class="trk" aria-current="false" data-d="187"><span class="n num">3</span><span class="t">Song 3</span><span class="d num">3:07</span></button>
+<button class="trk" aria-current="false" data-d="212"><span class="n num">4</span><span class="t">Song 4</span><span class="d num">3:32</span></button>
 </div>
 </div>
 </section>
 
-<section style="background:var(--surface-page);padding:88px 24px">
+<section class="band band--page">
 <h2>Indie-Pop mit Herz</h2>
-<div style="max-width:var(--block-max);margin:48px auto 0;font-size:17px;line-height:1.55;text-wrap:pretty">
-<p style="margin:0">keine Panik. macht deutschsprachigen Indie-Pop, der ohne Umwege auskommt. Melodien, die hängen bleiben, und Texte über die kleinen Geschichten, die das Leben so schreibt.</p>
-<p style="margin:16px 0 0">Seit Juli 2024 spielen sich die vier aus Waging am See durch den südostbayerischen Raum. Was auffällt: die Ehrlichkeit. In der Musik und zwischen den Songs, wenn Frontmann Mathias ins Publikum redet, als kenne er es schon.</p>
-<p style="margin:16px 0 0">Ihre Heimat lassen sie dabei nie draußen. In „83329“ singt Mathias darüber, dass seine erste große Liebe wohl immer Waging bleiben wird. Postleitzahl als Liebeserklärung, und es funktioniert.</p>
-<p style="margin:16px 0 0">Am liebsten stehen sie auf der Bühne. Genau da gehören sie auch hin.</p>
+<div class="prose">
+<p>keine Panik. macht deutschsprachigen Indie-Pop, der ohne Umwege auskommt. Melodien, die hängen bleiben, und Texte über die kleinen Geschichten, die das Leben so schreibt.</p>
+<p>Seit Juli 2024 spielen sich die vier aus Waging am See durch den südostbayerischen Raum. Was auffällt: die Ehrlichkeit. In der Musik und zwischen den Songs, wenn Frontmann Mathias ins Publikum redet, als kenne er es schon.</p>
+<p>Ihre Heimat lassen sie dabei nie draußen. In „83329“ singt Mathias darüber, dass seine erste große Liebe wohl immer Waging bleiben wird. Postleitzahl als Liebeserklärung, und es funktioniert.</p>
+<p>Am liebsten stehen sie auf der Bühne. Genau da gehören sie auch hin.</p>
 </div>
 </section>
 
-<section style="height:340px;display:flex;align-items:center;justify-content:center">
-<img src="assets/heartakreis.svg" alt="keine Panik." style="width:clamp(120px,34vw,220px);aspect-ratio:1;animation:kpspin 24s linear infinite;filter:brightness(0) invert(1)">
+<section class="band band--mark">
+<img class="mark" src="assets/heartakreis.svg" alt="keine Panik.">
 </section>
 
-<section style="background:var(--surface-dark);padding:56px 24px">
-<h2 style="color:var(--kp-cream)">Live und in Farbe</h2>
-<div style="max-width:var(--block-max);margin:32px auto 0;border:1px solid var(--kp-white);color:var(--kp-cream)">
-<div class="caps" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px;border-bottom:1px solid var(--kp-white)">
-<span>Termine · 3</span><a href="#" style="color:var(--kp-cream);text-decoration:underline;text-underline-offset:3px">Folgen</a>
+<section class="band band--dark">
+<h2>Live und in Farbe</h2>
+<div class="gigs">
+<div class="gigs__head caps">
+<span>Termine · 3</span><a href="#">Folgen</a>
 </div>
 <a class="gig" href="#"><span class="day"><b>13</b><span>MÄR 26</span></span><span class="v"><b>Bacchus</b><span>Waging am See</span></span><span class="pill caps">Tickets</span></a>
-<a class="gig" href="#"><span class="day"><b>25</b><span>APR 26</span></span><span class="v"><b>MuK Studios</b><span>Traunstein</span></span><span class="pill caps off">Ausverkauft</span></a>
+<a class="gig" href="#"><span class="day"><b>25</b><span>APR 26</span></span><span class="v"><b>MuK Studios</b><span>Traunstein</span></span><span class="pill pill--off caps">Ausverkauft</span></a>
 <a class="gig" href="#"><span class="day"><b>02</b><span>MAI 26</span></span><span class="v"><b>Traunbar</b><span>Traunstein</span></span><span class="pill caps">Tickets</span></a>
-<a class="caps" href="#" style="display:block;padding:14px 20px;text-align:center;color:var(--kp-cream);text-decoration:none">Alle Termine</a>
+<a class="gigs__all caps" href="#">Alle Termine</a>
 </div>
 </section>
 
-<section class="band" style="padding:64px 24px">
+<section class="band">
 <div class="panel">
-<h3 style="padding:24px 24px 16px">Presse</h3>
+<h3 class="press__title">Presse</h3>
 <a class="dl" href="#" download><span class="l"><b>Fotos</b><span>JPG, druckfähig</span></span><span class="b caps">Laden</span></a>
 <a class="dl" href="#" download><span class="l"><b>Promotexte</b><span>Kurz- und Langversion, PDF</span></span><span class="b caps">Laden</span></a>
 <a class="dl" href="#" download><span class="l"><b>Rider</b><span>Technik und Backline, PDF</span></span><span class="b caps">Laden</span></a>
 <a class="dl" href="#" download><span class="l"><b>Alles als ZIP</b><span>Fotos, Texte, Rider</span></span><span class="b caps">ZIP</span></a>
-<div style="padding:14px 24px;font-size:13px;color:var(--text-muted)">Presseanfragen: Mathias · <a href="mailto:presse@keinepanik.band">presse@keinepanik.band</a></div>
+<div class="press__contact">Presseanfragen: Mathias · <a href="mailto:presse@keinepanik.band">presse@keinepanik.band</a></div>
 </div>
 </section>
 
-<section style="background:var(--surface-page);padding:64px 24px">
-<div style="max-width:var(--block-max);margin:0 auto;text-align:center">
+<section class="band band--page">
+<div class="news">
 <h3>Nichts verpassen</h3>
-<p style="font-size:15px;line-height:1.55;color:var(--text-muted);margin:12px 0 24px">Neue Songs, neue Termine. Ein paar Mails im Jahr, nicht mehr.</p>
-<form id="nl" style="display:grid;gap:16px;text-align:left">
-<div style="display:flex;gap:12px;align-items:flex-end">
-<label style="flex:1"><span class="caps" style="display:block;margin-bottom:8px">E-Mail</span><input class="field" type="email" required placeholder="du@beispiel.de"></label>
+<p class="news__lead">Neue Songs, neue Termine. Ein paar Mails im Jahr, nicht mehr.</p>
+<form class="news__form" id="nl">
+<div class="news__row">
+<label><span class="news__label caps">E-Mail</span><input class="field" type="email" required placeholder="du@beispiel.de"></label>
 <button class="submit" type="submit">Anmelden</button>
 </div>
-<label style="display:flex;align-items:flex-start;gap:12px;font-size:15px;line-height:1.55;cursor:pointer"><input type="checkbox" required style="margin-top:4px;width:16px;height:16px;accent-color:#231c17"><span>Ja, schickt mir Mails. Abmelden geht jederzeit.</span></label>
+<label class="news__consent"><input type="checkbox" required><span>Ja, schickt mir Mails. Abmelden geht jederzeit.</span></label>
 </form>
-<p id="nl-ok" style="display:none;font-size:17px;margin:0">Passt. Schau in dein Postfach.</p>
+<p class="news__ok" id="nl-ok" hidden>Passt. Schau in dein Postfach.</p>
 </div>
 </section>
 
-<footer style="background:var(--surface-footer);color:var(--kp-cream);padding:56px 24px 40px;text-align:center">
-<span role="img" aria-label="keine Panik." style="display:block;width:clamp(130px,40vw,200px);max-width:80%;aspect-ratio:1.969;margin:0 auto;background:var(--kp-cream);-webkit-mask-image:url(assets/logo-offwhite.svg);mask-image:url(assets/logo-offwhite.svg);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-position:center;mask-position:center"></span>
-<div class="follow" style="gap:12px;margin-top:32px">
+<footer class="site-footer">
+<span class="wordmark" role="img" aria-label="keine Panik."></span>
+<div class="follow follow--sm">
 <a href="#" aria-label="Spotify"><img class="glyph glyph-sm" src="assets/icons/spotify.svg" alt="" width="22" height="22"></a>
 <a href="#" aria-label="Apple Music"><img class="glyph glyph-sm" src="assets/icons/apple-music.svg" alt="" width="22" height="22"></a>
 <a href="#" aria-label="Deezer"><img class="glyph glyph-sm" src="assets/icons/deezer.svg" alt="" width="22" height="22"></a>
 <a href="#" aria-label="Tidal"><img class="glyph glyph-sm" src="assets/icons/tidal.svg" alt="" width="22" height="22"></a>
 <a href="#" aria-label="Instagram"><img class="glyph glyph-sm" src="assets/icons/instagram.svg" alt="" width="22" height="22"></a>
 </div>
-<nav style="display:flex;justify-content:center;flex-wrap:wrap;gap:24px;margin-top:32px">
-<a class="caps" href="#" style="color:var(--kp-white-70);text-decoration:none">Impressum</a>
-<a class="caps" href="#" style="color:var(--kp-white-70);text-decoration:none">Datenschutz</a>
-<a class="caps" href="#" style="color:var(--kp-white-70);text-decoration:none">Kontakt</a>
+<nav class="footer-nav">
+<a class="caps" href="#">Impressum</a>
+<a class="caps" href="#">Datenschutz</a>
+<a class="caps" href="#">Kontakt</a>
 </nav>
-<div style="font-size:13px;color:var(--kp-white-40);margin-top:32px">© keine Panik. · Waging am See</div>
+<div class="footer-legal">© keine Panik. · Waging am See</div>
 </footer>
 
 </main>
-<script>
-(() => {
-  const rows = [...document.querySelectorAll('.trk')];
-  const now = document.getElementById('now'), flag = document.getElementById('flag');
-  const bar = document.getElementById('bar'), pos = document.getElementById('pos'), dur = document.getElementById('dur');
-  const play = document.getElementById('play');
-  let i = 0, playing = false, t = 0, timer = null;
-  const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
-  const len = () => +rows[i].dataset.d;
-  function paint() {
-    rows.forEach((r, n) => {
-      r.setAttribute('aria-current', n === i ? 'true' : 'false');
-      r.querySelector('.n').textContent = (n === i && playing) ? '▶' : String(n + 1);
-    });
-    now.textContent = rows[i].querySelector('.t').textContent;
-    flag.textContent = playing ? 'läuft' : 'pause';
-    play.textContent = playing ? '❙❙' : '▶';
-    play.setAttribute('aria-label', playing ? 'Pause' : 'Abspielen');
-    dur.textContent = fmt(len());
-    pos.textContent = fmt(t);
-    bar.style.width = (t / len() * 100) + '%';
-  }
-  function tick() {
-    clearInterval(timer);
-    if (!playing) return;
-    timer = setInterval(() => { t = t + 1 > len() ? 0 : t + 1; paint(); }, 1000);
-  }
-  function select(n) { i = (n + rows.length) % rows.length; t = 0; playing = true; paint(); tick(); }
-  rows.forEach((r, n) => r.addEventListener('click', () => select(n)));
-  document.getElementById('prev').addEventListener('click', () => select(i - 1));
-  document.getElementById('next').addEventListener('click', () => select(i + 1));
-  play.addEventListener('click', () => { playing = !playing; paint(); tick(); });
-  const nl = document.getElementById('nl');
-  nl.addEventListener('submit', e => { e.preventDefault(); nl.style.display = 'none'; document.getElementById('nl-ok').style.display = 'block'; });
-  paint();
-})();
-</script>
-</body></html>
+<script src="js/app.js"></script>
+</body>
+</html>

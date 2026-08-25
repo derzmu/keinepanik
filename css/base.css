@@ -1,0 +1,51 @@
+/* Base layer — the document itself. Element defaults only, no components. */
+
+*{box-sizing:border-box}
+
+/* The sky fill on html is the canvas fallback behind the photo. */
+html{background:var(--surface-sky)}
+
+/* #backdrop sits at z-index:-1, so body must stay transparent — giving body a
+   background hides the photograph completely. */
+body{
+  margin:0;
+  font-family:var(--font-sans);
+  font-size:var(--type-body);
+  font-weight:var(--weight-regular);
+  line-height:var(--leading-body);
+  letter-spacing:var(--track-body);
+  color:var(--text-body);
+  background:transparent;
+}
+
+/* A position:fixed layer, not background-attachment:fixed — iOS Safari ignores that. */
+#backdrop{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:url(../assets/img/magnolia.jpg) center top/cover no-repeat;
+  pointer-events:none;
+}
+
+a{color:var(--text-accent)}
+a:hover{color:var(--text-body)}
+
+h2,h3{
+  margin:0;
+  font-family:var(--font-hand);
+  font-weight:var(--weight-regular);
+  font-size:var(--type-hand-section);
+  line-height:var(--leading-hand);
+  letter-spacing:var(--track-hand);
+  text-align:center;
+}
+
+[hidden]{display:none !important}
+
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+
+@keyframes kpspin{to{transform:rotate(360deg)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}

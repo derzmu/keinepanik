@@ -7,10 +7,15 @@ on any web host.
 ## Structure
 ```
 keine-panik-website/
-├─ index.html            the page — markup, inline styles, ~40 lines of vanilla JS
+├─ index.html            the page — markup only, no styling
 ├─ css/
 │  ├─ styles.css         the only stylesheet the page links; an @import list
+│  ├─ base.css           document defaults: html, body, links, headings, backdrop
+│  ├─ components.css     every component class on the page
 │  └─ tokens/            colours, typography, spacing, effects, @font-face
+├─ js/app.js             the player mock-up and the newsletter form
+├─ tools/
+│  └─ validate-tokens.mjs  guards the rules below — run it before you commit
 └─ assets/
    ├─ logo-offwhite.svg  brand logo (drawn as a CSS mask — see note)
    ├─ heartakreis.svg    the rotating hand-drawn mark
@@ -19,7 +24,30 @@ keine-panik-website/
    └─ img/magnolia.jpg   the one photograph the whole page runs on
 ```
 
+## The design system
+
 Editing colours, type or spacing means editing `css/tokens/` — never the page.
+Three rules keep that true, and `tools/validate-tokens.mjs` fails the build if one breaks:
+
+1. **`index.html` carries no styling.** No `style=""` attributes, no `<style>` block.
+   Markup names things; `css/components.css` styles them.
+2. **Rules never hold raw values.** Every colour, spacing value, font size and
+   weight in `base.css` / `components.css` is a `var(--token)`. A value that has no
+   token yet gets one added to `css/tokens/` first.
+3. **Spacing lives on the scale.** Every padding, margin and gap resolves to one of
+   the nine `--space-*` steps (4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96). Off-scale
+   values are bugs, not nuances.
+
+Components read the **semantic** aliases (`--text-on-dark`, `--line-hairline`,
+`--surface-dark`), not the raw palette (`--kp-cream`, `--kp-ink-12`). Retinting the
+brand is then a change to the alias block in `css/tokens/colors.css` alone.
+
+```
+node tools/validate-tokens.mjs
+```
+
+The validator also lists tokens that are defined but unused. Those are not errors —
+the palette and the type scale are deliberately wider than this one page needs.
 
 ## Paths
 Font `src` URLs in `css/tokens/fonts.css` are relative to **that file**, so they read
