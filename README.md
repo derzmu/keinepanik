@@ -180,15 +180,10 @@ means fixing those two lines.
   band (wrecked the top). A scrolling background was built and rejected on looks: it has
   to cover the whole 3604px document, which scales the photograph to 2403px wide, so a
   phone sees a 16% centre slice with no magnolia branches on the first screen.
-  Nothing gets page content in there — but the root background can be an image, and on
-  phones it is: `assets/img/magnolia-blur.jpg`, a 96x144px blurred copy of the photograph
-  under 3KB, stretched over the whole document with `background-size: 100% 100%`. The blur
-  hides both the stretching and the fact that a root background scrolls with the page, so
-  the bands carry the photograph's own colours instead of a flat blue. `#backdrop` still
-  covers everything actually visible; the blurred copy only ever shows where the page
-  cannot paint.
-  Regenerate it by drawing `magnolia.jpg` into a 96x144 canvas with `filter: blur(2px)`
-  and exporting JPEG at 0.82.
+  Nothing removes it: the page carries a thin sky-coloured band at the top and the
+  bottom on iOS. A blurred, stretched copy of the photograph on the root background was
+  tried — it does reach both bands, since a root background is painted onto the canvas —
+  and rejected on looks.
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
