@@ -60,7 +60,7 @@ body{
   height:100lvh;
   z-index:0;
   object-fit:cover;
-  object-position:center bottom;
+  object-position:center top;
   pointer-events:none;
 }
 
