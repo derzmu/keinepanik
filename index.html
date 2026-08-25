@@ -1,13 +1,31 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-locked>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>keine Panik.</title>
+<!-- Not public yet. Remove this line together with the gate. -->
+<meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="css/styles.css">
+<!-- Render-blocking on purpose: an unlocked session must not see the gate flash past. -->
+<script src="js/gate.js"></script>
 </head>
 <body>
 <div id="backdrop" aria-hidden="true"></div>
+
+<div class="gate" id="gate">
+<div class="gate__panel">
+<span class="wordmark wordmark--gate" role="img" aria-label="keine Panik."></span>
+<p class="gate__lead">Die Seite ist noch nicht öffentlich.</p>
+<form class="gate__form" id="gate-form">
+<label class="gate__label caps" for="gate-input">Passwort</label>
+<input class="field" id="gate-input" type="password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+<button class="submit" type="submit">Rein</button>
+<p class="gate__error" id="gate-error" role="alert" hidden>Passt nicht. Nochmal.</p>
+</form>
+</div>
+</div>
+
 <main>
 
 <section class="band band--sky">

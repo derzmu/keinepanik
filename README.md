@@ -51,6 +51,38 @@ node tools/validate-tokens.mjs
 The validator also lists tokens that are defined but unused. Those are not errors —
 the palette and the type scale are deliberately wider than this one page needs.
 
+## Pre-launch gate
+
+`js/gate.js` puts a password screen in front of the site. Password: `peinekanik`
+(case- and whitespace-tolerant). Unlocking is remembered for the browser session.
+
+**It is a curtain, not a lock.** The site is static, so `js/gate.js` — password
+included — is served to anyone who requests it, and the gate is one devtools click
+away. It keeps a work in progress out of sight; it protects nothing. Hashing the
+password would only make that weakness harder to see, so it is stored in the clear.
+
+Real protection is server-side, and it is usually one setting at the host:
+
+| Host | Where |
+|---|---|
+| Apache | `.htaccess` + `.htpasswd` (HTTP Basic Auth) |
+| Netlify | Site settings → Access control → Password protection |
+| Vercel | Project settings → Deployment protection |
+| Cloudflare Pages | Access policy |
+
+That matters for the legal shortcut too: skipping Impressum and Datenschutz rests on
+the site not being publicly accessible. A client-side gate does not make it
+inaccessible — the server still hands the page to anyone. Host-level auth does.
+
+**To remove the gate before launch:** delete `js/gate.js`, its `<script>` tag, the
+`data-locked` attribute on `<html>`, the `robots` meta tag, the `#gate` block in
+`index.html`, the gate rules in `css/components.css`, and the `data-locked` check at
+the bottom of `js/gigs.js`.
+
+While the gate is up, nothing behind it runs — the Bandsintown request in particular
+waits for the `kp:unlock` event, so no visitor IP reaches a US service before someone
+is actually through.
+
 ## Live dates (Bandsintown)
 
 `js/gigs.js` fills the "Live und in Farbe" block from the Bandsintown API on every

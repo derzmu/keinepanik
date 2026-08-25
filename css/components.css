@@ -332,6 +332,37 @@
 }
 .submit:hover{opacity:.82}
 
+/* ---------- pre-launch gate ----------
+   Presentation only. The gate hides the page, it does not protect it — see the
+   note at the top of js/gate.js. */
+.gate{
+  position:fixed;
+  inset:0;
+  z-index:10;
+  display:grid;
+  place-items:center;
+  padding:var(--band-pad-x);
+  overflow-y:auto;
+}
+html:not([data-locked]) .gate{display:none}
+html[data-locked] main{display:none}
+.gate__panel{
+  width:100%;
+  max-width:var(--content-max);
+  background:var(--surface-panel-90);
+  padding:var(--space-7) var(--space-5);
+  text-align:center;
+}
+.gate__lead{
+  margin:var(--space-6) 0;
+  font-size:var(--type-body-sm);
+  line-height:var(--leading-body);
+  color:var(--text-muted);
+}
+.gate__form{display:grid;gap:var(--space-3);text-align:left}
+.gate__label{display:block}
+.gate__error{margin:0;font-size:var(--type-body-sm);color:var(--text-accent)}
+
 /* ---------- footer ---------- */
 .site-footer{
   background:var(--surface-footer);
@@ -350,6 +381,8 @@
   -webkit-mask:url(../assets/logo-offwhite.svg) no-repeat center/contain;
   mask:url(../assets/logo-offwhite.svg) no-repeat center/contain;
 }
+/* On the gate the mark sits on a light panel, so it is painted in ink. */
+.wordmark--gate{background:var(--text-body)}
 .footer-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-5);margin-top:var(--space-6)}
 .footer-nav a{color:var(--text-on-dark-muted);text-decoration:none}
 .footer-legal{font-size:var(--type-caption);color:var(--text-on-dark-faint);margin-top:var(--space-6)}
