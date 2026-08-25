@@ -1,6 +1,7 @@
 :root{
 /* --- base palette (brand-confirmed) --- */
---kp-sky:#5daacd;          /* the blue of the magnolia photo's sky — the brand's signature */
+--kp-sky:#5eaacc;          /* the exact top row of magnolia.jpg — the two must match, or
+                              the iOS status-bar band shows as a seam against the sky */
 --kp-sky-deep:#3f8fb4;
 --kp-sky-soft:#9ccbe1;
 --kp-cream:#fffcf4;        /* brand light — paper / long-form reading surface */
