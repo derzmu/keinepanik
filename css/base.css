@@ -72,24 +72,11 @@ body{
    Phones only — a desktop browser has neither the toolbar strip nor the problem.
    Breakpoints are literal: a media query cannot read a custom property. */
 @media (max-width:647px){
-  /* The bands iOS fills from the root background get the photograph itself. A root
-     background is painted onto the canvas, which is the only thing that reaches them —
-     but iOS gives it no way to stand still, so it scrolls with the page. That is the
-     trade being made here: real picture in the bands, moving.
-     One canvas serves BOTH bands, so this shows at the top as well as the bottom;
-     there is no way to give one band the photograph and leave the other blue. */
-  html{
-    background-image:url(../assets/img/magnolia.jpg);
-    background-size:cover;
-    background-position:center top;
-    background-repeat:no-repeat;
-  }
-  /* The top fade has to go with it: it made #backdrop transparent over the first 120px,
-     which would now put that moving picture on the screen itself rather than only in
-     the band. The photograph covers the screen edge to edge again. */
   #backdrop{
     height:calc(100vh + var(--backdrop-drop));
     height:calc(100lvh + var(--backdrop-drop));
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,var(--mask-keep) var(--backdrop-fade));
+    mask-image:linear-gradient(to bottom,transparent 0,var(--mask-keep) var(--backdrop-fade));
   }
 }
 
