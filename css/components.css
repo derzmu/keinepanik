@@ -416,6 +416,27 @@ html[data-locked] main{display:none}
 .footer-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-5);margin-top:var(--space-6)}
 .footer-nav a{color:var(--text-on-dark-muted);text-decoration:none}
 
+/* ---------- pre-launch backdrop A/B ----------
+   The two readings of the photograph sit one tap apart, because only a real phone
+   can decide between them. Both links carry the same page; ?bg=scroll is the whole
+   difference. Removed together with the gate — see README. */
+.variant{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:var(--space-2);
+  margin-top:var(--space-6);
+}
+.variant__label{color:var(--text-on-dark-muted)}
+.variant__opt{
+  color:var(--text-on-dark-muted);
+  text-decoration:none;
+  border:var(--border-on-dark-soft);
+  padding:var(--space-2) var(--space-4);
+}
+.variant__opt[aria-current]{color:var(--text-on-dark);border:var(--border-on-dark)}
+
 /* The page sits above the photograph — see the #backdrop note in base.css. */
 main,
 .gate{position:relative;z-index:1}

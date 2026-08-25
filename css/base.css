@@ -89,6 +89,27 @@ body{
     -webkit-mask-image:linear-gradient(to bottom,transparent 0,var(--mask-keep) var(--backdrop-fade));
     mask-image:linear-gradient(to bottom,transparent 0,var(--mask-keep) var(--backdrop-fade));
   }
+
+  /* Fassung B, ?bg=scroll — the other side of the trade described above.
+     Here the photograph is the BODY'S background, so it is the scrolling document's
+     own background and therefore does reach both strips iOS paints outside the page
+     area. No layer, no script, nothing pinned, so nothing can stutter either.
+     What it costs: cover measures against the whole document, not a screen, so the
+     picture is magnified several times over and reads as a wash rather than as a
+     photograph — and it moves with the page instead of standing still.
+     image-set keeps a phone off the master file. js/variant.js sets the attribute. */
+  :root[data-bg="scroll"] body{
+    background-image:image-set(
+      url(../assets/img/magnolia-1200.jpg) 1x,
+      url(../assets/img/magnolia-1800.jpg) 2x);
+    background-image:-webkit-image-set(
+      url(../assets/img/magnolia-1200.jpg) 1x,
+      url(../assets/img/magnolia-1800.jpg) 2x);
+    background-size:cover;
+    background-position:center top;
+    background-repeat:no-repeat;
+  }
+  :root[data-bg="scroll"] #backdrop{display:none}
 }
 
 

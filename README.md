@@ -14,7 +14,9 @@ keine-panik-website/
 │  ├─ components.css     every component class on the page
 │  └─ tokens/            colours, typography, spacing, effects, @font-face
 ├─ js/
-│  ├─ app.js             the player mock-up and the newsletter form
+│  ├─ gate.js            the pre-launch password curtain
+│  ├─ variant.js         picks the backdrop fassung (pre-launch A/B)
+│  ├─ app.js             the audio player and the newsletter form
 │  └─ gigs.js            live dates, pulled from Bandsintown at page load
 ├─ tools/
 │  ├─ validate-tokens.mjs  guards the rules below — run it before you commit
@@ -88,6 +90,37 @@ the bottom of `js/gigs.js`.
 While the gate is up, nothing behind it runs — the Bandsintown request in particular
 waits for the `kp:unlock` event, so no visitor IP reaches a US service before someone
 is actually through.
+
+## The two backdrop fassungen (pre-launch A/B)
+
+The photograph can be read two ways on a phone, and only a real iPhone can decide
+between them, so both ship side by side. One page, one query parameter:
+
+| | URL | What it does |
+|---|---|---|
+| **A** | `/` | the photograph is the fixed `#backdrop` layer and stands still |
+| **B** | `/?bg=scroll` | the photograph is the body's background and scrolls with the page |
+
+`js/variant.js` reads the parameter and puts `data-bg="scroll"` on `<html>`; the rules
+sit in the mobile block of `css/base.css`. It is render-blocking for the same reason
+`js/gate.js` is — the attribute has to be there before the first paint, or A paints and
+is then swapped for B in front of the eye. The URL is the whole state; nothing is
+remembered. Both fassungen carry a switch in the footer so the two can be compared a tap
+apart.
+
+**The trade, plainly.** A is the picture as composed, standing still, and iOS paints its
+two strips (status bar, bottom toolbar) in the sky colour — the seam this whole exercise
+is about. B has no seam at all, because the scrolling document's own background does reach
+those strips, and it is perfectly smooth because nothing runs per frame; but `cover`
+measures against the whole 3600px document rather than a screen, so the picture is
+magnified roughly six times, the first screen is almost flat blue, and it moves with the
+page. Desktop is untouched by either — the block is `max-width: 647px`.
+
+Note B fetches one file more than it needs: the `#backdrop` `<img>` is `display: none` but
+still loads its `srcset` pick. Not worth a script to prevent while this is temporary.
+
+**Both go away at launch, together with the gate:** delete `js/variant.js`, its `<script>`
+tag, the `.variant` nav in the footer and its rules, and keep whichever fassung won.
 
 ## The player
 
@@ -199,7 +232,12 @@ means fixing those two lines.
   Measured and failed, each in its own commit: `inset: 0`, `100lvh`, a 120px overscan,
   `z-index: -1` and `0`, `position: sticky`, `viewport-fit=cover`, the photograph on `html`,
   a blurred stretched copy of it, opaque tint colours under the photograph, a JS-pinned and
-  a JS-drifted `body` background, and the inner scroller.
+  a JS-drifted `body` background, and the inner scroller. Also tested and disproved on the
+  device: that `background-attachment: fixed` works on iOS if the `url()` is root-absolute
+  or a full `https://` one. It does not — all three URL forms scroll.
+  The one construction that *does* reach both strips is fassung B above: give the scrolling
+  document itself the background. It costs the standing picture and a great deal of
+  magnification, which is exactly why both fassungen are on the site to be compared.
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.

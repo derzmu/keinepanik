@@ -10,7 +10,9 @@
 <!-- Not public yet. Remove this line together with the gate. -->
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="css/styles.css">
-<!-- Render-blocking on purpose: an unlocked session must not see the gate flash past. -->
+<!-- Both render-blocking on purpose: an unlocked session must not see the gate flash
+     past, and the backdrop variant has to be decided before the first paint. -->
+<script src="js/variant.js"></script>
 <script src="js/gate.js"></script>
 </head>
 <body>
@@ -169,6 +171,12 @@
 <a class="caps" href="https://keinepanikmusik.de/Impressum/" target="_blank" rel="noopener">Impressum</a>
 <a class="caps" href="https://keinepanikmusik.de/datenschutz/" target="_blank" rel="noopener">Datenschutz</a>
 <a class="caps" href="#">Kontakt</a>
+</nav>
+<!-- Pre-launch only: the two backdrop fassungen, one tap apart. Goes with the gate. -->
+<nav class="variant" aria-label="Testfassung">
+<span class="variant__label caps">Hintergrund</span>
+<a class="caps variant__opt" id="variant-fixed" href="./">A · steht</a>
+<a class="caps variant__opt" id="variant-scroll" href="?bg=scroll">B · scrollt mit</a>
 </nav>
 </footer>
 
