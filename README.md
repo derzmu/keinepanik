@@ -173,12 +173,21 @@ means fixing those two lines.
   It is one colour for both ends, so it cannot follow the content: tracking it to the
   band at the bottom of the screen was tried and put a brown strip across the top. It is
   `--surface-sky`, which is what the top of the photograph shows anyway.
-  Two things were tried and reverted, both recorded so they are not tried again: the
+  Tried and reverted, all recorded so they are not tried again: `inset: 0`, `100lvh`, a
+  120px overscan, `z-index: -1` and `0`, `position: sticky`, `viewport-fit=cover`, the
   photograph on `html` with `background-attachment: fixed` (iOS treats it as `scroll`,
   so it scrolled with the page), and `js/underpage.js` tracking the colour to the bottom
-  band (wrecked the top).
-  `#backdrop` is stacked at `z-index: 0` with the page above it rather than at `-1`,
-  because negative-stacked content appears not to reach the status-bar area on iOS.
+  band (wrecked the top). A scrolling background was built and rejected on looks: it has
+  to cover the whole 3604px document, which scales the photograph to 2403px wide, so a
+  phone sees a 16% centre slice with no magnolia branches on the first screen.
+  **What does help is the fade.** The strip stays, but on phones the photograph fades out
+  over its last `--backdrop-fade` (`css/base.css`), meeting the strip's colour gradually
+  instead of being cut off by a hard band. Bottom edge only — the top of the photograph
+  is sky, the same colour as the strip up there — and under 647px only, since a desktop
+  browser has no such strip.
+  It does not help where an opaque band reaches the bottom of the screen: there the band
+  still meets the strip at a hard edge, and fixing that needs the strip colour to follow
+  the band, which is the thing that broke the top.
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
