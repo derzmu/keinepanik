@@ -163,19 +163,20 @@ means fixing those two lines.
   it the page paints there and the photograph runs to the edge. The `env(safe-area-inset-*)`
   padding in `css/components.css` is what keeps content clear of the hardware in exchange;
   the bands stay full-bleed on purpose.
-- **The strip behind the iOS bottom toolbar is not page content.** Measured on a device,
-  `#backdrop` already overshoots the visible area by 40px and still does not paint there:
-  iOS fills that region from the root background colour, and `theme-color` is ignored. So
-  it is controlled by `html`'s background — `--surface-underpage`, sampled from the
-  photograph where it slides under the toolbar — and `js/underpage.js` keeps that colour
-  matched to whichever band is at the bottom of the screen. Sizing `#backdrop` cannot fix
-  it; do not try.
-  **Nor can the photograph itself go there.** Putting it on `html` with
-  `background-attachment: fixed` was tried and reverted: iOS treats `fixed` on the root as
-  `scroll`, so the picture scrolled with the page and left a moving band along the bottom.
-  It is the same iOS limitation that `#backdrop` exists to work around, one layer further
-  down — and there is no layer below the root to work around it with. A matched colour is
-  the most that region can hold.
+- **The strip behind the iOS bottom toolbar, and the status-bar band at the top,** are
+  filled with the **root** background colour wherever the page does not paint. Sizing
+  `#backdrop` never reaches them — measured on a device, it overshoots the visible area
+  by 40px and still does not paint there — and `theme-color` is ignored.
+  It is one colour for both ends, so it cannot follow the content: tracking it to the
+  band at the bottom of the screen was tried and put a brown strip across the top. It is
+  `--surface-sky`, which is what the top of the photograph shows anyway.
+  Two things were tried and reverted, both recorded so they are not tried again: the
+  photograph on `html` with `background-attachment: fixed` (iOS treats it as `scroll`,
+  so it scrolled with the page), and `js/underpage.js` tracking the colour to the bottom
+  band (wrecked the top).
+  `#backdrop` is stacked at `z-index: 0` with the page above it rather than at `-1`,
+  because negative-stacked content appears not to reach the status-bar area on iOS.
+
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
 - **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`),

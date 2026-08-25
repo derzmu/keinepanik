@@ -8,9 +8,13 @@
    fills the region from this colour instead. So the bottom edge is fixed here, not
    by sizing #backdrop. js/underpage.js keeps it matched to whatever band is at the
    bottom of the screen; this value is what shows without JS. */
-html{background:var(--surface-underpage)}
+html{background:var(--surface-sky)}
 
-/* #backdrop sits at z-index:-1, so body must stay transparent — giving body a
+/* The photograph is stacked at z-index:0 and the page above it, rather than the
+   photograph at -1 and the page at auto. Negative-stacked content appears not to
+   reach the status-bar area on iOS: the diagnostic page, whose top panel was
+   ordinarily stacked, painted there, while this backdrop at -1 did not and left the
+   root colour showing. body must still stay transparent either way — giving it a
    background hides the photograph completely. */
 body{
   margin:0;
@@ -47,7 +51,7 @@ body{
   width:100%;
   height:100vh;    /* fallback — on iOS Safari vh already means the large viewport */
   height:100lvh;
-  z-index:-1;
+  z-index:0;
   object-fit:cover;
   object-position:center top;
   pointer-events:none;

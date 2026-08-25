@@ -416,6 +416,10 @@ html[data-locked] main{display:none}
 .footer-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-5);margin-top:var(--space-6)}
 .footer-nav a{color:var(--text-on-dark-muted);text-decoration:none}
 
+/* The page sits above the photograph — see the #backdrop note in base.css. */
+main,
+.gate{position:relative;z-index:1}
+
 /* ---------- safe areas ----------
    With viewport-fit=cover the page reaches under the status bar, the home indicator
    and, in landscape, the notch. The bands stay full-bleed — the photograph should run
