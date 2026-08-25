@@ -167,32 +167,19 @@ means fixing those two lines.
   padding in `css/components.css` is what keeps content clear of the hardware in exchange;
   the bands stay full-bleed on purpose.
 - **The strip behind the iOS bottom toolbar, and the status-bar band at the top,** are
-  filled with the **root** background colour wherever the page does not paint. Sizing
-  `#backdrop` never reaches them — measured on a device, it overshoots the visible area
-  by 40px and still does not paint there — and `theme-color` is ignored.
-  It is one colour for both ends, so it cannot follow the content: tracking it to the
-  band at the bottom of the screen was tried and put a brown strip across the top. It is
-  `--surface-sky`, which is what the top of the photograph shows anyway.
-  Tried and reverted, all recorded so they are not tried again: `inset: 0`, `100lvh`, a
-  120px overscan, `z-index: -1` and `0`, `position: sticky`, `viewport-fit=cover`, the
-  photograph on `html` with `background-attachment: fixed` (iOS treats it as `scroll`,
-  so it scrolled with the page), and `js/underpage.js` tracking the colour to the bottom
-  band (wrecked the top). A scrolling background was built and rejected on looks: it has
-  to cover the whole 3604px document, which scales the photograph to 2403px wide, so a
-  phone sees a 16% centre slice with no magnolia branches on the first screen.
-  **What they take is the nearest OPAQUE background in the ancestor chain at that screen
-  edge.** Measured on a device with `diag2.html` (in git history): an opaque band reaches
-  them, which is why the footer's black runs all the way down; a see-through band falls
-  through to the root colour; and `#backdrop` never counts, because it is an element in
-  front rather than a background behind.
-  So on phones `js/edgetint.js` gives the see-through band at each edge an opaque colour
-  matching the photograph there, and `css/components.css` stacks the photograph over that
-  colour so it is never seen — see the painting-order note there. Two edges, two elements,
-  two colours, which a single root colour could never do.
-  Dead ends, so they are not tried again: `inset: 0`, `100lvh`, a 120px overscan,
-  `z-index: -1`, `position: sticky`, `viewport-fit=cover`, the photograph on `html` with
-  `background-attachment: fixed` (iOS treats it as `scroll`), a blurred stretched copy of
-  it, and tracking the root colour to the bottom band (that one browns the top).
+  filled by Safari, not by the page, and nothing has been found that puts the photograph
+  in them. They are sky-coloured, and that is where this stands.
+  What is known: they take the nearest **opaque** background in the ancestor chain at that
+  screen edge — an opaque band reaches them, which is why the footer's black runs all the
+  way down; a see-through band falls through to the root colour; `#backdrop` never counts,
+  being an element in front rather than a background behind. `theme-color` is ignored.
+  Dead ends, measured, so nobody repeats them: `inset: 0`, `100lvh`, a 120px overscan,
+  `z-index: -1`, `position: sticky`, `viewport-fit=cover`; the photograph on `html` with
+  `background-attachment: fixed` (iOS treats it as `scroll`, so it scrolled with the page);
+  a blurred stretched copy of it; tracking the root colour to the bottom band (browns the
+  top, since one colour serves both ends); and giving the see-through bands an opaque
+  colour under the photograph — the stacking that hides it in Chromium does not hold on
+  iOS, where the colours showed through and jumped between bands as you scrolled.
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.

@@ -416,19 +416,9 @@ html[data-locked] main{display:none}
 .footer-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-5);margin-top:var(--space-6)}
 .footer-nav a{color:var(--text-on-dark-muted);text-decoration:none}
 
-/* Painting order, and why it is split.
-   The photograph is a fixed element at z-index 0, so it paints after every in-flow
-   block background. That is deliberate: a see-through band carries an opaque
-   background colour that iOS samples for the strip behind its toolbar (js/edgetint.js),
-   and the photograph must cover that colour rather than sit behind it.
-   So the two kinds of band are treated differently:
-   - an opaque band lifts itself above the photograph, or the photograph would hide it;
-   - a see-through band stays unpositioned, keeping its colour underneath, and lifts
-     its contents instead. */
-.band--page,
-.band--dark,
-.site-footer{position:relative;z-index:1}
-.band:not(.band--page):not(.band--dark) > *{position:relative;z-index:1}
+/* The page sits above the photograph — see the #backdrop note in base.css. */
+main,
+.gate{position:relative;z-index:1}
 
 /* ---------- safe areas ----------
    With viewport-fit=cover the page reaches under the status bar, the home indicator
