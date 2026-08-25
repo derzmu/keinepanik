@@ -64,6 +64,24 @@ body{
   pointer-events:none;
 }
 
+/* The strip behind the iOS toolbar is filled from html's colour and no page content
+   reaches it (see the note on html above). The strip cannot be removed — but the seam
+   can: the photograph fades out over its last --backdrop-fade, so it meets that colour
+   gradually instead of being cut off by a hard band.
+
+   Only the bottom edge: the top of the photograph is sky, the same colour as the strip
+   up there, so there is nothing to hide.
+
+   Only on phones: a desktop browser has no such strip, and there the fade would be a
+   soft blue haze bought for nothing. Breakpoints are literal — a media query cannot
+   read a custom property. */
+@media (max-width:647px){
+  #backdrop{
+    -webkit-mask-image:linear-gradient(to bottom,var(--mask-keep) calc(100% - var(--backdrop-fade)),transparent 100%);
+    mask-image:linear-gradient(to bottom,var(--mask-keep) calc(100% - var(--backdrop-fade)),transparent 100%);
+  }
+}
+
 a{color:var(--text-accent)}
 a:hover{color:var(--text-body)}
 
