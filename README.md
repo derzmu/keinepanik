@@ -155,6 +155,12 @@ means fixing those two lines.
   `html`. Giving `body` a background hides the photo completely.
   It is sized with `height: 100lvh`, **not** `inset: 0`, so it stops rescaling as the iOS
   browser bars slide.
+- **viewport-fit=cover is load-bearing.** Without it iOS confines the page to the safe
+  area and fills the rest — the status-bar band at the top, the home-indicator band at
+  the bottom — with the root background colour. That was the strip along the top. With
+  it the page paints there and the photograph runs to the edge. The `env(safe-area-inset-*)`
+  padding in `css/components.css` is what keeps content clear of the hardware in exchange;
+  the bands stay full-bleed on purpose.
 - **The strip behind the iOS bottom toolbar is not page content.** Measured on a device,
   `#backdrop` already overshoots the visible area by 40px and still does not paint there:
   iOS fills that region from the root background colour, and `theme-color` is ignored. So

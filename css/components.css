@@ -415,3 +415,17 @@ html[data-locked] main{display:none}
 .site-footer .wordmark{width:var(--size-wordmark-sm)}
 .footer-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-5);margin-top:var(--space-6)}
 .footer-nav a{color:var(--text-on-dark-muted);text-decoration:none}
+
+/* ---------- safe areas ----------
+   With viewport-fit=cover the page reaches under the status bar, the home indicator
+   and, in landscape, the notch. The bands stay full-bleed — the photograph should run
+   right to the edge — but their contents are held clear of the hardware.
+   env() resolves to 0 wherever there is no inset, so this changes nothing elsewhere. */
+.band,
+.site-footer{
+  padding-left:calc(var(--band-pad-x) + env(safe-area-inset-left,0px));
+  padding-right:calc(var(--band-pad-x) + env(safe-area-inset-right,0px));
+}
+.band--sky{padding-top:calc(var(--band-pad-y) + env(safe-area-inset-top,0px))}
+.site-footer{padding-bottom:calc(var(--space-7) + env(safe-area-inset-bottom,0px))}
+.gate{padding:calc(var(--band-pad-x) + env(safe-area-inset-top,0px)) calc(var(--band-pad-x) + env(safe-area-inset-right,0px)) calc(var(--band-pad-x) + env(safe-area-inset-bottom,0px)) calc(var(--band-pad-x) + env(safe-area-inset-left,0px))}
