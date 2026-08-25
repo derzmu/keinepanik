@@ -14,7 +14,18 @@
 <script src="js/gate.js"></script>
 </head>
 <body>
-<img id="backdrop" src="assets/img/magnolia.jpg" alt="" aria-hidden="true" fetchpriority="high">
+<!-- srcset lets a phone fetch 243KB instead of the master's 1MB. sizes has to describe
+     the RENDERED width, not the element width: object-fit:cover blows the picture up past
+     the viewport on a narrow screen (556px of image across a 390px element), so a plain
+     100vw would fetch a file too small and it would look soft. Regenerate the variants
+     with tools/make-variants.mjs after changing the master. -->
+<img id="backdrop"
+     src="assets/img/magnolia.jpg"
+     srcset="assets/img/magnolia-1200.jpg 1200w,
+             assets/img/magnolia-1800.jpg 1800w,
+             assets/img/magnolia.jpg 2304w"
+     sizes="(max-width: 647px) 143vw, 100vw"
+     alt="" aria-hidden="true" fetchpriority="high">
 
 <div class="gate" id="gate">
 <div class="gate__panel">
@@ -46,7 +57,7 @@
 <h3 class="player__title">Direkt reinhören</h3>
 <div class="player__head">
 <div class="player__art">
-<img class="player__cover" id="cover" src="assets/img/magnolia.jpg" alt="">
+<img class="player__cover" id="cover" src="assets/img/magnolia-1200.jpg" alt="">
 <span class="player__flag caps" id="flag">pause</span>
 </div>
 <div class="player__meta">

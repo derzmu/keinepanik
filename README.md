@@ -17,13 +17,15 @@ keine-panik-website/
 │  ├─ app.js             the player mock-up and the newsletter form
 │  └─ gigs.js            live dates, pulled from Bandsintown at page load
 ├─ tools/
-│  └─ validate-tokens.mjs  guards the rules below — run it before you commit
+│  ├─ validate-tokens.mjs  guards the rules below — run it before you commit
+│  └─ make-variants.mjs    rebuilds the smaller copies of the backdrop photograph
 └─ assets/
    ├─ logo-offwhite.svg  brand logo (drawn as a CSS mask — see note)
    ├─ heartakreis.svg    the rotating hand-drawn mark
    ├─ icons/             the four platform glyphs
    ├─ fonts/             Sue Ellen Francisco (headings), Heebo (copy)
    └─ img/magnolia.jpg   the one photograph the whole page runs on
+                         (plus -1200 and -1800 copies for srcset)
 ```
 
 ## The design system
@@ -136,6 +138,23 @@ curl "https://rest.bandsintown.com/artists/id_15633413/events?app_id=<APP_ID>&da
 
 **Privacy:** the request goes from the visitor's browser straight to Bandsintown, so
 their IP reaches a US service. That belongs in `datenschutz` before this goes live.
+
+## The backdrop photograph
+
+`#backdrop` is a real `<img>`, so `srcset` does the work: a phone fetches 243KB or 458KB
+where it used to fetch the 1MB master. 2304px is the master's width and the largest that
+exists, so retina desktop is slightly short — as it was before.
+
+`sizes` describes the **rendered** width, not the element width. `object-fit: cover` blows
+the picture up past the viewport on a narrow screen — 556px of image across a 390px
+element — so a plain `100vw` would fetch a file too small and it would look soft. Hence
+`(max-width: 647px) 143vw, 100vw`.
+
+After changing the master, rebuild the copies and commit them; the site has no build step:
+
+```
+node tools/make-variants.mjs
+```
 
 ## Paths
 Font `src` URLs in `css/tokens/fonts.css` are relative to **that file**, so they read
