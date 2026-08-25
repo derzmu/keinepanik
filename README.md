@@ -180,14 +180,8 @@ means fixing those two lines.
   band (wrecked the top). A scrolling background was built and rejected on looks: it has
   to cover the whole 3604px document, which scales the photograph to 2403px wide, so a
   phone sees a 16% centre slice with no magnolia branches on the first screen.
-  **What does help is the fade.** The strip stays, but on phones the photograph fades out
-  over its last `--backdrop-fade` (`css/base.css`), meeting the strip's colour gradually
-  instead of being cut off by a hard band. Bottom edge only — the top of the photograph
-  is sky, the same colour as the strip up there — and under 647px only, since a desktop
-  browser has no such strip.
-  It does not help where an opaque band reaches the bottom of the screen: there the band
-  still meets the strip at a hard edge, and fixing that needs the strip colour to follow
-  the band, which is the thing that broke the top.
+  Nothing removes it. The page simply carries a thin sky-coloured band at the top and
+  the bottom on iOS, and that is the end of it.
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
