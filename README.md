@@ -180,15 +180,19 @@ means fixing those two lines.
   band (wrecked the top). A scrolling background was built and rejected on looks: it has
   to cover the whole 3604px document, which scales the photograph to 2403px wide, so a
   phone sees a 16% centre slice with no magnolia branches on the first screen.
-  **This is settled: the band at the bottom stays sky-coloured.** Page content cannot
-  reach it at any size, stacking or position. The root background does reach it, because
-  it is painted onto the canvas — but iOS gives a root background no way to stand still,
-  so anything put there scrolls with the page. Tried and rejected on looks: the sharp
-  photograph on the canvas (a moving band), and a blurred stretched copy of it. One
-  canvas serves both bands, so nothing can be given to one and withheld from the other.
-  What *is* solved is the top: on phones the photograph hangs from the bottom past the
-  fold and dissolves into the sky over its top `--backdrop-fade`, so that edge is gone.
-  The bottom band is simply accepted.
+  **What they take is the nearest OPAQUE background in the ancestor chain at that screen
+  edge.** Measured on a device with `diag2.html` (in git history): an opaque band reaches
+  them, which is why the footer's black runs all the way down; a see-through band falls
+  through to the root colour; and `#backdrop` never counts, because it is an element in
+  front rather than a background behind.
+  So on phones `js/edgetint.js` gives the see-through band at each edge an opaque colour
+  matching the photograph there, and `css/components.css` stacks the photograph over that
+  colour so it is never seen — see the painting-order note there. Two edges, two elements,
+  two colours, which a single root colour could never do.
+  Dead ends, so they are not tried again: `inset: 0`, `100lvh`, a 120px overscan,
+  `z-index: -1`, `position: sticky`, `viewport-fit=cover`, the photograph on `html` with
+  `background-attachment: fixed` (iOS treats it as `scroll`), a blurred stretched copy of
+  it, and tracking the root colour to the bottom band (that one browns the top).
 
 - **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
   `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
