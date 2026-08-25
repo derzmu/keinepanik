@@ -27,12 +27,16 @@ body{
   background:transparent;
 }
 
-/* A position:STICKY <img> behind the content — deliberately not position:fixed.
-   Sticky stands still like fixed does, but it stays in the flow, and in-flow content
-   is what reaches under the iOS status bar: the page's own bands paint there while a
-   fixed layer at the same place did not, whether stacked at -1 or at 0. That was the
-   last difference left between the two.
-   Not background-attachment:fixed either — iOS ignores that outright.
+/* A position:fixed <img> behind the content, not background-attachment:fixed — iOS
+   ignores that outright.
+
+   Do not spend another day trying to make this reach the iOS status-bar band or the
+   strip behind the bottom toolbar. Tried and measured, all of it failed: inset:0,
+   100lvh, a 120px overscan, z-index -1 and 0, position:sticky, viewport-fit=cover,
+   and the photograph on html itself (that one reaches both, but iOS treats
+   background-attachment:fixed as scroll there, so it scrolls with the page). Those
+   two bands are filled from the root background colour and page content does not
+   reach them.
    Two iOS traps, one layer:
    1. background-attachment:fixed does nothing, hence this element.
    2. inset:0 would size it to the LAYOUT viewport, which iOS keeps at the height
@@ -46,16 +50,14 @@ body{
    rescale the photograph on every scroll. lvh is stable and always tall enough; the
    overhang below the fold is cropped by cover and costs nothing. */
 #backdrop{
-  position:sticky;
+  position:fixed;
   top:0;
+  left:0;
+  right:0;
   display:block;   /* an <img> is inline by nature */
   width:100%;
   height:100vh;    /* fallback — on iOS Safari vh already means the large viewport */
   height:100lvh;
-  /* It is the page's first child and pulls its own height back out of the flow, so
-     the content starts at the top of the document and scrolls over it. */
-  margin-bottom:-100vh;
-  margin-bottom:-100lvh;
   z-index:0;
   object-fit:cover;
   object-position:center top;
