@@ -98,30 +98,6 @@ body{
 }
 
 
-/* The grain sits between the photograph and the page: fixed over the whole viewport,
-   exactly the area #backdrop covers, so it has no edge anywhere. That is the direct
-   lesson from the scrim that was tried on .band--sky — a layer bounded by a band
-   stops where the band stops and leaves a hard line across the picture.
-
-   z-index 0 puts it on the photograph's level; because body::after is painted after
-   #backdrop it lands on top of it, while main, .site-footer and .gate sit at 1 and
-   10 and stay above — so no text or control is ever grained.
-
-   A pseudo-element rather than a <div>: no markup, and body's own background stays
-   transparent, which the #backdrop note above requires.
-
-   Not on the legal pages — those are paper, with no photograph to grain. */
-html:not([data-page="legal"]) body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  background-image:var(--grain-texture);
-  background-size:var(--grain-tile) var(--grain-tile);
-  opacity:var(--grain-opacity);
-}
-
 a{color:var(--text-accent)}
 a:hover{color:var(--text-body)}
 

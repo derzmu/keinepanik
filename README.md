@@ -387,17 +387,6 @@ file instead, one level up: `../assets/…`.
   browsers use; `favicon-32.png` and `apple-touch-icon.png` cover iOS home screens
   and the few places that still refuse an SVG icon. Rebuilding them means rendering
   `favicon.svg` at 32 and 180.
-- **The photograph carries a grain.** A fixed layer between it and the page
-  (`body::after` in `base.css`), not noise rendered into the JPEG — high-frequency
-  noise is what JPEG compresses worst, and baking it in would undo a good part of
-  the 3.4MB → 916KB the served copies cost now. As a layer it costs no bytes.
-  It is `position:fixed; inset:0`, covering exactly what `#backdrop` covers, so it
-  has **no edge anywhere**. That is deliberate and it is the lesson from the scrim:
-  a layer bounded by a band stops where the band stops and leaves a hard line across
-  the picture. Do not re-hang this on a band.
-  Everything on the page sits at `z-index:1` or above, so no text or control is ever
-  grained — only the photograph and the sky. The legal pages are excluded; they are
-  paper. Strength is `--grain-opacity`, one number; `--grain-tile` sets how fine it is.
 - **Unreleased songs** sit in the tracklist without a `data-src`, which shows them as
   "bald" and makes them unclickable. Giving one a file and a `data-src` is all it
   takes to release it.
