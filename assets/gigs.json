@@ -1,0 +1,138 @@
+{
+  "fetchedAt": "2026-08-26T11:27:38.193Z",
+  "upcoming": [],
+  "past": [
+    {
+      "datetime": "2026-07-31T20:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949093?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "keine panik.",
+        "city": "Traunstein",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2026-04-25T20:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107948996?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "keine panik. + do it anyway",
+        "city": "Traunstein",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2026-04-18T22:45:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/108125543?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Kneipenfest Waging",
+        "city": "Waging am See",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2026-03-13T21:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107948993?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Die Herren Holzweg + keine panik.",
+        "city": "Waging am See",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2025-09-27T20:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949201?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "keine panik.",
+        "city": "Waging am See",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2025-08-22T20:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949198?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "keine panik.",
+        "city": "Traunstein",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2025-08-02T19:30:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949193?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Voglwuid Festival",
+        "city": "Berchtesgaden",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2025-05-30T20:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949181?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Wohnung 13 + keine panik.",
+        "city": "Berchtesgaden",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2024-11-24T14:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949178?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Marktfest Tittmoning",
+        "city": "Tittmoning",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2024-11-14T20:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949173?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Mo Skeeto + keine panik.",
+        "city": "München",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2024-10-18T14:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949169?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Anschöring muckt auf",
+        "city": "Kirchanschöring",
+        "country": "Germany",
+        "location": ""
+      }
+    },
+    {
+      "datetime": "2024-08-31T19:00:00",
+      "title": "",
+      "url": "https://www.bandsintown.com/e/107949155?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Mo Skeeto + keine panik.",
+        "city": "Waging am See",
+        "country": "Germany",
+        "location": ""
+      }
+    }
+  ]
+}
