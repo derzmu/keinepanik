@@ -9,7 +9,7 @@ Expected, under exactly these names:
 | File | Row | Status |
 |---|---|---|
 | `keine-panik-fotos.zip` | Fotos — JPG, druckfähig | **fehlt noch** |
-| `keine-panik-logo.zip` | Logo — SVG und PNG | **fehlt noch** |
+| `keine-panik-logo.zip` | Logo — hell und dunkel, SVG/PNG/PDF | **fehlt noch** |
 | `keine-panik-promotexte.pdf` | Promotexte — Kurz- und Langversion | **fehlt noch** |
 | `keine-panik-rider.pdf` | Rider — Technik und Backline | **fehlt noch** |
 | `keine-panik-presskit.zip` | Alles als ZIP — enthält alle vier oben | **fehlt noch** |
