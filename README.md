@@ -388,7 +388,7 @@ file instead, one level up: `../assets/…`.
 ## Before launch
 
 - [ ] Newsletter: only bring it back once a provider is behind it — see above
-- [ ] The four files in `assets/downloads/` added (the rows 404 until then)
+- [ ] The five files in `assets/downloads/` added (the rows 404 until then)
 - [ ] **Move to Hetzner.** The Datenschutz names Hetzner as the host and promises an
       AVV. On GitHub Pages that section is untrue — and Pages can set no HTTP headers
       and no server-side password either

@@ -9,9 +9,10 @@ Expected, under exactly these names:
 | File | Row | Status |
 |---|---|---|
 | `keine-panik-fotos.zip` | Fotos — JPG, druckfähig | **fehlt noch** |
+| `keine-panik-logo.zip` | Logo — SVG und PNG | **fehlt noch** |
 | `keine-panik-promotexte.pdf` | Promotexte — Kurz- und Langversion | **fehlt noch** |
 | `keine-panik-rider.pdf` | Rider — Technik und Backline | **fehlt noch** |
-| `keine-panik-presskit.zip` | Alles als ZIP | **fehlt noch** |
+| `keine-panik-presskit.zip` | Alles als ZIP — enthält alle vier oben | **fehlt noch** |
 
 Until a file is here its row 404s on click. Renaming a file means renaming it in
 `index.html` too — the two are not linked by anything cleverer than the path.
