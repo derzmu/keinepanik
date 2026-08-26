@@ -11,6 +11,12 @@
 <!-- Tints the browser chrome in the sky colour, so the band iOS paints above the
      page matches the photograph's top row the same way the root background does. -->
 <meta name="theme-color" content="#5eaacc">
+<!-- One heart out of assets/heartakreis.svg. The SVG is what modern browsers use
+     and the only one that stays crisp; the PNGs cover iOS home screens and the
+     handful of places that still refuse an SVG icon. -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <!-- Not public yet. Remove this line together with the gate. -->
 <meta name="robots" content="noindex,nofollow">
 <!-- Loaded as separate links rather than through @import in styles.css: @import is
@@ -25,9 +31,7 @@
 <link rel="stylesheet" href="css/tokens/effects.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
-<!-- Both render-blocking on purpose: an unlocked session must not see the gate flash
-     past, and the backdrop variant has to be decided before the first paint. -->
-<script src="js/variant.js"></script>
+<!-- Render-blocking on purpose: an unlocked session must not see the gate flash past. -->
 <script src="js/gate.js"></script>
 </head>
 <body>
@@ -167,7 +171,7 @@
 <a class="dl" href="assets/downloads/keine-panik-promotexte.pdf" download><span class="l"><b>Promotexte</b><span>Kurz- und Langversion, PDF</span></span><span class="b caps">Laden</span></a>
 <a class="dl" href="assets/downloads/keine-panik-rider.pdf" download><span class="l"><b>Rider</b><span>Technik und Backline, PDF</span></span><span class="b caps">Laden</span></a>
 <a class="dl" href="assets/downloads/keine-panik-presskit.zip" download><span class="l"><b>Alles als ZIP</b><span>Fotos, Texte, Rider</span></span><span class="b caps">ZIP</span></a>
-<div class="downloads__contact">Presseanfragen: Mathias · <a href="mailto:presse@keinepanik.band">presse@keinepanik.band</a></div>
+<div class="downloads__contact">Anfragen: Mathias · <a href="mailto:booking@keinepanikmusik.de">booking@keinepanikmusik.de</a></div>
 </div>
 </section>
 
@@ -204,13 +208,7 @@
 <nav class="footer-nav">
 <a class="caps" href="https://keinepanikmusik.de/Impressum/" target="_blank" rel="noopener">Impressum</a>
 <a class="caps" href="https://keinepanikmusik.de/datenschutz/" target="_blank" rel="noopener">Datenschutz</a>
-<a class="caps" href="mailto:presse@keinepanik.band">Kontakt</a>
-</nav>
-<!-- Pre-launch only: the two backdrop fassungen, one tap apart. Goes with the gate. -->
-<nav class="variant" aria-label="Testfassung">
-<span class="variant__label caps">Hintergrund</span>
-<a class="caps variant__opt" id="variant-fixed" href="./">A · steht</a>
-<a class="caps variant__opt" id="variant-scroll" href="?bg=scroll">B · scrollt mit</a>
+<a class="caps" href="mailto:booking@keinepanikmusik.de">Kontakt</a>
 </nav>
 </footer>
 

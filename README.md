@@ -14,7 +14,6 @@ keine-panik-website/
 │  └─ tokens/            colours, typography, spacing, effects, @font-face
 ├─ js/
 │  ├─ gate.js            the pre-launch password curtain
-│  ├─ variant.js         picks the backdrop fassung (pre-launch A/B)
 │  ├─ app.js             the audio player and the newsletter form
 │  └─ gigs.js            live dates, pulled from Bandsintown after unlock
 ├─ tools/
@@ -23,6 +22,7 @@ keine-panik-website/
 └─ assets/
    ├─ logo-offwhite.svg  brand logo (drawn as a CSS mask — see note)
    ├─ heartakreis.svg    the rotating hand-drawn mark (also a mask)
+   ├─ favicon.svg        one heart out of heartakreis.svg (+ the two PNG sizes)
    ├─ icons/             the four platform glyphs
    ├─ fonts/             Sue Ellen Francisco (headings), Heebo (copy)
    ├─ audio/             song files — see the README in there
@@ -36,6 +36,35 @@ used to be pulled in by an `@import` list in a `css/styles.css`, which cost seve
 serialised round trips in the critical path — the browser cannot discover the second
 file until it has fetched and parsed the first. As links they are fetched in
 parallel. The order in `index.html` is the cascade order; keep it.
+
+## Deploy, and what `.gitignore` is doing here
+
+`.gitignore` does nothing **for** the site. It never reaches a browser and it is not
+a config file the page reads. It is an instruction to git alone: these paths are
+never to be tracked — editor folders, `.DS_Store`, `node_modules`. Since everything
+this site serves is checked in on purpose, that list is short and only covers what a
+machine leaves lying around.
+
+What it does **not** do is keep files out of the deploy. If the server checks the
+repository out into the webroot, everything in it is served, including the parts the
+page never asks for:
+
+| Ships but is not part of the site | |
+|---|---|
+| `README.md` | **names the gate password.** Already in `js/gate.js` by design, but publishing it twice is worse than once |
+| `assets/img/magnolia.jpg` | the 3.4MB master — never served by the page, still downloadable |
+| `tools/`, `.github/`, `.gitignore` | build-time only |
+| `assets/*/README.md` | notes for whoever adds the files |
+
+None of it is secret and none of it breaks anything, but it is roughly 3.5MB of dead
+weight on the server and a password sitting at a guessable URL. Two ways out:
+
+- **rsync with an exclude list** — a GitHub Action builds nothing and copies only what
+  the page needs. This is the cleaner one, and the exclude list is the table above.
+- **`git pull` into the webroot** — simplest, and then add a server rule denying
+  `/.git`, `/README.md`, `/tools`, `/.github`. On nginx that is one `location` block.
+
+Either way the deploy stays a copy of the repository; there is nothing to build.
 
 ## The design system
 
@@ -127,36 +156,25 @@ run regardless, which made this sentence untrue for the audio request.
 `index.html`, the gate rules in `css/components.css`, and the `data-locked` checks at
 the bottom of `js/gigs.js` and `js/app.js`.
 
-## The two backdrop fassungen (pre-launch A/B)
+## The backdrop fassung, decided
 
-The photograph can be read two ways on a phone, and only a real iPhone can decide
-between them, so both ship side by side. One page, one query parameter:
+The photograph could be read two ways on a phone and both shipped side by side for a
+while, because only a real iPhone could decide between them:
 
-| | URL | What it does |
-|---|---|---|
-| **A** | `/` | the photograph is the fixed `#backdrop` layer and stands still |
-| **B** | `/?bg=scroll` | the photograph is the body's background and scrolls with the page |
+| | What it did |
+|---|---|
+| **A**, kept | the photograph is the fixed `#backdrop` layer and stands still |
+| **B**, dropped | the photograph is the body's background and scrolls with the page |
 
-`js/variant.js` reads the parameter and puts `data-bg="scroll"` on `<html>`; the rules
-sit in the mobile block of `css/base.css`. It is render-blocking for the same reason
-`js/gate.js` is — the attribute has to be there before the first paint, or A paints and
-is then swapped for B in front of the eye. The URL is the whole state; nothing is
-remembered. Both fassungen carry a switch in the footer so the two can be compared a tap
-apart.
+**A won.** B had no seam at all — the scrolling document's own background does reach
+the strips iOS paints outside the page area, and it was perfectly smooth because
+nothing ran per frame. But `cover` measures against the whole 3600px document rather
+than a screen, so the picture came out magnified roughly six times, the first screen
+was almost flat blue, and it moved with the page.
 
-**The trade, plainly.** A is the picture as composed, standing still, and iOS paints its
-two strips (status bar, bottom toolbar) in the sky colour — the seam this whole exercise
-is about. B has no seam at all, because the scrolling document's own background does reach
-those strips, and it is perfectly smooth because nothing runs per frame; but `cover`
-measures against the whole 3600px document rather than a screen, so the picture is
-magnified roughly six times, the first screen is almost flat blue, and it moves with the
-page. Desktop is untouched by either — the block is `max-width: 647px`.
-
-Note B fetches one file more than it needs: the `#backdrop` `<img>` is `display: none` but
-still loads its `srcset` pick. Not worth a script to prevent while this is temporary.
-
-**Both go away at launch, together with the gate:** delete `js/variant.js`, its `<script>`
-tag, the `.variant` nav in the footer and its rules, and keep whichever fassung won.
+B is gone from the site: `js/variant.js`, the `?bg=scroll` parameter, the
+`[data-bg="scroll"]` rules and the footer switch are all removed. It is in git history
+if the trade ever needs looking at again.
 
 ## The player
 
@@ -307,10 +325,17 @@ file instead, one level up: `../assets/…`.
   a JS-drifted `body` background, and the inner scroller. Also tested and disproved on the
   device: that `background-attachment: fixed` works on iOS if the `url()` is root-absolute
   or a full `https://` one. It does not — all three URL forms scroll.
-  The one construction that *does* reach both strips is fassung B above: give the scrolling
-  document itself the background. It costs the standing picture and a great deal of
-  magnification, which is exactly why both fassungen are on the site to be compared.
+  The one construction that *does* reach both strips is to give the scrolling document
+  itself the background. That shipped as fassung B and was compared on a device; it
+  costs the standing picture and a great deal of magnification, and it lost. Do not
+  rediscover it as a new idea — it is in git history, already measured.
 
+- **The favicon is one heart out of `heartakreis.svg`**, upright and centred, on a
+  cream ground rather than transparent — the heart is ink on paper, and on a dark
+  browser toolbar a transparent one would disappear. `favicon.svg` is what modern
+  browsers use; `favicon-32.png` and `apple-touch-icon.png` cover iOS home screens
+  and the few places that still refuse an SVG icon. Rebuilding them means rendering
+  `favicon.svg` at 32 and 180.
 - **Unreleased songs** sit in the tracklist without a `data-src`, which shows them as
   "bald" and makes them unclickable. Giving one a file and a `data-src` is all it
   takes to release it.
@@ -319,11 +344,10 @@ file instead, one level up: `../assets/…`.
 
 - [ ] Newsletter form connected to a provider, or disabled — see above
 - [ ] The four files in `assets/downloads/` added (the rows 404 until then)
-- [ ] Press contact address confirmed; the footer Kontakt link currently points at it
 - [ ] Bandsintown named in the Datenschutz on `keinepanikmusik.de`
-- [ ] Gate removed, and with it `robots: noindex` and both backdrop fassungen
-- [ ] `og:` / `twitter:` tags and a favicon — both need the final domain, which is
-      why they are not in `<head>` yet
+- [ ] Gate removed, and with it `robots: noindex`
+- [ ] `og:` / `twitter:` tags — they need the final domain for an absolute image URL,
+      which is why they are not in `<head>` yet
 - [ ] The bottom edge of the photograph faded to the sky colour
-- [ ] Both fassungen compared on a real iPhone, and the scrim on the sky band looked
-      at there — it is the one change in this pass that alters the picture
+- [ ] The scrim on the sky band looked at on a real iPhone — it is the one change in
+      the audit pass that alters the picture
