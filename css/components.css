@@ -2,19 +2,15 @@
 
 /* ---------- bands: the full-bleed horizontal stripes the page is made of ---------- */
 .band{padding:var(--band-pad-y) var(--band-pad-x)}
-.band--sky{text-align:center;position:relative}
+.band--sky{text-align:center}
 .band--sky h2{color:var(--text-on-sky)}
-/* White type and off-white glyphs on bare sky sit at 2.59:1 and 2.55:1. The scrim
-   under them takes both past 4.6:1 without touching the top edge, where the seam
-   with the iOS status-bar strip lives — see --overlay-photo-scrim in tokens/effects.css. */
-.band--sky::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:var(--overlay-photo-scrim);
-  pointer-events:none;
-}
-.band--sky > *{position:relative}
+/* The sky band is the plain sky colour and nothing else — no scrim, no gradient.
+   One was tried, to lift the white type off the blue, and it failed for a reason
+   worth keeping: the band is only ~195px tall and the sky continues well past it,
+   so the darkening stopped where the band stopped and left a hard horizontal edge
+   across the photograph. Any tint bounded by this band does the same.
+   The white type here is at 2.59:1 and the glyphs at 2.53:1. If that has to be
+   fixed, fix it on the type and the glyph files — not on the picture. */
 /* The follow band and the player band read as one unit over the photograph,
    so they close the gap between them rather than each carrying full rhythm. */
 .band--sky{padding-bottom:var(--space-5)}

@@ -105,16 +105,24 @@ and the type scale are deliberately wider than this one page needs.
 The palette is checked against WCAG 2.2 AA, and two places needed the numbers rather
 than the eye:
 
-- **The sky band.** White type and the off-white glyphs sit at 2.59:1 and 2.55:1 on
-  bare sky, which fails. `--overlay-photo-scrim` darkens the band under them to
-  4.75:1 and 4.63:1. Its first stop is fully transparent and stays that way for
-  `--backdrop-fade`, which is load-bearing: darkening the top edge would put the
-  seam with the iOS status-bar strip straight back. The ramp coincides with the mask
-  on `#backdrop`, so on a phone the band darkens at the rate the photograph emerges.
 - **The focus ring is two rings.** Magnolia carries cream, mint, ink and black, but
   it sits at almost exactly the sky's luminance and would vanish on the follow icons.
   The cream halo covers precisely the surfaces magnolia cannot. On every surface on
   this page at least one of the two clears 3:1.
+
+**One place is knowingly short: the sky band.** The white "Folgen" sits at 2.59:1 on
+the sky and the off-white glyphs at 2.53:1, against a 3:1 minimum.
+
+A scrim was tried and reverted, and the reason is worth keeping so nobody builds it
+twice: a tint on `.band--sky` stops where the band stops, at about 195px, while the
+sky carries on well past it. That leaves a hard horizontal edge straight across the
+photograph — the exact kind of seam the rest of this file is about avoiding. **Any
+darkening bounded by that band does the same.** `--overlay-photo-scrim` is still
+defined and still unused; do not reach for it here.
+
+If this gets fixed, it has to be fixed on the type and on the glyph files, not on the
+picture: re-export the four SVGs in `assets/icons/` in a darker tone, and give the
+heading a colour that clears the blue. The sky itself stays the flat `--kp-sky`.
 
 `--text-on-dark-faint` is white at 50%, not 40%: at 40% it lands on 3.79:1 against
 `--kp-ink`, and the labels using it ("Ausverkauft", "Gespielt") are 10–11px.
@@ -349,5 +357,5 @@ file instead, one level up: `../assets/…`.
 - [ ] `og:` / `twitter:` tags — they need the final domain for an absolute image URL,
       which is why they are not in `<head>` yet
 - [ ] The bottom edge of the photograph faded to the sky colour
-- [ ] The scrim on the sky band looked at on a real iPhone — it is the one change in
-      the audit pass that alters the picture
+- [ ] Decide the sky band: leave the white type as it is, or darken the four glyph
+      files and the heading colour. Not by tinting the picture — see Contrast above

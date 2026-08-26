@@ -29,20 +29,10 @@
 /* No drop shadows anywhere in the brand. Elevation is done with flat panels. */
 --shadow-none:none;
 
-/* Darkens the photograph under the sky band so white type and the off-white
-   platform glyphs are legible on it (they sit at 2.59:1 and 2.55:1 on bare sky;
-   at .35 they reach 4.75:1 and 4.63:1).
-   The first stop is fully transparent and stays that way for --backdrop-fade,
-   which is load-bearing: iOS paints the status-bar strip from the root sky colour
-   and the photograph's top row is authored to match it exactly. Darkening the top
-   edge would put that seam straight back. The ramp coincides with the mask on
-   #backdrop, so on a phone the band darkens at exactly the rate the photograph
-   emerges from the blue. */
---overlay-photo-scrim:linear-gradient(
-  180deg,
-  rgba(35,31,32,0) 0,
-  rgba(35,31,32,.35) var(--backdrop-fade),
-  rgba(35,31,32,.35) 100%);
+/* Unused, and deliberately so. Do not reach for this to darken the sky band: it was
+   tried and it leaves a hard horizontal edge where the band ends and the sky carries
+   on. Read the note on .band--sky in components.css before using it anywhere. */
+--overlay-photo-scrim:linear-gradient(180deg,rgba(35,31,32,0) 0%,rgba(35,31,32,.35) 100%);
 
 /* Motion: slow, plain fades. Nothing bounces. */
 --ease-brand:cubic-bezier(.4,0,.2,1);
