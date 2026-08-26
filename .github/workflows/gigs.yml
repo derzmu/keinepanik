@@ -38,7 +38,11 @@ jobs:
         run: |
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          # fetchedAt changes on every run, so compare everything except that line:
+          # Intent-to-add first. git diff ignores untracked files completely, so on
+          # the very first run — when gigs.json does not exist yet — the comparison
+          # below would report "unchanged" and the file would never be committed.
+          git add -N assets/gigs.json
+          # fetchedAt moves on every run, so compare everything except that line:
           # committing an identical list once an hour would bury the real history.
           if git diff --quiet -- assets/gigs.json; then
             echo 'unchanged'
@@ -46,7 +50,6 @@ jobs:
           fi
           if [ -z "$(git diff -U0 -- assets/gigs.json | grep '^[+-][^+-]' | grep -v 'fetchedAt')" ]; then
             echo 'only the timestamp moved — not committing'
-            git checkout -- assets/gigs.json
             exit 0
           fi
           git add assets/gigs.json
