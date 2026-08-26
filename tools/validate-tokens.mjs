@@ -11,6 +11,7 @@
  *   - a style="" attribute in the markup
  *   - a stylesheet <link> pointing at a file that is not there
  *   - a class name built in js/ that no rule file defines
+ *   - a site footer that has drifted out of step across the pages
  * Token files themselves are exempt: raw values are what they are for.
  */
 import fs from 'fs';
@@ -22,7 +23,7 @@ const read = p => fs.readFileSync(path.join(root, p), 'utf8');
 const tokenDir = 'css/tokens';
 const tokenFiles = fs.readdirSync(path.join(root, tokenDir)).map(f => `${tokenDir}/${f}`);
 const ruleFiles = ['css/base.css', 'css/components.css'];
-const htmlFiles = ['index.html'];
+const htmlFiles = ['index.html', 'impressum.html', 'datenschutz.html'];
 const jsFiles = fs.readdirSync(path.join(root, 'js')).filter(f => f.endsWith('.js')).map(f => `js/${f}`);
 
 const problems = [];
@@ -129,6 +130,24 @@ for (const file of jsFiles) {
       if (cls && !cssClasses.has(cls)) {
         fail(file, `builds class "${cls}", which no rule file defines`);
       }
+    }
+  }
+}
+
+/* ---- 6. the footer is the same on every page ----
+   There is no build step and no include, so the site footer is copied into every
+   page by hand. That is a deliberate trade — but a copy that drifts is the whole
+   cost of it, and drift is exactly what a machine should be watching for. */
+const footers = htmlFiles.map(file => {
+  const m = read(file).match(/<footer class="site-footer">[\s\S]*?<\/footer>/);
+  return { file, block: m && m[0] };
+});
+const withFooter = footers.filter(f => f.block);
+if (withFooter.length > 1) {
+  const [first, ...rest] = withFooter;
+  for (const other of rest) {
+    if (other.block !== first.block) {
+      fail(other.file, `site footer differs from the one in ${first.file} — they are copies and must stay identical`);
     }
   }
 }

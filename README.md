@@ -8,6 +8,8 @@ runtime — both webfonts and all four platform glyphs are in `assets/`. Open
 ```
 keine-panik-website/
 ├─ index.html            the page — markup only, no styling
+├─ impressum.html        legal, no photograph, no gate
+├─ datenschutz.html      legal, no photograph, no gate
 ├─ css/
 │  ├─ base.css           document defaults: html, body, links, headings, backdrop
 │  ├─ components.css     every component class on the page
@@ -15,9 +17,10 @@ keine-panik-website/
 ├─ js/
 │  ├─ gate.js            the pre-launch password curtain
 │  ├─ app.js             the audio player and the newsletter form
-│  └─ gigs.js            live dates, pulled from Bandsintown after unlock
+│  └─ gigs.js            renders the live dates from assets/gigs.json
 ├─ tools/
 │  ├─ validate-tokens.mjs  guards the rules below — CI runs it on every push
+│  ├─ fetch-gigs.mjs       pulls the live dates; CI runs it hourly
 │  └─ make-variants.mjs    rebuilds the served copies of the backdrop photograph
 └─ assets/
    ├─ logo-offwhite.svg  brand logo (drawn as a CSS mask — see note)
@@ -25,6 +28,7 @@ keine-panik-website/
    ├─ favicon.svg        one heart out of heartakreis.svg (+ the two PNG sizes)
    ├─ icons/             the four platform glyphs
    ├─ fonts/             Sue Ellen Francisco (headings), Heebo (copy)
+   ├─ gigs.json          the live dates, written by CI — never edited by hand
    ├─ audio/             song files — see the README in there
    ├─ downloads/         press files — see the README in there
    └─ img/magnolia.jpg   the one photograph the whole page runs on
@@ -36,6 +40,22 @@ used to be pulled in by an `@import` list in a `css/styles.css`, which cost seve
 serialised round trips in the critical path — the browser cannot discover the second
 file until it has fetched and parsed the first. As links they are fetched in
 parallel. The order in `index.html` is the cascade order; keep it.
+
+## The legal pages
+
+`impressum.html` and `datenschutz.html` sit beside `index.html` and share its
+stylesheets, tokens and footer. They carry **no** `#backdrop` and **no** gate: a legal
+page is running text, the photograph would only cost legibility and 241KB, and an
+Impressum is meant to be reachable. `data-page="legal"` on `<html>` puts the page on
+cream all the way into the iOS strips.
+
+The Art. 21 objection is set in capitals because the statute is; it is set smaller and
+boxed so it does not shout down the rest of the page.
+
+**The footer is now copied into three files.** There is no build step and no include —
+that is the deliberate trade — so `validate-tokens.mjs` compares the three
+`<footer class="site-footer">` blocks and fails if they drift apart. Change one, change
+all three, and let the guard catch you when you forget.
 
 ## Deploy, and what `.gitignore` is doing here
 
@@ -71,8 +91,8 @@ Either way the deploy stays a copy of the repository; there is nothing to build.
 Editing colours, type or spacing means editing `css/tokens/` — never the page.
 Four rules keep that true, and `tools/validate-tokens.mjs` fails the build if one breaks:
 
-1. **`index.html` carries no styling.** No `style=""` attributes, no `<style>` block.
-   Markup names things; `css/components.css` styles them.
+1. **The markup carries no styling.** No `style=""` attributes, no `<style>` block —
+   on any of the three pages. Markup names things; `css/components.css` styles them.
 2. **Rules never hold raw values.** Every colour, spacing value, font size, weight,
    border width and opacity in `base.css` / `components.css` is a `var(--token)`.
    A value that has no token yet gets one added to `css/tokens/` first.
@@ -218,35 +238,46 @@ before launch, or disable the form until there is one.**
 
 ## Live dates (Bandsintown)
 
-`js/gigs.js` fills the "Live und in Farbe" block from the Bandsintown API on every
-page load. Config sits at the top of that file: `appId`, the artist as
-`id_15633413` (the numeric id is unambiguous, the name is not), and the artist URL.
+**The browser never calls Bandsintown.** `tools/fetch-gigs.mjs` does, on a CI runner
+once an hour, and commits the result as `assets/gigs.json`. `js/gigs.js` renders that
+file. The visitor's browser only ever talks to this domain.
 
-The `app_id` is **not** a secret. Bandsintown issues it as a public client
-identifier and it is meant to travel in front-end code, which is why this needs no
-backend — their API sends `Access-Control-Allow-Origin: *`.
+That is a privacy decision, not a caching one. A call from the page would hand every
+visitor's IP, user agent and this site's origin to a US service before they had asked
+for anything — a processing that would have to be declared in the Datenschutz,
+justified under Art. 6(1)(f) and carried as a third-country transfer. Fetching at
+build time removes the cause instead of documenting it, which is why the privacy
+policy needs no paragraph about Bandsintown at all.
 
-**There is no static fallback, by design.** If the API is unreachable the block says
-so and links to Bandsintown rather than showing dates nobody has checked. Stale gig
-dates on a band site are worse than none.
+It also took one of the two things this site stored on the device with it: the
+30-minute `sessionStorage` cache is gone, because an HTTP cache is what a static file
+already has. The only remaining storage is the gate's unlock flag.
+
+| | |
+|---|---|
+| Schedule | hourly, `0 * * * *`, plus every push to `main` |
+| By hand | Actions tab → *gigs* → Run workflow, or `node tools/fetch-gigs.mjs` locally |
+| Commits | only when the dates actually changed — a moved `fetchedAt` alone is not a commit |
+| Config | `CONFIG` at the top of `tools/fetch-gigs.mjs` |
+
+The `app_id` is **not** a secret. Bandsintown issues it as a public client identifier
+and it travelled in the front-end code before this; it stays in the clear.
+
+Only the fields the page renders are written out — `datetime`, the venue's name, city,
+country and location, the offers, the event URL and title. The API returns a great
+deal more; what is not written cannot be shipped.
+
+**There is still no hand-maintained fallback.** If the file is missing (the workflow
+has never run) or malformed, the block says so and links to Bandsintown rather than
+showing dates nobody has checked. The old rule — stale dates on a band site are worse
+than none — is better served by an hourly refresh than it was by a live call.
 
 The block covers five states: dates listed · nothing booked · past dates (collapsed,
-newest first) · API unreachable · loading. "Show anfragen" is offered in all of them.
+newest first) · file unreachable · loading. "Show anfragen" is offered in all of them.
 
-Fetches are cached in `sessionStorage` for 30 minutes, so moving around the site does
-not re-hit the API.
-
-Everything from the API reaches the DOM through `textContent`, never `innerHTML`. The
+Everything from the file reaches the DOM through `textContent`, never `innerHTML`. The
 one exception is a row's `href`, which is checked for an `http(s)` scheme before it is
-assigned — an offer URL is the only value from outside that reaches a live sink.
-
-To check the API by hand:
-```
-curl "https://rest.bandsintown.com/artists/id_15633413/events?app_id=<APP_ID>&date=upcoming"
-```
-
-**Privacy:** the request goes from the visitor's browser straight to Bandsintown, so
-their IP reaches a US service. That belongs in `datenschutz` before this goes live.
+assigned — those URLs still originate at Bandsintown, only by way of the runner.
 
 ## The backdrop photograph
 
@@ -352,10 +383,13 @@ file instead, one level up: `../assets/…`.
 
 - [ ] Newsletter form connected to a provider, or disabled — see above
 - [ ] The four files in `assets/downloads/` added (the rows 404 until then)
-- [ ] Bandsintown named in the Datenschutz on `keinepanikmusik.de`
+- [ ] **Move to Hetzner.** The Datenschutz names Hetzner as the host and promises an
+      AVV. On GitHub Pages that section is untrue — and Pages can set no HTTP headers
+      and no server-side password either
 - [ ] Gate removed, and with it `robots: noindex`
 - [ ] `og:` / `twitter:` tags — they need the final domain for an absolute image URL,
       which is why they are not in `<head>` yet
+- [ ] Newsletter, when it is wired up, gets its own section in the Datenschutz
 - [ ] The bottom edge of the photograph faded to the sky colour
 - [ ] Decide the sky band: leave the white type as it is, or darken the four glyph
       files and the heading colour. Not by tinting the picture — see Contrast above

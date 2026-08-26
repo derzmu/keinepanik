@@ -457,6 +457,81 @@ main,
 .site-footer,
 .gate{position:relative;z-index:1}
 
+/* ---------- legal pages ----------
+   Impressum und Datenschutz: langer Fließtext, kein Foto, kein Gate. Eine Spalte
+   auf Lesemaß, sonst nichts. */
+.legal{
+  max-width:var(--content-max);
+  margin:0 auto;
+  padding:var(--band-pad-y) var(--band-pad-x);
+}
+.legal__back{
+  display:inline-block;
+  margin-bottom:var(--space-6);
+  font-size:var(--type-body-sm);
+}
+.legal h1{
+  font-family:var(--font-hand);
+  font-size:var(--type-hand-section);
+  line-height:var(--leading-hand);
+  letter-spacing:var(--track-hand);
+  text-align:left;
+  margin:0 0 var(--space-7);
+}
+/* Ein nummerierter Abschnitt. Bekommt oben eine Haarlinie, damit die vier
+   Hauptteile der Erklärung ohne Zählen auseinanderzuhalten sind. */
+.legal h2{
+  font-family:var(--font-hand);
+  font-size:var(--type-hand-block);
+  line-height:var(--leading-hand);
+  letter-spacing:var(--track-hand);
+  text-align:left;
+  margin:var(--space-8) 0 var(--space-5);
+  padding-top:var(--space-6);
+  border-top:var(--border-soft);
+}
+.legal h2:first-of-type{margin-top:0;padding-top:0;border-top:none}
+.legal h3{
+  font-family:var(--font-sans);
+  font-size:var(--type-body-lg);
+  font-weight:var(--weight-bold);
+  line-height:var(--leading-tight);
+  letter-spacing:var(--track-body);
+  text-align:left;
+  margin:var(--space-6) 0 var(--space-3);
+}
+.legal h4{
+  font-size:var(--type-body);
+  font-weight:var(--weight-bold);
+  line-height:var(--leading-tight);
+  margin:var(--space-5) 0 var(--space-2);
+}
+.legal p{
+  font-size:var(--type-body-sm);
+  line-height:var(--leading-body);
+  margin:0 0 var(--space-4);
+  text-wrap:pretty;
+}
+.legal ul{
+  margin:0 0 var(--space-4);
+  padding-left:var(--space-5);
+}
+.legal li{
+  font-size:var(--type-body-sm);
+  line-height:var(--leading-body);
+  margin-bottom:var(--space-3);
+}
+.legal__address{font-style:normal}
+/* Der Art.-21-Widerspruch steht im Gesetzestext in Versalien und bleibt so.
+   Kleiner gesetzt und eingerahmt, damit er den Rest der Seite nicht anschreit. */
+.legal__shout{
+  font-size:var(--type-caption);
+  line-height:var(--leading-body);
+  padding:var(--space-4);
+  border:var(--border-soft);
+  margin-bottom:var(--space-3);
+}
+
 /* ---------- safe areas ----------
    With viewport-fit=cover the page reaches under the status bar, the home indicator
    and, in landscape, the notch. The bands stay full-bleed — the photograph should run

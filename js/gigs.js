@@ -1,20 +1,23 @@
-/* Live dates, pulled from Bandsintown at page load.
+/* Live dates, rendered from assets/gigs.json.
  *
- * There is no static fallback: if the API cannot be reached the block says so
- * rather than showing dates nobody has checked.
+ * The browser does NOT call Bandsintown. tools/fetch-gigs.mjs does, on a CI runner
+ * once an hour, and commits the result. That is a privacy decision, not a caching
+ * one: a call from here would hand every visitor's IP, user agent and this site's
+ * origin to a US service before they had asked for anything. Reading our own file
+ * means the browser only ever talks to this domain, and the privacy policy needs no
+ * paragraph about a third party it never reaches.
  *
- * The app_id is not a secret — Bandsintown issues it as a public client
- * identifier and it is meant to travel in front-end code.
+ * There is still no hand-maintained fallback: if the file is missing or malformed
+ * the block says so and links to Bandsintown, rather than showing dates nobody has
+ * checked. The file is never older than an hour, so the reason for that rule —
+ * stale dates on a band site are worse than none — is better served than before.
  */
 const CONFIG = {
-  appId: '497c6d21b4d5cea98fff71063aae4f4c',
-  artist: 'id_15633413',                       // keine panik. — numeric id, not the name
+  data: 'assets/gigs.json',
   artistUrl: 'https://www.bandsintown.com/a/15633413',
   /* The artist page carries Bandsintown's own "Request a Show" button. If you
      have a direct deep link to that form, put it here instead. */
   requestShowUrl: 'https://www.bandsintown.com/a/15633413',
-  api: 'https://rest.bandsintown.com',
-  cacheMinutes: 30,
   pastLimit: 12,
 };
 
@@ -151,38 +154,17 @@ function renderError() {
   $('#gig-error').hidden = false;
 }
 
-/* ---------- fetching ---------- */
+/* ---------- reading ---------- */
 
-function cached(key) {
-  try {
-    const raw = sessionStorage.getItem(key);
-    if (!raw) return null;
-    const { at, data } = JSON.parse(raw);
-    if (Date.now() - at > CONFIG.cacheMinutes * 60000) return null;
-    return data;
-  } catch { return null; }
-}
-
-function cache(key, data) {
-  try { sessionStorage.setItem(key, JSON.stringify({ at: Date.now(), data })); } catch { /* private mode */ }
-}
-
-async function load(when) {
-  const key = `bit:${CONFIG.artist}:${when}`;
-  const hit = cached(key);
-  if (hit) return hit;
-
-  const url = `${CONFIG.api}/artists/${encodeURIComponent(CONFIG.artist)}/events`
-    + `?app_id=${encodeURIComponent(CONFIG.appId)}&date=${when}`;
-  const res = await fetch(url, { headers: { Accept: 'application/json' } });
-  if (!res.ok) throw new Error(`Bandsintown ${when}: HTTP ${res.status}`);
-
+/* One request, same origin, no credentials and nothing kept in sessionStorage:
+   a static file is exactly what an HTTP cache is for, so the browser handles
+   repeat visits without this script storing anything on the device. */
+async function loadAll() {
+  const res = await fetch(CONFIG.data, { headers: { Accept: 'application/json' } });
+  if (!res.ok) throw new Error(`${CONFIG.data}: HTTP ${res.status}`);
   const body = await res.json();
-  /* An artist with nothing on the calendar can come back as {} or as a warning
-     object rather than an empty array. */
-  const data = Array.isArray(body) ? body : [];
-  cache(key, data);
-  return data;
+  const list = v => (Array.isArray(v) ? v : []);
+  return { upcoming: list(body?.upcoming), past: list(body?.past) };
 }
 
 const byDate = dir => (a, b) => {
@@ -203,23 +185,15 @@ async function init() {
   });
 
   try {
-    const [upcoming, past] = await Promise.allSettled([load('upcoming'), load('past')]);
-
-    if (upcoming.status === 'fulfilled') {
-      renderUpcoming(upcoming.value.slice().sort(byDate(1)));
-    } else {
-      console.warn(upcoming.reason);
-      renderError();
-    }
-
-    if (past.status === 'fulfilled') {
-      renderPast(past.value.slice().sort(byDate(-1)));
-    } else {
-      console.warn(past.reason);
-    }
+    const { upcoming, past } = await loadAll();
+    /* Sorted again here rather than trusted from the file: the order is what the
+       design depends on, and a hand-edited file must not be able to break it. */
+    renderUpcoming(upcoming.slice().sort(byDate(1)));
+    renderPast(past.slice().sort(byDate(-1)));
   } catch (err) {
-    /* allSettled does not throw, but a render can. Without this the block would
-       sit on "Termine werden geladen." for good. */
+    /* A missing file (the workflow has not run yet), a malformed one, or a render
+       that throws. Without this the block would sit on "Termine werden geladen."
+       for good. */
     console.warn(err);
     renderError();
   } finally {

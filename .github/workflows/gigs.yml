@@ -1,0 +1,54 @@
+# Fetches the live dates so the visitor's browser never has to.
+#
+# The page used to call the Bandsintown API directly, which handed every visitor's
+# IP to a US service. This runner does it instead, once an hour, and commits the
+# result as assets/gigs.json. See the note at the top of tools/fetch-gigs.mjs.
+name: gigs
+
+on:
+  schedule:
+    - cron: '0 * * * *'     # hourly; the file is never more than an hour stale
+  push:
+    branches: [main]        # so a fresh checkout has dates within a minute
+  workflow_dispatch:        # and so it can be forced from the Actions tab
+
+# Commits made with GITHUB_TOKEN do not trigger workflows, so the push trigger
+# above cannot loop on this job's own commit.
+permissions:
+  contents: write
+
+concurrency:
+  group: gigs
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # No install step: the script has no dependencies and uses node's own fetch.
+      - name: Fetch from Bandsintown
+        run: node tools/fetch-gigs.mjs
+
+      - name: Commit if the dates changed
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          # fetchedAt changes on every run, so compare everything except that line:
+          # committing an identical list once an hour would bury the real history.
+          if git diff --quiet -- assets/gigs.json; then
+            echo 'unchanged'
+            exit 0
+          fi
+          if [ -z "$(git diff -U0 -- assets/gigs.json | grep '^[+-][^+-]' | grep -v 'fetchedAt')" ]; then
+            echo 'only the timestamp moved — not committing'
+            git checkout -- assets/gigs.json
+            exit 0
+          fi
+          git add assets/gigs.json
+          git commit -m 'Update live dates from Bandsintown'
+          git push

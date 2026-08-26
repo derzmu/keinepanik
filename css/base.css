@@ -12,6 +12,10 @@
    the picture; see the note on #backdrop below. */
 html{background:var(--surface-sky)}
 
+/* Rechtsseiten tragen das Foto nicht — dort ist der Grund durchgehend Papier,
+   bis in die iOS-Streifen hinein. Klassenspezifität schlägt die Regel darüber. */
+html[data-page="legal"]{background:var(--surface-page)}
+
 /* The photograph is stacked at z-index:0 and the page above it, rather than the
    photograph at -1 and the page at auto. Negative-stacked content appears not to
    reach the status-bar area on iOS: the diagnostic page, whose top panel was
