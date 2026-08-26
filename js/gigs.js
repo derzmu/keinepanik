@@ -126,7 +126,12 @@ function renderUpcoming(events) {
   events.forEach(e => list.append(gigRow(e, { past: false })));
 }
 
-function renderPast(events) {
+/* `expanded` is decided by whether anything is coming up, not by the past dates
+   themselves: with nothing booked the block would otherwise be an empty state above
+   a closed drawer, and the only thing there is to show would need a click to find.
+   As soon as there is a real date again the past folds away, because then it is
+   history and the upcoming list is the point. */
+function renderPast(events, { expanded }) {
   const wrap = $('#gig-past');
   const list = $('#gig-past-list');
   const toggle = $('#gig-past-toggle');
@@ -136,6 +141,8 @@ function renderPast(events) {
   events.slice(0, CONFIG.pastLimit).forEach(e => list.append(gigRow(e, { past: true })));
   $('#gig-past-count').textContent = String(events.length);
   wrap.hidden = false;
+  toggle.setAttribute('aria-expanded', String(expanded));
+  list.hidden = !expanded;
 
   /* Bound once. A second render would otherwise stack a second handler on the
      same button, and the two would cancel each other out. */
@@ -189,7 +196,7 @@ async function init() {
     /* Sorted again here rather than trusted from the file: the order is what the
        design depends on, and a hand-edited file must not be able to break it. */
     renderUpcoming(upcoming.slice().sort(byDate(1)));
-    renderPast(past.slice().sort(byDate(-1)));
+    renderPast(past.slice().sort(byDate(-1)), { expanded: upcoming.length === 0 });
   } catch (err) {
     /* A missing file (the workflow has not run yet), a malformed one, or a render
        that throws. Without this the block would sit on "Termine werden geladen."
