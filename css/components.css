@@ -455,10 +455,14 @@ html[data-locked] .site-footer{display:none}
 .footer-nav a{color:var(--text-on-dark-muted);text-decoration:none}
 
 /* The page sits above the photograph — see the #backdrop note in base.css.
-   The footer is listed separately because it is a sibling of main, not inside it. */
+   The footer is listed separately because it is a sibling of main, not inside it.
+   .gate is NOT in this list: it declares position:fixed and z-index:10 of its own
+   further up, and naming it here overrode both — same specificity, later in the
+   file. The curtain was then position:relative and only as tall as its content, so
+   inset:0 did nothing and place-items:center centred the panel in 459px instead of
+   in the viewport. It has to stay fixed and above everything. */
 main,
-.site-footer,
-.gate{position:relative;z-index:1}
+.site-footer{position:relative;z-index:1}
 
 /* ---------- legal pages ----------
    Impressum und Datenschutz: langer Fließtext, kein Foto, kein Gate. Eine Spalte
