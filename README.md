@@ -16,7 +16,7 @@ keine-panik-website/
 │  └─ tokens/            colours, typography, spacing, effects, @font-face
 ├─ js/
 │  ├─ gate.js            the pre-launch password curtain
-│  ├─ app.js             the audio player and the newsletter form
+│  ├─ app.js             the audio player (and the parked newsletter form)
 │  └─ gigs.js            renders the live dates from assets/gigs.json
 ├─ tools/
 │  ├─ validate-tokens.mjs  guards the rules below — CI runs it on every push
@@ -226,15 +226,21 @@ A track becomes playable by pointing `data-src` at a file in `assets/audio/`:
 Adding a song is therefore two steps: drop the file in `assets/audio/`, add
 `data-src` to its row. Nothing else needs touching.
 
-## The newsletter form is not wired up
+## The newsletter is parked
 
-**Deliberately, for now.** There is no newsletter tool behind it yet. `js/app.js`
-swallows the submit, hides the form and shows "Passt. Schau in dein Postfach." — the
-address is not sent anywhere and not stored anywhere.
+It is **off the page**, not deleted. The `<section>` sits commented out in
+`index.html` behind a `PARKED:` marker; the `.news*` rules in `css/components.css`
+and `initNewsletter()` in `js/app.js` are untouched and inert — the function finds no
+`#nl` and returns straight away.
 
-That confirmation is a promise the site cannot currently keep, and the consent
-checkbox asks for a processing that does not happen. **Connect it to a provider
-before launch, or disable the form until there is one.**
+**To bring it back:** remove the comment markers around that section. Nothing else
+changes. Both halves carry a note pointing at each other so neither gets tidied away
+as an orphan.
+
+**Why it went away:** there is no newsletter tool behind it. The form swallowed the
+submit, showed "Passt. Schau in dein Postfach." and sent the address nowhere — a
+promise the site could not keep, next to a consent checkbox for a processing that
+never happened. Wire it to a provider before un-commenting.
 
 ## Live dates (Bandsintown)
 
@@ -381,7 +387,7 @@ file instead, one level up: `../assets/…`.
 
 ## Before launch
 
-- [ ] Newsletter form connected to a provider, or disabled — see above
+- [ ] Newsletter: only bring it back once a provider is behind it — see above
 - [ ] The four files in `assets/downloads/` added (the rows 404 until then)
 - [ ] **Move to Hetzner.** The Datenschutz names Hetzner as the host and promises an
       AVV. On GitHub Pages that section is untrue — and Pages can set no HTTP headers

@@ -171,27 +171,31 @@
 <a class="dl" href="assets/downloads/keine-panik-promotexte.pdf" download><span class="l"><b>Promotexte</b><span>Kurz- und Langversion, PDF</span></span><span class="b caps">Laden</span></a>
 <a class="dl" href="assets/downloads/keine-panik-rider.pdf" download><span class="l"><b>Rider</b><span>Technik und Backline, PDF</span></span><span class="b caps">Laden</span></a>
 <a class="dl" href="assets/downloads/keine-panik-presskit.zip" download><span class="l"><b>Alles als ZIP</b><span>Fotos, Texte, Rider</span></span><span class="b caps">ZIP</span></a>
-<div class="downloads__contact">Anfragen: Mathias · <a href="mailto:booking@keinepanikmusik.de">booking@keinepanikmusik.de</a></div>
+<div class="downloads__contact">Anfragen: <a href="mailto:booking@keinepanikmusik.de">booking@keinepanikmusik.de</a></div>
 </div>
 </section>
 
-<section class="band band--page">
-<div class="news">
-<h3>Nichts verpassen</h3>
-<p class="news__lead">Neue Songs, neue Termine. Ein paar Mails im Jahr, nicht mehr.</p>
-<!-- Deliberately not wired to a provider yet: there is no newsletter tool behind
-     this. js/app.js shows the confirmation and nothing is sent or stored. Connect
-     it before launch, or the confirmation is a promise the site cannot keep. -->
-<form class="news__form" id="nl">
-<div class="news__row">
-<label><span class="news__label caps">E-Mail</span><input class="field" type="email" required placeholder="du@beispiel.de"></label>
-<button class="submit" type="submit">Anmelden</button>
-</div>
-<label class="news__consent"><input type="checkbox" required><span>Ja, schickt mir Mails. Abmelden geht jederzeit.</span></label>
-</form>
-<p class="news__ok" id="nl-ok" hidden>Passt. Schau in dein Postfach.</p>
-</div>
-</section>
+<!-- PARKED: newsletter. Un-comment the section below to bring it back — the
+     .news* rules in css/components.css and initNewsletter() in js/app.js are still
+     in place and pick it up again with no other change.
+     Parked because nothing is behind it: the form showed a confirmation and sent
+     the address nowhere. See README, "The newsletter is parked".
+
+     <section class="band band--page">
+     <div class="news">
+     <h3>Nichts verpassen</h3>
+     <p class="news__lead">Neue Songs, neue Termine. Ein paar Mails im Jahr, nicht mehr.</p>
+     <form class="news__form" id="nl">
+     <div class="news__row">
+     <label><span class="news__label caps">E-Mail</span><input class="field" type="email" required placeholder="du@beispiel.de"></label>
+     <button class="submit" type="submit">Anmelden</button>
+     </div>
+     <label class="news__consent"><input type="checkbox" required><span>Ja, schickt mir Mails. Abmelden geht jederzeit.</span></label>
+     </form>
+     <p class="news__ok" id="nl-ok" hidden>Passt. Schau in dein Postfach.</p>
+     </div>
+     </section>
+-->
 
 </main>
 

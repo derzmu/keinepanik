@@ -338,7 +338,10 @@
 }
 .dl:hover .b{background:var(--surface-dark);color:var(--text-on-dark)}
 
-/* ---------- newsletter ---------- */
+/* ---------- newsletter ----------
+   PARKED, not dead. The markup sits commented out in index.html; these rules are the
+   other half of it and stay so that un-commenting is the whole job. Do not tidy them
+   away as orphans — see the PARKED note in index.html. */
 .news{max-width:var(--block-max);margin:0 auto;text-align:center}
 .news__lead{
   font-size:var(--type-body-sm);

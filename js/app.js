@@ -176,9 +176,13 @@ function initPlayer() {
 }
 
 /* ---------- newsletter ----------
- * There is no newsletter tool behind this yet: the submit is swallowed, the
- * confirmation is shown, and the address goes nowhere. That is deliberate and
- * temporary — see the note in index.html. Wire it to a provider before launch.
+ * PARKED, not dead. The markup sits commented out in index.html, so this finds no
+ * #nl and returns straight away. It stays because it is the other half of the parked
+ * block: un-comment the markup and the form works again with no change here.
+ * Do not tidy it away as an orphan — see the PARKED note in index.html.
+ *
+ * When it comes back it still sends nothing. Wire it to a provider first, or the
+ * confirmation is a promise the site cannot keep.
  */
 function initNewsletter() {
   const nl = document.getElementById('nl');
