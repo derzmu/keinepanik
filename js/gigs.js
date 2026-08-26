@@ -64,11 +64,18 @@ function venueLine(event) {
 
 /* ---------- rendering ---------- */
 
+/* The only value from the API that reaches a DOM sink rather than textContent.
+   A javascript: or data: URL in an offer would run on click, so the scheme is
+   checked rather than trusted. */
+const safeUrl = u => (/^https?:\/\//i.test(String(u || '')) ? u : null);
+
 function gigRow(event, { past }) {
   const date = parseDate(event.datetime);
   const offer = ticketOffer(event);
   const soldOut = /sold\s*out/i.test((offer && offer.status) || '');
-  const href = (!past && !soldOut && offer && offer.url) || event.url || CONFIG.artistUrl;
+  const href = (!past && !soldOut && offer && safeUrl(offer.url))
+    || safeUrl(event.url)
+    || CONFIG.artistUrl;
 
   const row = el('a', past ? 'gig gig--past' : 'gig');
   row.href = href;
@@ -92,7 +99,7 @@ function gigRow(event, { past }) {
     row.append(el('span', 'gig__note caps', 'Gespielt'));
   } else if (soldOut) {
     row.append(el('span', 'pill pill--off caps', 'Ausverkauft'));
-  } else if (offer && offer.url) {
+  } else if (offer && safeUrl(offer.url)) {
     row.append(el('span', 'pill caps', 'Tickets'));
   } else {
     row.append(el('span', 'pill caps', 'Infos'));
@@ -127,6 +134,10 @@ function renderPast(events) {
   $('#gig-past-count').textContent = String(events.length);
   wrap.hidden = false;
 
+  /* Bound once. A second render would otherwise stack a second handler on the
+     same button, and the two would cancel each other out. */
+  if (toggle.dataset.bound) return;
+  toggle.dataset.bound = 'true';
   toggle.addEventListener('click', () => {
     const open = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!open));
@@ -183,25 +194,37 @@ const byDate = dir => (a, b) => {
 async function init() {
   if (!$('#gig-list')) return;
 
+  /* getAttribute, not .href: the property returns the RESOLVED url, so on an
+     http(s) page it always starts with "http" — even for href="#". Read through
+     the property this fallback could never fire. */
   const links = [$('#gig-follow'), $('#gig-request'), $('#gig-error-link')];
-  links.forEach(a => { if (a && !a.href.startsWith('http')) a.href = CONFIG.artistUrl; });
+  links.forEach(a => {
+    if (a && !/^https?:\/\//i.test(a.getAttribute('href') || '')) a.href = CONFIG.artistUrl;
+  });
 
-  const [upcoming, past] = await Promise.allSettled([load('upcoming'), load('past')]);
+  try {
+    const [upcoming, past] = await Promise.allSettled([load('upcoming'), load('past')]);
 
-  if (upcoming.status === 'fulfilled') {
-    renderUpcoming(upcoming.value.slice().sort(byDate(1)));
-  } else {
-    console.warn(upcoming.reason);
+    if (upcoming.status === 'fulfilled') {
+      renderUpcoming(upcoming.value.slice().sort(byDate(1)));
+    } else {
+      console.warn(upcoming.reason);
+      renderError();
+    }
+
+    if (past.status === 'fulfilled') {
+      renderPast(past.value.slice().sort(byDate(-1)));
+    } else {
+      console.warn(past.reason);
+    }
+  } catch (err) {
+    /* allSettled does not throw, but a render can. Without this the block would
+       sit on "Termine werden geladen." for good. */
+    console.warn(err);
     renderError();
+  } finally {
+    $('#gig-loading').hidden = true;
   }
-
-  if (past.status === 'fulfilled') {
-    renderPast(past.value.slice().sort(byDate(-1)));
-  } else {
-    console.warn(past.reason);
-  }
-
-  $('#gig-loading').hidden = true;
 }
 
 /* Behind the pre-launch gate nothing is fetched: the request would send the

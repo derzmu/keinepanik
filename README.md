@@ -1,15 +1,14 @@
 # keine Panik. — Einseiter
 
-Static one-page site. No build step, no framework, no CDN at runtime except the
-Heebo webfont (see below). Open `index.html` in a browser, or drop the whole folder
-on any web host.
+Static one-page site. No build step, no framework, nothing loaded from a CDN at
+runtime — both webfonts and all four platform glyphs are in `assets/`. Open
+`index.html` in a browser, or drop the whole folder on any web host.
 
 ## Structure
 ```
 keine-panik-website/
 ├─ index.html            the page — markup only, no styling
 ├─ css/
-│  ├─ styles.css         the only stylesheet the page links; an @import list
 │  ├─ base.css           document defaults: html, body, links, headings, backdrop
 │  ├─ components.css     every component class on the page
 │  └─ tokens/            colours, typography, spacing, effects, @font-face
@@ -17,32 +16,43 @@ keine-panik-website/
 │  ├─ gate.js            the pre-launch password curtain
 │  ├─ variant.js         picks the backdrop fassung (pre-launch A/B)
 │  ├─ app.js             the audio player and the newsletter form
-│  └─ gigs.js            live dates, pulled from Bandsintown at page load
+│  └─ gigs.js            live dates, pulled from Bandsintown after unlock
 ├─ tools/
-│  ├─ validate-tokens.mjs  guards the rules below — run it before you commit
-│  └─ make-variants.mjs    rebuilds the smaller copies of the backdrop photograph
+│  ├─ validate-tokens.mjs  guards the rules below — CI runs it on every push
+│  └─ make-variants.mjs    rebuilds the served copies of the backdrop photograph
 └─ assets/
    ├─ logo-offwhite.svg  brand logo (drawn as a CSS mask — see note)
-   ├─ heartakreis.svg    the rotating hand-drawn mark
+   ├─ heartakreis.svg    the rotating hand-drawn mark (also a mask)
    ├─ icons/             the four platform glyphs
    ├─ fonts/             Sue Ellen Francisco (headings), Heebo (copy)
+   ├─ audio/             song files — see the README in there
+   ├─ downloads/         press files — see the README in there
    └─ img/magnolia.jpg   the one photograph the whole page runs on
-                         (plus -1200 and -1800 copies for srcset)
+                         (the master; the served copies sit beside it)
 ```
+
+The seven stylesheets are linked one by one from `<head>`, in cascade order. They
+used to be pulled in by an `@import` list in a `css/styles.css`, which cost seven
+serialised round trips in the critical path — the browser cannot discover the second
+file until it has fetched and parsed the first. As links they are fetched in
+parallel. The order in `index.html` is the cascade order; keep it.
 
 ## The design system
 
 Editing colours, type or spacing means editing `css/tokens/` — never the page.
-Three rules keep that true, and `tools/validate-tokens.mjs` fails the build if one breaks:
+Four rules keep that true, and `tools/validate-tokens.mjs` fails the build if one breaks:
 
 1. **`index.html` carries no styling.** No `style=""` attributes, no `<style>` block.
    Markup names things; `css/components.css` styles them.
-2. **Rules never hold raw values.** Every colour, spacing value, font size and
-   weight in `base.css` / `components.css` is a `var(--token)`. A value that has no
-   token yet gets one added to `css/tokens/` first.
+2. **Rules never hold raw values.** Every colour, spacing value, font size, weight,
+   border width and opacity in `base.css` / `components.css` is a `var(--token)`.
+   A value that has no token yet gets one added to `css/tokens/` first.
 3. **Spacing lives on the scale.** Every padding, margin and gap resolves to one of
    the nine `--space-*` steps (4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96). Off-scale
    values are bugs, not nuances.
+4. **Colour is never manufactured.** No `filter: invert()` or `brightness()` to turn
+   a graphic white — paint it with a token. That is how the rotating mark ended up a
+   different white from the wordmark.
 
 Components read the **semantic** aliases (`--text-on-dark`, `--line-hairline`,
 `--surface-dark`), not the raw palette (`--kp-cream`, `--kp-ink-12`). Retinting the
@@ -52,8 +62,33 @@ brand is then a change to the alias block in `css/tokens/colors.css` alone.
 node tools/validate-tokens.mjs
 ```
 
-The validator also lists tokens that are defined but unused. Those are not errors —
-the palette and the type scale are deliberately wider than this one page needs.
+Beyond the four rules it also checks that every `var()` resolves, that every
+stylesheet `<link>` points at a file that exists, and that **every class name built
+in `js/` has a rule behind it** — `gigs.js` writes markup, so a class renamed in CSS
+and not in the script would leave the live dates unstyled with every other check
+still passing.
+
+It also lists tokens that are defined but unused. Those are not errors — the palette
+and the type scale are deliberately wider than this one page needs.
+
+## Contrast
+
+The palette is checked against WCAG 2.2 AA, and two places needed the numbers rather
+than the eye:
+
+- **The sky band.** White type and the off-white glyphs sit at 2.59:1 and 2.55:1 on
+  bare sky, which fails. `--overlay-photo-scrim` darkens the band under them to
+  4.75:1 and 4.63:1. Its first stop is fully transparent and stays that way for
+  `--backdrop-fade`, which is load-bearing: darkening the top edge would put the
+  seam with the iOS status-bar strip straight back. The ramp coincides with the mask
+  on `#backdrop`, so on a phone the band darkens at the rate the photograph emerges.
+- **The focus ring is two rings.** Magnolia carries cream, mint, ink and black, but
+  it sits at almost exactly the sky's luminance and would vanish on the follow icons.
+  The cream halo covers precisely the surfaces magnolia cannot. On every surface on
+  this page at least one of the two clears 3:1.
+
+`--text-on-dark-faint` is white at 50%, not 40%: at 40% it lands on 3.79:1 against
+`--kp-ink`, and the labels using it ("Ausverkauft", "Gespielt") are 10–11px.
 
 ## Pre-launch gate
 
@@ -82,14 +117,15 @@ Impressum and Datenschutz in the footer point at the band's existing pages on
 live on this domain. Note that the Datenschutz there predates this site and says
 nothing about the Bandsintown request — that needs a paragraph before launch.
 
+**Nothing behind the gate runs.** Both `js/gigs.js` and `js/app.js` wait for the
+`kp:unlock` event: no visitor IP reaches Bandsintown, and the player's duration probe
+does not fetch track metadata, before someone is actually through. `app.js` used to
+run regardless, which made this sentence untrue for the audio request.
+
 **To remove the gate before launch:** delete `js/gate.js`, its `<script>` tag, the
 `data-locked` attribute on `<html>`, the `robots` meta tag, the `#gate` block in
-`index.html`, the gate rules in `css/components.css`, and the `data-locked` check at
-the bottom of `js/gigs.js`.
-
-While the gate is up, nothing behind it runs — the Bandsintown request in particular
-waits for the `kp:unlock` event, so no visitor IP reaches a US service before someone
-is actually through.
+`index.html`, the gate rules in `css/components.css`, and the `data-locked` checks at
+the bottom of `js/gigs.js` and `js/app.js`.
 
 ## The two backdrop fassungen (pre-launch A/B)
 
@@ -139,10 +175,20 @@ A track becomes playable by pointing `data-src` at a file in `assets/audio/`:
 - **Never write a duration into the markup.** It is read from the file on load.
 - A track with no `data-src`, or whose file 404s, shows "bald", is not clickable, and
   is skipped by prev/next. If no track has a file, the transport disables itself.
-- The rail seeks: click it, or focus it and use the arrow keys.
+- The rail seeks: click it, or focus it and use the arrow keys, `Home` or `End`.
 
 Adding a song is therefore two steps: drop the file in `assets/audio/`, add
 `data-src` to its row. Nothing else needs touching.
+
+## The newsletter form is not wired up
+
+**Deliberately, for now.** There is no newsletter tool behind it yet. `js/app.js`
+swallows the submit, hides the form and shows "Passt. Schau in dein Postfach." — the
+address is not sent anywhere and not stored anywhere.
+
+That confirmation is a promise the site cannot currently keep, and the consent
+checkbox asks for a processing that does not happen. **Connect it to a provider
+before launch, or disable the form until there is one.**
 
 ## Live dates (Bandsintown)
 
@@ -164,6 +210,10 @@ newest first) · API unreachable · loading. "Show anfragen" is offered in all o
 Fetches are cached in `sessionStorage` for 30 minutes, so moving around the site does
 not re-hit the API.
 
+Everything from the API reaches the DOM through `textContent`, never `innerHTML`. The
+one exception is a row's `href`, which is checked for an `http(s)` scheme before it is
+assigned — an offer URL is the only value from outside that reaches a live sink.
+
 To check the API by hand:
 ```
 curl "https://rest.bandsintown.com/artists/id_15633413/events?app_id=<APP_ID>&date=upcoming"
@@ -174,9 +224,15 @@ their IP reaches a US service. That belongs in `datenschutz` before this goes li
 
 ## The backdrop photograph
 
-`#backdrop` is a real `<img>`, so `srcset` does the work: a phone fetches 243KB or 458KB
-where it used to fetch the 1MB master. 2304px is the master's width and the largest that
-exists, so retina desktop is slightly short — as it was before.
+`#backdrop` is a real `<img>`, so `srcset` does the work: a phone fetches 241KB or
+450KB, and the widest copy any screen can ask for is 916KB.
+
+**The master is never served.** `assets/img/magnolia.jpg` is 2304×3456 at 3.4MB —
+roughly five times less compressed per pixel than its own derivatives — and it used to
+sit in the `srcset` as the 2304w entry, which is what desktop and retina fetched.
+Every entry is now derived from it by `tools/make-variants.mjs` at one quality,
+`magnolia-2304.jpg` included. The master stays as the source and is never rewritten:
+re-encoding it in place would compound generation loss on every run.
 
 `sizes` describes the **rendered** width, not the element width. `object-fit: cover` blows
 the picture up past the viewport on a narrow screen — 556px of image across a 390px
@@ -189,18 +245,30 @@ After changing the master, rebuild the copies and commit them; the site has no b
 node tools/make-variants.mjs
 ```
 
+Measured after a rebuild: the photograph's **top** row is `#5eaacc`, exactly
+`--kp-sky`, so that seam is closed. Its **bottom** row is around `#6f5553` — the fade
+into the sky colour still has to be built into the picture. Re-encoding does not move
+either edge.
+
 ## Paths
 Font `src` URLs in `css/tokens/fonts.css` are relative to **that file**, so they read
 `../../assets/fonts/…` — two levels up out of `css/tokens/`. Moving the tokens folder
-means fixing those two lines.
+means fixing those two lines. The mask URLs in `components.css` are relative to that
+file instead, one level up: `../assets/…`.
 
 ## Notes
-- **Fully offline.** Nothing loads from a CDN: both webfonts and all four platform
-  glyphs are in `assets/`.
+- **Fonts are woff2.** Same outlines, same variable axis, 172KB down to 79KB. The
+  `.ttf` files are kept as the source; only the woff2 is served. Every browser that
+  can run this page supports woff2, so there is no second format to fall back to.
 - **Platform glyphs** are the band's own SVGs in `assets/icons/`, drawn pre-filled in
   off-white — they belong on the sky band and the black footer, not on cream. Both
   rows link to the same four destinations; changing one means changing the other.
   Tidal was dropped — the glyph is recoverable from git history if it returns.
+- **Both brand marks are painted as CSS masks**, in `--text-on-dark`. Neither SVG
+  carries a fill of its own, so rendering either as a plain `<img>` gives
+  black-on-black in the footer. A mask clips the element, so both have to be empty
+  elements rather than `<img>` tags — an `<img>` would paint its own black paths over
+  the masked fill.
 - **The standing photograph** is a `position: fixed` `<img>` (`#backdrop`) behind the
   content, not `background-attachment: fixed` — iOS ignores that outright. An element
   rather than a CSS background, and `object-fit: cover` does the job `background-size:
@@ -217,9 +285,13 @@ means fixing those two lines.
   it the page paints there and the photograph runs to the edge. The `env(safe-area-inset-*)`
   padding in `css/components.css` is what keeps content clear of the hardware in exchange;
   the bands stay full-bleed on purpose.
+- **`theme-color` is set to the sky.** It tints the browser's own chrome above the
+  page, which is the one standard mechanism that was never tried in the round of
+  measurements below. It does not address the in-page strips — that is what
+  `viewport-fit=cover` is for — and it has not been checked on a device yet.
 - **The strip behind the iOS bottom toolbar, and the status-bar band at the top,** stay
   sky-coloured, and the join is hidden in the photograph instead: it is authored to end in
-  `#5daacd`. Its top row already does, to within one value of green; the bottom is where a
+  `#5daacd`. Its top row already does — measured, exactly `#5eaacc`; the bottom is where a
   fade has to be built into the picture. **This is settled — it cannot be solved in CSS.**
   Three requirements, and no two leave room for the third:
   1. to reach those bands, the picture must be the **scrolling element's** background;
@@ -239,10 +311,19 @@ means fixing those two lines.
   document itself the background. It costs the standing picture and a great deal of
   magnification, which is exactly why both fassungen are on the site to be compared.
 
-- **The logo SVG carries no fill of its own**, so it is painted as a CSS mask in
-  `--kp-cream`. Rendering it as a plain `<img>` gives black-on-black in the footer.
-- **Placeholders to replace:** press download links (`#`), the footer Kontakt link (`#`),
-  and the press contact address.
 - **Unreleased songs** sit in the tracklist without a `data-src`, which shows them as
   "bald" and makes them unclickable. Giving one a file and a `data-src` is all it
   takes to release it.
+
+## Before launch
+
+- [ ] Newsletter form connected to a provider, or disabled — see above
+- [ ] The four files in `assets/downloads/` added (the rows 404 until then)
+- [ ] Press contact address confirmed; the footer Kontakt link currently points at it
+- [ ] Bandsintown named in the Datenschutz on `keinepanikmusik.de`
+- [ ] Gate removed, and with it `robots: noindex` and both backdrop fassungen
+- [ ] `og:` / `twitter:` tags and a favicon — both need the final domain, which is
+      why they are not in `<head>` yet
+- [ ] The bottom edge of the photograph faded to the sky colour
+- [ ] Both fassungen compared on a real iPhone, and the scrim on the sky band looked
+      at there — it is the one change in this pass that alters the picture

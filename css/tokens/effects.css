@@ -4,27 +4,54 @@
 --radius-pill:999px;
 
 /* Borders are 1px hairline rules, ink on light / white on dark. */
---border-hairline:1px solid var(--line-ink);
---border-soft:1px solid var(--line-hairline);
---border-on-dark:1px solid var(--line-on-dark);
---border-on-dark-soft:1px solid var(--line-on-dark-soft);
+--border-width:1px;
+--border-none:var(--border-width) solid transparent;  /* holds a control's size when it has no rule */
+--border-hairline:var(--border-width) solid var(--line-ink);
+--border-soft:var(--border-width) solid var(--line-hairline);
+--border-on-dark:var(--border-width) solid var(--line-on-dark);
+--border-on-dark-soft:var(--border-width) solid var(--line-on-dark-soft);
 
 /* A mask stencil, not a brand colour: in a mask, opaque means "keep this pixel". */
 --mask-keep:#000;
 
+/* Focus ring geometry — see --focus-ring / --focus-ring-halo in colors.css. */
+--focus-ring-width:2px;
+
+/* --- interaction opacity ---
+   One value for "this is being hovered", one for "this is not available". Four
+   different numbers used to be spread across the components; a fifth component
+   would have invented a fifth. If a hover needs a tint rather than a dimming,
+   use --state-hover-* from colors.css instead. */
+--opacity-full:1;
+--opacity-hover:.72;
+--opacity-disabled:.35;
+
 /* No drop shadows anywhere in the brand. Elevation is done with flat panels. */
 --shadow-none:none;
---overlay-photo-scrim:linear-gradient(180deg,rgba(35,31,32,0) 0%,rgba(35,31,32,.35) 100%); /* @kind other */
+
+/* Darkens the photograph under the sky band so white type and the off-white
+   platform glyphs are legible on it (they sit at 2.59:1 and 2.55:1 on bare sky;
+   at .35 they reach 4.75:1 and 4.63:1).
+   The first stop is fully transparent and stays that way for --backdrop-fade,
+   which is load-bearing: iOS paints the status-bar strip from the root sky colour
+   and the photograph's top row is authored to match it exactly. Darkening the top
+   edge would put that seam straight back. The ramp coincides with the mask on
+   #backdrop, so on a phone the band darkens at exactly the rate the photograph
+   emerges from the blue. */
+--overlay-photo-scrim:linear-gradient(
+  180deg,
+  rgba(35,31,32,0) 0,
+  rgba(35,31,32,.35) var(--backdrop-fade),
+  rgba(35,31,32,.35) 100%);
 
 /* Motion: slow, plain fades. Nothing bounces. */
---ease-brand:cubic-bezier(.4,0,.2,1); /* @kind other */
---ease-linear:linear; /* @kind other */
---dur-fast:120ms; /* @kind other */
---dur-base:220ms; /* @kind other */
---dur-slow:600ms; /* @kind other */
---dur-tick:1000ms; /* @kind other */ /* one second of playback on the progress rail */
---parallax-speed:0.1; /* @kind other */ /* how fast the photograph drifts against the scroll, on phones */
---dur-rotate:24s; /* @kind other */ /* Heartakreis mark, one full rotation */
+--ease-brand:cubic-bezier(.4,0,.2,1);
+--ease-linear:linear;
+--dur-fast:120ms;
+--dur-base:220ms;
+--dur-slow:600ms;
+--dur-tick:1000ms;   /* one second of playback on the progress rail */
+--dur-rotate:24s;    /* Heartakreis mark, one full rotation */
 
 /* The standing photograph is a position:fixed layer, not background-attachment:fixed
    — iOS Safari ignores that property. See #backdrop in css/base.css. */

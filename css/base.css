@@ -1,13 +1,15 @@
 /* Base layer — the document itself. Element defaults only, no components. */
 
-*{box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box}
 
 /* The canvas fill — and on iOS, the strip behind the bottom toolbar.
    That strip is NOT page content: measured on a real iPhone, the backdrop already
    overshoots the visible area by 40px and still does not paint there, because iOS
    fills the region from this colour instead. So the bottom edge is fixed here, not
-   by sizing #backdrop. js/underpage.js keeps it matched to whatever band is at the
-   bottom of the screen; this value is what shows without JS. */
+   by sizing #backdrop.
+   The photograph's own bottom edge does not match this yet — measured, it ends
+   around #6f5553 against a sky of #5eaacc. That fade still has to be built into
+   the picture; see the note on #backdrop below. */
 html{background:var(--surface-sky)}
 
 /* The photograph is stacked at z-index:0 and the page above it, rather than the
@@ -116,19 +118,31 @@ body{
 a{color:var(--text-accent)}
 a:hover{color:var(--text-body)}
 
-h2,h3{
+/* h1 names the page and is the only one of its kind; the wordmark carries it
+   visually, so it is here for the document outline rather than for the eye. */
+h1,h2,h3{
   margin:0;
   font-family:var(--font-hand);
   font-weight:var(--weight-regular);
-  font-size:var(--type-hand-section);
   line-height:var(--leading-hand);
   letter-spacing:var(--track-hand);
   text-align:center;
 }
+/* h2 opens a band, h3 opens a block inside one. They used to be set at the same
+   size, which left the two levels indistinguishable and the outline decorative. */
+h2{font-size:var(--type-hand-section)}
+h3{font-size:var(--type-hand-block)}
 
 [hidden]{display:none !important}
 
-:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+/* Two rings, not one — see --focus-ring-halo in tokens/colors.css. outline-offset
+   opens a gap the width of the ring; the box-shadow fills exactly that gap, so the
+   two read as concentric rings rather than a ring floating off the element. */
+:focus-visible{
+  outline:var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset:var(--focus-ring-width);
+  box-shadow:0 0 0 var(--focus-ring-width) var(--focus-ring-halo);
+}
 
 @keyframes kpspin{to{transform:rotate(360deg)}}
 

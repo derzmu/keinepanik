@@ -1,0 +1,23 @@
+# The site is served straight from the repository — everything it needs is checked
+# in on purpose. This list is only for what a machine leaves behind.
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Node — the site has no dependencies; tools/ borrows playwright from the machine
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Scratch
+*.log
+*.tmp
+/tmp/

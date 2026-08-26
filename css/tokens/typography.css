@@ -7,7 +7,8 @@
    Every section heading is one size, and that size shrinks on narrow viewports
    without ever breaking rank: 32px on a phone, 42px from ~700px up. */
 --type-hand-hero:clamp(40px,9vw,64px);   /* reserved for a page-opening hero */
---type-hand-section:clamp(32px,6vw,42px);
+--type-hand-section:clamp(32px,6vw,42px);  /* h2 — the bands of the page */
+--type-hand-block:clamp(26px,5vw,34px);    /* h3 — a block inside a band */
 --type-hand-md:34px;                     /* the player's "now playing" line */
 
 /* sizes — sans copy */
@@ -28,7 +29,7 @@
 
 /* tracking */
 --track-hand:0.02em;
---track-body:0; /* @kind other */
+--track-body:0;
 --track-caps:0.08em;
 
 /* weights — the sans is used at 400 and 700 only */

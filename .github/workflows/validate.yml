@@ -1,0 +1,19 @@
+# The design-system rules in README.md are only rules if something enforces them.
+# "Run it before you commit" was the enforcement until this file existed.
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tokens:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # No install step: the validator reads files and has no dependencies.
+      - name: Design-system guard
+        run: node tools/validate-tokens.mjs

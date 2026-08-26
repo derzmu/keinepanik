@@ -7,25 +7,41 @@
      the root background colour — that was the strip along the top. -->
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>keine Panik.</title>
+<meta name="description" content="keine Panik. — deutschsprachiger Indie-Pop aus Waging am See. Songs, Live-Termine und Downloads.">
+<!-- Tints the browser chrome in the sky colour, so the band iOS paints above the
+     page matches the photograph's top row the same way the root background does. -->
+<meta name="theme-color" content="#5eaacc">
 <!-- Not public yet. Remove this line together with the gate. -->
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="css/styles.css">
+<!-- Loaded as separate links rather than through @import in styles.css: @import is
+     serialised, so the browser had to fetch and parse one file before it learned
+     about the next. Seven stylesheets, seven round trips in the critical path.
+     As links they are fetched in parallel. The order below is the cascade order —
+     tokens define the vocabulary, base styles the document, components the page. -->
+<link rel="stylesheet" href="css/tokens/fonts.css">
+<link rel="stylesheet" href="css/tokens/colors.css">
+<link rel="stylesheet" href="css/tokens/typography.css">
+<link rel="stylesheet" href="css/tokens/spacing.css">
+<link rel="stylesheet" href="css/tokens/effects.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
 <!-- Both render-blocking on purpose: an unlocked session must not see the gate flash
      past, and the backdrop variant has to be decided before the first paint. -->
 <script src="js/variant.js"></script>
 <script src="js/gate.js"></script>
 </head>
 <body>
-<!-- srcset lets a phone fetch 243KB instead of the master's 1MB. sizes has to describe
-     the RENDERED width, not the element width: object-fit:cover blows the picture up past
-     the viewport on a narrow screen (556px of image across a 390px element), so a plain
-     100vw would fetch a file too small and it would look soft. Regenerate the variants
-     with tools/make-variants.mjs after changing the master. -->
+<!-- srcset lets a phone fetch 241KB instead of the 916KB full-width copy. sizes has to
+     describe the RENDERED width, not the element width: object-fit:cover blows the
+     picture up past the viewport on a narrow screen (556px of image across a 390px
+     element), so a plain 100vw would fetch a file too small and it would look soft.
+     Every entry here is derived from assets/img/magnolia.jpg by tools/make-variants.mjs.
+     The master itself is never served — it is 3.4MB at a quality no screen needs. -->
 <img id="backdrop"
-     src="assets/img/magnolia.jpg"
+     src="assets/img/magnolia-1200.jpg"
      srcset="assets/img/magnolia-1200.jpg 1200w,
              assets/img/magnolia-1800.jpg 1800w,
-             assets/img/magnolia.jpg 2304w"
+             assets/img/magnolia-2304.jpg 2304w"
      sizes="(max-width: 647px) 143vw, 100vw"
      alt="" aria-hidden="true" fetchpriority="high">
 
@@ -43,6 +59,10 @@
 </div>
 
 <main>
+
+<!-- The wordmark in the footer carries the band's name on screen; the document
+     still needs one h1, and this is it. -->
+<h1 class="visually-hidden">keine Panik.</h1>
 
 <section class="band band--sky">
 <h2>Folgen</h2>
@@ -65,7 +85,9 @@
 <div class="player__meta">
 <div>
 <div class="player__label caps">Jetzt läuft</div>
-<div class="player__now" id="now">Wecker</div>
+<!-- aria-live: the title changes under the reader's feet when a track ends and the
+     next one starts, and that change is the only announcement of what is playing. -->
+<div class="player__now" id="now" aria-live="polite">Wecker</div>
 </div>
 <div class="player__controls">
 <button class="ctl" id="prev" aria-label="Zurück">❙◀</button>
@@ -102,8 +124,10 @@
 </div>
 </section>
 
+<!-- Decorative: the band's name is already carried by the h1 and the footer
+     wordmark, so a third announcement of it would only be noise. -->
 <section class="band band--mark">
-<img class="mark" src="assets/heartakreis.svg" alt="keine Panik.">
+<span class="mark" aria-hidden="true"></span>
 </section>
 
 <section class="band band--dark">
@@ -133,14 +157,17 @@
 </div>
 </section>
 
+<!-- The files these point at live in assets/downloads/ — see the README there.
+     Drop a file in under the name below and the row goes live; nothing else to
+     change. Until then the link 404s: they are not wired up yet. -->
 <section class="band">
 <div class="panel">
-<h3 class="press__title">Presse</h3>
-<a class="dl" href="#" download><span class="l"><b>Fotos</b><span>JPG, druckfähig</span></span><span class="b caps">Laden</span></a>
-<a class="dl" href="#" download><span class="l"><b>Promotexte</b><span>Kurz- und Langversion, PDF</span></span><span class="b caps">Laden</span></a>
-<a class="dl" href="#" download><span class="l"><b>Rider</b><span>Technik und Backline, PDF</span></span><span class="b caps">Laden</span></a>
-<a class="dl" href="#" download><span class="l"><b>Alles als ZIP</b><span>Fotos, Texte, Rider</span></span><span class="b caps">ZIP</span></a>
-<div class="press__contact">Presseanfragen: Mathias · <a href="mailto:presse@keinepanik.band">presse@keinepanik.band</a></div>
+<h3 class="downloads__title">Downloads</h3>
+<a class="dl" href="assets/downloads/keine-panik-fotos.zip" download><span class="l"><b>Fotos</b><span>JPG, druckfähig</span></span><span class="b caps">Laden</span></a>
+<a class="dl" href="assets/downloads/keine-panik-promotexte.pdf" download><span class="l"><b>Promotexte</b><span>Kurz- und Langversion, PDF</span></span><span class="b caps">Laden</span></a>
+<a class="dl" href="assets/downloads/keine-panik-rider.pdf" download><span class="l"><b>Rider</b><span>Technik und Backline, PDF</span></span><span class="b caps">Laden</span></a>
+<a class="dl" href="assets/downloads/keine-panik-presskit.zip" download><span class="l"><b>Alles als ZIP</b><span>Fotos, Texte, Rider</span></span><span class="b caps">ZIP</span></a>
+<div class="downloads__contact">Presseanfragen: Mathias · <a href="mailto:presse@keinepanik.band">presse@keinepanik.band</a></div>
 </div>
 </section>
 
@@ -148,6 +175,9 @@
 <div class="news">
 <h3>Nichts verpassen</h3>
 <p class="news__lead">Neue Songs, neue Termine. Ein paar Mails im Jahr, nicht mehr.</p>
+<!-- Deliberately not wired to a provider yet: there is no newsletter tool behind
+     this. js/app.js shows the confirmation and nothing is sent or stored. Connect
+     it before launch, or the confirmation is a promise the site cannot keep. -->
 <form class="news__form" id="nl">
 <div class="news__row">
 <label><span class="news__label caps">E-Mail</span><input class="field" type="email" required placeholder="du@beispiel.de"></label>
@@ -159,6 +189,10 @@
 </div>
 </section>
 
+</main>
+
+<!-- Outside main on purpose: a site footer is a top-level landmark, and nesting it
+     inside main hides it from landmark navigation. -->
 <footer class="site-footer">
 <span class="wordmark" role="img" aria-label="keine Panik."></span>
 <div class="follow follow--sm">
@@ -170,7 +204,7 @@
 <nav class="footer-nav">
 <a class="caps" href="https://keinepanikmusik.de/Impressum/" target="_blank" rel="noopener">Impressum</a>
 <a class="caps" href="https://keinepanikmusik.de/datenschutz/" target="_blank" rel="noopener">Datenschutz</a>
-<a class="caps" href="#">Kontakt</a>
+<a class="caps" href="mailto:presse@keinepanik.band">Kontakt</a>
 </nav>
 <!-- Pre-launch only: the two backdrop fassungen, one tap apart. Goes with the gate. -->
 <nav class="variant" aria-label="Testfassung">
@@ -180,8 +214,7 @@
 </nav>
 </footer>
 
-</main>
-<script src="js/app.js"></script>
+<script src="js/app.js" type="module"></script>
 <script src="js/gigs.js" type="module"></script>
 </body>
 </html>

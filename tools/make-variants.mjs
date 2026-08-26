@@ -1,27 +1,54 @@
 #!/usr/bin/env node
-/* Rebuilds the smaller copies of the backdrop photograph. Run: node tools/make-variants.mjs
+/* Rebuilds the served copies of the backdrop photograph. Run: node tools/make-variants.mjs
  *
- * #backdrop is a real <img>, so the browser picks a file from srcset by itself: a phone
- * fetches a few hundred KB instead of the full master. Run this whenever the master
- * changes — the variants are checked in, since the site has no build step.
+ * #backdrop is a real <img>, so the browser picks a file from srcset by itself.
+ *
+ * The master is the SOURCE and is never served and never rewritten: re-encoding it in
+ * place would compound generation loss with every run. Every entry in the srcset —
+ * 2304 included — is derived from it here at one quality, so the largest file the page
+ * can fetch is a fraction of the master rather than the master itself.
  *
  * 2304px is the master's width and the largest there is, so it stays the top of the set.
  * Retina desktop would want more; it did before this too.
  *
- * Playwright is used only because it is already on this machine and can decode and
- * re-encode a JPEG. Any image tool would do — this is not a dependency of the site.
+ * Playwright is used only because it can decode and re-encode a JPEG without pulling a
+ * dependency into the site. Any image tool would do — this is not a dependency of the
+ * site, and the site has no build step: the variants are checked in.
  */
-import playwright from '/opt/node22/lib/node_modules/playwright/index.js';
-const { chromium } = playwright;
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+/* Resolve playwright wherever it happens to live: a local install, a global one, or
+   the toolbox path it sat on when this script was written. Hard-coding one machine's
+   path made this unrunnable everywhere else. */
+async function loadChromium() {
+  const candidates = [
+    'playwright',
+    '/opt/node22/lib/node_modules/playwright/index.js',
+    '/usr/lib/node_modules/playwright/index.js',
+  ];
+  for (const spec of candidates) {
+    try {
+      /* playwright is CommonJS: depending on how Node reads it, chromium is either a
+         named export or only reachable through the default one. Accept both. */
+      const mod = await import(spec);
+      const chromium = mod.chromium ?? mod.default?.chromium;
+      if (chromium) return chromium;
+    } catch { /* try the next one */ }
+  }
+  throw new Error(
+    'playwright not found. Install it (npm i -g playwright) or re-encode the variants\n' +
+    'with any image tool at the sizes and quality named at the top of this file.'
+  );
+}
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const master = path.join(root, 'assets/img/magnolia.jpg');
-const WIDTHS = [1200, 1800];
+const WIDTHS = [1200, 1800, 2304];
 const QUALITY = 0.82;
 
+const chromium = await loadChromium();
 const src = 'data:image/jpeg;base64,' + fs.readFileSync(master).toString('base64');
 const browser = await chromium.launch();
 const page = await (await browser.newContext()).newPage();
@@ -46,7 +73,7 @@ const made = await page.evaluate(async ([data, widths, q]) => {
 }, [src, WIDTHS, QUALITY]);
 await browser.close();
 
-console.log(`master ${made.master[0]}x${made.master[1]}  ${(fs.statSync(master).size / 1024).toFixed(0)} KB`);
+console.log(`master ${made.master[0]}x${made.master[1]}  ${(fs.statSync(master).size / 1024).toFixed(0)} KB  (source only, not served)`);
 for (const v of made.out) {
   const file = path.join(root, `assets/img/magnolia-${v.w}.jpg`);
   fs.writeFileSync(file, Buffer.from(v.data.split(',')[1], 'base64'));

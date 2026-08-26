@@ -17,15 +17,13 @@
 --kp-ink-05:rgba(35,28,23,.05);
 --kp-white:#ffffff;
 --kp-white-70:rgba(255,255,255,.7);
+--kp-white-50:rgba(255,255,255,.5);
 --kp-white-40:rgba(255,255,255,.4);
 --kp-white-12:rgba(255,255,255,.12);
 --kp-white-05:rgba(255,255,255,.05);
 --kp-magnolia:#c25a78;     /* petal pink, pulled from the photo */
 --kp-magnolia-deep:#a64b74;
 --kp-blossom:#f2c7ce;
-/* Sampled from the photograph exactly where it slides under the iOS toolbar
-   (the 714-754px band on a phone). Not a brand colour — a colour match. */
---kp-underpage:#6c5252;
 
 /* --- semantic aliases ---
    Components read from here, never from the palette above. Retinting the brand
@@ -37,10 +35,6 @@
 --surface-dark:var(--kp-ink);
 --surface-footer:var(--kp-black);
 --surface-card:var(--kp-white);
-/* The canvas fill. iOS paints the strip behind its toolbar from this and page
-   content cannot reach there, so it stands in for whatever sits at the bottom
-   edge — js/underpage.js keeps it in step; this is the value without JS. */
---surface-underpage:var(--kp-underpage);
 
 /* interaction tints — flat washes, no shadows (see effects.css) */
 --state-hover-ink:var(--kp-ink-05);
@@ -51,7 +45,9 @@
 --text-muted:var(--kp-ink-70);
 --text-on-dark:var(--kp-cream);
 --text-on-dark-muted:var(--kp-white-70);
---text-on-dark-faint:var(--kp-white-40);
+/* 50%, not 40%: at 40% this lands on 3.79:1 against --kp-ink and the labels that
+   use it ("Ausverkauft", "Gespielt") are 10-11px. 50% reaches 5.16:1. */
+--text-on-dark-faint:var(--kp-white-50);
 --text-on-sky:var(--kp-white);
 --text-accent:var(--kp-magnolia-deep);
 
@@ -61,5 +57,12 @@
 --line-on-dark-soft:var(--kp-white-12);
 
 --control-accent:var(--kp-ink);   /* native checkbox / radio tick */
+
+/* The focus ring is two rings, not one. Magnolia alone carries cream, mint, ink
+   and black, but it sits at almost exactly the sky's luminance (1.61:1 there, and
+   worse once the sky band is scrimmed), so on the follow icons it would vanish.
+   The cream halo covers precisely the surfaces magnolia cannot: on every surface
+   on this page at least one of the two rings clears 3:1. */
 --focus-ring:var(--kp-magnolia);
+--focus-ring-halo:var(--kp-cream);
 }

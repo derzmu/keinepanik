@@ -2,8 +2,19 @@
 
 /* ---------- bands: the full-bleed horizontal stripes the page is made of ---------- */
 .band{padding:var(--band-pad-y) var(--band-pad-x)}
-.band--sky{text-align:center}
+.band--sky{text-align:center;position:relative}
 .band--sky h2{color:var(--text-on-sky)}
+/* White type and off-white glyphs on bare sky sit at 2.59:1 and 2.55:1. The scrim
+   under them takes both past 4.6:1 without touching the top edge, where the seam
+   with the iOS status-bar strip lives — see --overlay-photo-scrim in tokens/effects.css. */
+.band--sky::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:var(--overlay-photo-scrim);
+  pointer-events:none;
+}
+.band--sky > *{position:relative}
 /* The follow band and the player band read as one unit over the photograph,
    so they close the gap between them rather than each carrying full rhythm. */
 .band--sky{padding-bottom:var(--space-5)}
@@ -47,9 +58,23 @@
 }
 .num{font-variant-numeric:tabular-nums}
 
+/* Carried by the accessibility tree, not by the eye. Used for the h1: the wordmark
+   is the band's name on screen, but a page needs one in its outline too. */
+.visually-hidden{
+  position:absolute;
+  width:var(--size-hairline);
+  height:var(--size-hairline);
+  margin:calc(var(--size-hairline) * -1);
+  padding:0;
+  border:0;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+
 .follow{display:flex;justify-content:center;gap:var(--space-4);margin-top:var(--space-5)}
-.follow a{padding:var(--space-2);opacity:1;transition:opacity var(--dur-base) var(--ease-brand)}
-.follow a:hover{opacity:.72}
+.follow a{padding:var(--space-2);opacity:var(--opacity-full);transition:opacity var(--dur-base) var(--ease-brand)}
+.follow a:hover{opacity:var(--opacity-hover)}
 .follow--sm{gap:var(--space-3);margin-top:var(--space-6)}
 .glyph{display:block;width:var(--size-icon);height:var(--size-icon)}
 .glyph-sm{width:var(--size-icon-sm);height:var(--size-icon-sm)}
@@ -99,7 +124,7 @@
   height:var(--size-control);
   display:grid;
   place-items:center;
-  border:1px solid transparent;
+  border:var(--border-none);
   border-radius:var(--radius-none);
   background:none;
   color:var(--text-body);
@@ -108,7 +133,7 @@
   cursor:pointer;
   transition:opacity var(--dur-base) var(--ease-brand);
 }
-.ctl:hover{opacity:.55}
+.ctl:hover{opacity:var(--opacity-hover)}
 .ctl--main{
   width:var(--size-control-lg);
   height:var(--size-control-lg);
@@ -117,7 +142,7 @@
   color:var(--text-on-dark);
   font-size:var(--type-body-sm);
 }
-.ctl--main:hover{opacity:1;background:var(--text-muted)}
+.ctl--main:hover{opacity:var(--opacity-full);background:var(--text-muted)}
 
 .trk{
   width:100%;
@@ -144,8 +169,8 @@
 /* A song with no file yet: listed, legible, plainly not clickable. */
 .trk--soon{cursor:default;color:var(--text-muted)}
 .trk--soon:hover{background:none}
-.ctl:disabled{opacity:.35;cursor:default}
-.ctl:disabled:hover{opacity:.35}
+.ctl:disabled{opacity:var(--opacity-disabled);cursor:default}
+.ctl:disabled:hover{opacity:var(--opacity-disabled)}
 
 /* ---------- live dates ---------- */
 .gigs{
@@ -268,17 +293,28 @@
 .prose p{margin:0}
 .prose p + p{margin-top:var(--space-4)}
 
-/* ---------- rotating mark ---------- */
+/* ---------- rotating mark ----------
+   Painted as a mask in --text-on-dark, the same way .wordmark is. It used to be
+   filter:brightness(0) invert(1), which produces pure #ffffff — so the two brand
+   marks on the page were two different whites, and the filter route bypassed the
+   colour system entirely. heartakreis.svg carries no fill of its own, so it works
+   as a stencil unchanged.
+   A mask clips the element, so this has to be an empty element rather than an
+   <img>: an <img> would still paint its own black paths over the masked fill.
+   Hence the <span> in the markup, exactly as .wordmark does it. */
 .mark{
+  display:block;
   width:var(--size-mark);
   aspect-ratio:1;
   animation:kpspin var(--dur-rotate) var(--ease-linear) infinite;
-  filter:brightness(0) invert(1);
+  background:var(--text-on-dark);
+  -webkit-mask:url(../assets/heartakreis.svg) no-repeat center/contain;
+  mask:url(../assets/heartakreis.svg) no-repeat center/contain;
 }
 
-/* ---------- press downloads ---------- */
-.press__title{padding:0 var(--space-5) var(--space-4)}
-.press__contact{padding:var(--space-4) var(--space-5) 0;font-size:var(--type-caption);color:var(--text-muted)}
+/* ---------- downloads ---------- */
+.downloads__title{padding:0 var(--space-5) var(--space-4)}
+.downloads__contact{padding:var(--space-4) var(--space-5) 0;font-size:var(--type-caption);color:var(--text-muted)}
 .dl{
   display:flex;
   align-items:center;
@@ -347,7 +383,7 @@
 }
 .submit{
   padding:var(--space-4) var(--space-5);
-  border:1px solid transparent;
+  border:var(--border-none);
   border-radius:var(--radius-none);
   background:var(--surface-dark);
   color:var(--text-on-dark);
@@ -359,7 +395,7 @@
   cursor:pointer;
   transition:opacity var(--dur-base) var(--ease-brand);
 }
-.submit:hover{opacity:.82}
+.submit:hover{opacity:var(--opacity-hover)}
 
 /* ---------- pre-launch gate ----------
    Presentation only. The gate hides the page, it does not protect it — see the
@@ -374,7 +410,10 @@
   overflow-y:auto;
 }
 html:not([data-locked]) .gate{display:none}
-html[data-locked] main{display:none}
+/* The footer is a sibling of main, not a child of it, so it has to be named here
+   too — otherwise it stays on screen underneath the gate. */
+html[data-locked] main,
+html[data-locked] .site-footer{display:none}
 .gate__panel{
   width:100%;
   max-width:var(--content-max);
@@ -403,7 +442,7 @@ html[data-locked] main{display:none}
 .wordmark{
   display:block;
   width:var(--size-wordmark);
-  max-width:80%;
+  max-width:var(--wordmark-max);
   aspect-ratio:var(--ratio-wordmark);
   margin:0 auto;
   background:var(--text-on-dark);
@@ -437,8 +476,10 @@ html[data-locked] main{display:none}
 }
 .variant__opt[aria-current]{color:var(--text-on-dark);border:var(--border-on-dark)}
 
-/* The page sits above the photograph — see the #backdrop note in base.css. */
+/* The page sits above the photograph — see the #backdrop note in base.css.
+   The footer is listed separately because it is a sibling of main, not inside it. */
 main,
+.site-footer,
 .gate{position:relative;z-index:1}
 
 /* ---------- safe areas ----------

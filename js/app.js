@@ -4,8 +4,12 @@
  * element. Nothing here invents a running time. A track is playable when it
  * carries data-src and the file behind it actually loads; anything else is
  * announced as "bald" rather than pretending to play.
+ *
+ * Nothing in here runs behind the pre-launch gate — see the bottom of the file.
+ * The duration probe fetches metadata from every track file, which is a request
+ * on a page the visitor has not been let into yet.
  */
-(() => {
+function initPlayer() {
   const audio = document.getElementById('audio');
   const rows = [...document.querySelectorAll('.trk')];
   if (!audio || !rows.length) return;
@@ -130,11 +134,18 @@
     const box = seek.getBoundingClientRect();
     seekTo((e.clientX - box.left) / box.width);
   });
+  /* Home and End are part of the ARIA slider pattern, not an extra: a keyboard
+     user expects them to reach the ends of the range. */
   seek.addEventListener('keydown', e => {
+    if (!Number.isFinite(audio.duration)) return;
     const nudge = { ArrowLeft: -5, ArrowRight: 5, ArrowDown: -5, ArrowUp: 5 }[e.key];
-    if (nudge == null || !Number.isFinite(audio.duration)) return;
+    let target = null;
+    if (nudge != null) target = audio.currentTime + nudge;
+    else if (e.key === 'Home') target = 0;
+    else if (e.key === 'End') target = audio.duration;
+    if (target == null) return;
     e.preventDefault();
-    audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + nudge));
+    audio.currentTime = Math.max(0, Math.min(audio.duration, target));
     paintTime();
   });
 
@@ -162,10 +173,14 @@
 
   paint();
   paintTime();
-})();
+}
 
-/* ---------- newsletter ---------- */
-(() => {
+/* ---------- newsletter ----------
+ * There is no newsletter tool behind this yet: the submit is swallowed, the
+ * confirmation is shown, and the address goes nowhere. That is deliberate and
+ * temporary — see the note in index.html. Wire it to a provider before launch.
+ */
+function initNewsletter() {
   const nl = document.getElementById('nl');
   if (!nl) return;
   nl.addEventListener('submit', e => {
@@ -173,4 +188,19 @@
     nl.hidden = true;
     document.getElementById('nl-ok').hidden = false;
   });
-})();
+}
+
+/* Behind the pre-launch gate nothing here runs — the duration probe would fetch
+   track metadata for a visitor who has not been let in yet. Same handshake as
+   js/gigs.js: gate.js clears data-locked synchronously for a remembered session,
+   and fires kp:unlock when someone gets through. */
+function start() {
+  initPlayer();
+  initNewsletter();
+}
+
+if (document.documentElement.hasAttribute('data-locked')) {
+  document.addEventListener('kp:unlock', start, { once: true });
+} else {
+  start();
+}

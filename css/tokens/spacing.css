@@ -31,10 +31,12 @@
 --size-trk-num:14px;            /* tracklist index column */
 --size-gig-day:46px;            /* gig row date column */
 --size-progress:3px;            /* player progress rail */
+--size-hairline:1px;            /* the 1px sliver .visually-hidden collapses to */
 --size-cover:clamp(96px,26vw,132px);
 --size-mark:clamp(120px,34vw,220px);
 --size-wordmark:clamp(130px,40vw,200px);
 --size-wordmark-sm:clamp(112px,32vw,160px);  /* the footer sits quieter than the gate */
+--wordmark-max:80%;             /* never edge-to-edge, however narrow the screen */
 --size-action-min:72px;         /* press actions all match the widest label, "Laden" */
 --backdrop-drop:120px;          /* how far the photograph hangs below the fold on a phone */
 --backdrop-fade:120px;          /* over how much of its top edge it dissolves into the sky */
