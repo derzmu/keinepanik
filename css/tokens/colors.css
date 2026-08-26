@@ -9,7 +9,6 @@
 --kp-mint:#eff4f1;         /* the pale panel used for the player card */
 --kp-mint-90:rgba(239,244,241,.9);  /* the same panel at 90%, so the photo reads through */
 --kp-ink:#231c17;          /* brand dark — body copy and the live band */
---kp-black:#000000;        /* footer only */
 --kp-ink-70:rgba(35,28,23,.7);
 --kp-ink-40:rgba(35,28,23,.4);
 --kp-ink-12:rgba(35,28,23,.12);
@@ -33,7 +32,9 @@
 --surface-panel:var(--kp-mint);
 --surface-panel-90:var(--kp-mint-90);
 --surface-dark:var(--kp-ink);
---surface-footer:var(--kp-black);
+--surface-footer:var(--kp-ink);   /* same dark as the live band — two
+                                     near-blacks one band apart read as a
+                                     mistake, not as a decision */
 --surface-card:var(--kp-white);
 
 /* interaction tints — flat washes, no shadows (see effects.css) */

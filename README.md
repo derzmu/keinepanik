@@ -125,6 +125,12 @@ and the type scale are deliberately wider than this one page needs.
 The palette is checked against WCAG 2.2 AA, and two places needed the numbers rather
 than the eye:
 
+- **The dark surfaces are one colour.** The footer used to be pure `#000000` while
+  the live band was `--kp-ink` `#231c17`. Two near-blacks a band apart read as a
+  mistake rather than a decision, so `--surface-footer` now points at `--kp-ink` too
+  and `--kp-black` is gone from the palette. Everything in the footer keeps a wide
+  margin on the slightly lighter ground: wordmark and glyphs 16.39:1, the nav links
+  8.78:1, the focus ring 4.02:1.
 - **The focus ring is two rings.** Magnolia carries cream, mint, ink and black, but
   it sits at almost exactly the sky's luminance and would vanish on the follow icons.
   The cream halo covers precisely the surfaces magnolia cannot. On every surface on
