@@ -20,7 +20,8 @@ keine-panik-website/
 ├─ tools/
 │  ├─ validate-tokens.mjs  guards the rules below — CI runs it on every push
 │  ├─ fetch-gigs.mjs       pulls the live dates; CI runs it hourly
-│  └─ make-variants.mjs    rebuilds the served copies of the backdrop photograph
+│  ├─ make-variants.mjs    rebuilds the served copies of the backdrop photograph
+│  └─ make-og.mjs          rebuilds the share image behind the og: tags
 └─ assets/
    ├─ logo-offwhite.svg  brand logo (drawn as a CSS mask — see note)
    ├─ heartakreis.svg    the rotating hand-drawn mark (also a mask)
@@ -30,8 +31,10 @@ keine-panik-website/
    ├─ gigs.json          the live dates, written by CI — never edited by hand
    ├─ audio/             song files — see the README in there
    ├─ downloads/         press files — see the README in there
-   └─ img/magnolia.jpg   the one photograph the whole page runs on
-                         (the master; the served copies sit beside it)
+   ├─ img/magnolia.jpg   the one photograph the whole page runs on
+   │                     (the master; the served copies sit beside it)
+   └─ img/og.jpg         the share image — built from the same photograph,
+                         never loaded by the page itself
 ```
 
 The seven stylesheets are linked one by one from `<head>`, in cascade order. They
@@ -163,6 +166,27 @@ page: HTTP Basic Auth (`.htaccess` + `.htpasswd`), or the host's own password se
 on Netlify, Vercel or Cloudflare Pages. A password in a static file is served to
 anyone who asks for the file, so it never protected anything. GitHub Pages, where this
 is hosted, offers none of that — private Pages needs Enterprise.
+
+## The share image
+
+`assets/img/og.jpg` is what WhatsApp, Instagram, Signal, Facebook and Discord show
+when someone pastes the link. Nothing on the page ever loads it — only the crawlers
+behind those previews do, and they find it through the `og:image` tag in `<head>`.
+
+Three things about it are not free choices:
+
+- **1200×630**, because that is the frame all of them crop to.
+- **An absolute URL.** A crawler has only the tag to go on and none of them resolve a
+  relative path. This is the whole reason the `og:` tags could not be written until
+  the domain was settled.
+- **The mark in ink, not offwhite.** White on this sky reaches 2.4:1 and a preview
+  thumbnail is small. Ink on the same pixels reaches 8.9:1. Darkening the photograph
+  instead was not on the table: the brand has no scrims — see `--overlay-photo-scrim`
+  in `css/tokens/effects.css`, a token that exists to say so.
+
+`node tools/make-og.mjs` rebuilds it from `magnolia.jpg`; the result is checked in like
+every other derived image. Change the domain and the four absolute URLs in `<head>`
+have to move with it — `og:url`, `og:image`, and the `rel=canonical` on all three pages.
 
 ## The backdrop fassung, decided
 
@@ -373,8 +397,9 @@ file instead, one level up: `../assets/…`.
       AVV. On GitHub Pages that section is untrue — and Pages can set no HTTP headers
       and no server-side password either
 - [x] Gate removed, and with it `robots: noindex`
-- [ ] `og:` / `twitter:` tags — they need the final domain for an absolute image URL,
-      which is why they are not in `<head>` yet
+- [x] `og:` / `twitter:` tags, and the share image behind them
+- [ ] Redirect `www.keinepanikmusik.de` to the apex — the tags and `rel=canonical`
+      name the apex as the one that counts, but only the server can send visitors there
 - [ ] Newsletter, when it is wired up, gets its own section in the Datenschutz
 - [ ] The bottom edge of the photograph faded to the sky colour
 - [ ] Decide the sky band: leave the white type as it is, or darken the four glyph

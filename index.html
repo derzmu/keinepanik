@@ -8,6 +8,31 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>keine Panik.</title>
 <meta name="description" content="keine Panik. — deutschsprachiger Indie-Pop aus Waging am See. Songs, Live-Termine und Downloads.">
+<!-- The site answers on both keinepanikmusik.de and www.keinepanikmusik.de. This
+     names the one of the two that counts, so the pair is never indexed as two sites
+     even if a redirect is ever missing. -->
+<link rel="canonical" href="https://keinepanikmusik.de/">
+<!-- What WhatsApp, Instagram, Signal, Facebook and Discord show when the link is
+     pasted. Without it they show the bare URL and nothing else.
+     Every URL here is absolute on purpose: a crawler has only the tag to go on and
+     none of them resolve a relative path. That is why these tags could not be
+     written before the domain was decided.
+     Twitter reads the og: tags for everything but the card shape, so twitter:card is
+     the only one of its own that earns its place. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://keinepanikmusik.de/">
+<meta property="og:site_name" content="keine Panik.">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="keine Panik.">
+<meta property="og:description" content="Deutschsprachiger Indie-Pop aus Waging am See. Songs, Live-Termine und Downloads.">
+<!-- 1200x630 is the frame all of them crop to. Built by tools/make-og.mjs out of the
+     backdrop photograph; it is never loaded by the page itself. -->
+<meta property="og:image" content="https://keinepanikmusik.de/assets/img/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Die Wortmarke „keine Panik.“ über blühenden Magnolien vor blauem Himmel.">
+<meta name="twitter:card" content="summary_large_image">
 <!-- Tints the browser chrome in the sky colour, so the band iOS paints above the
      page matches the photograph's top row the same way the root background does. -->
 <meta name="theme-color" content="#5eaacc">
