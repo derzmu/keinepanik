@@ -208,10 +208,4 @@ async function init() {
   }
 }
 
-/* Behind the pre-launch gate nothing is fetched: the request would send the
-   visitor's IP to Bandsintown before they have even reached the page. */
-if (document.documentElement.hasAttribute('data-locked')) {
-  document.addEventListener('kp:unlock', init, { once: true });
-} else {
-  init();
-}
+init();

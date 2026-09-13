@@ -396,40 +396,6 @@
 }
 .submit:hover{opacity:var(--opacity-hover)}
 
-/* ---------- pre-launch gate ----------
-   Presentation only. The gate hides the page, it does not protect it — see the
-   note at the top of js/gate.js. */
-.gate{
-  position:fixed;
-  inset:0;
-  z-index:10;
-  display:grid;
-  place-items:center;
-  padding:var(--band-pad-x);
-  overflow-y:auto;
-}
-html:not([data-locked]) .gate{display:none}
-/* The footer is a sibling of main, not a child of it, so it has to be named here
-   too — otherwise it stays on screen underneath the gate. */
-html[data-locked] main,
-html[data-locked] .site-footer{display:none}
-.gate__panel{
-  width:100%;
-  max-width:var(--content-max);
-  background:var(--surface-panel-90);
-  padding:var(--space-7) var(--space-5);
-  text-align:center;
-}
-.gate__lead{
-  margin:var(--space-6) 0;
-  font-size:var(--type-body-sm);
-  line-height:var(--leading-body);
-  color:var(--text-muted);
-}
-.gate__form{display:grid;gap:var(--space-3);text-align:left}
-.gate__label{display:block}
-.gate__error{margin:0;font-size:var(--type-body-sm);color:var(--text-accent)}
-
 /* ---------- footer ---------- */
 .site-footer{
   background:var(--surface-footer);
@@ -448,24 +414,17 @@ html[data-locked] .site-footer{display:none}
   -webkit-mask:url(../assets/logo-offwhite.svg) no-repeat center/contain;
   mask:url(../assets/logo-offwhite.svg) no-repeat center/contain;
 }
-/* On the gate the mark sits on a light panel, so it is painted in ink. */
-.wordmark--gate{background:var(--text-body)}
 .site-footer .wordmark{width:var(--size-wordmark-sm)}
 .footer-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-5);margin-top:var(--space-6)}
 .footer-nav a{color:var(--text-on-dark-muted);text-decoration:none}
 
 /* The page sits above the photograph — see the #backdrop note in base.css.
-   The footer is listed separately because it is a sibling of main, not inside it.
-   .gate is NOT in this list: it declares position:fixed and z-index:10 of its own
-   further up, and naming it here overrode both — same specificity, later in the
-   file. The curtain was then position:relative and only as tall as its content, so
-   inset:0 did nothing and place-items:center centred the panel in 459px instead of
-   in the viewport. It has to stay fixed and above everything. */
+   The footer is listed separately because it is a sibling of main, not inside it. */
 main,
 .site-footer{position:relative;z-index:1}
 
 /* ---------- legal pages ----------
-   Impressum und Datenschutz: langer Fließtext, kein Foto, kein Gate. Eine Spalte
+   Impressum und Datenschutz: langer Fließtext, kein Foto. Eine Spalte
    auf Lesemaß, sonst nichts. */
 .legal{
   max-width:var(--content-max);
@@ -551,4 +510,3 @@ main,
 }
 .band--sky{padding-top:calc(var(--band-pad-y) + env(safe-area-inset-top,0px))}
 .site-footer{padding-bottom:calc(var(--space-7) + env(safe-area-inset-bottom,0px))}
-.gate{padding:calc(var(--band-pad-x) + env(safe-area-inset-top,0px)) calc(var(--band-pad-x) + env(safe-area-inset-right,0px)) calc(var(--band-pad-x) + env(safe-area-inset-bottom,0px)) calc(var(--band-pad-x) + env(safe-area-inset-left,0px))}

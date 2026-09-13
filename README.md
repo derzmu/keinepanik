@@ -8,14 +8,13 @@ runtime — both webfonts and all four platform glyphs are in `assets/`. Open
 ```
 keine-panik-website/
 ├─ index.html            the page — markup only, no styling
-├─ impressum.html        legal, no photograph, no gate
-├─ datenschutz.html      legal, no photograph, no gate
+├─ impressum.html        legal, no photograph
+├─ datenschutz.html      legal, no photograph
 ├─ css/
 │  ├─ base.css           document defaults: html, body, links, headings, backdrop
 │  ├─ components.css     every component class on the page
 │  └─ tokens/            colours, typography, spacing, effects, @font-face
 ├─ js/
-│  ├─ gate.js            the pre-launch password curtain
 │  ├─ app.js             the audio player (and the parked newsletter form)
 │  └─ gigs.js            renders the live dates from assets/gigs.json
 ├─ tools/
@@ -44,9 +43,8 @@ parallel. The order in `index.html` is the cascade order; keep it.
 ## The legal pages
 
 `impressum.html` and `datenschutz.html` sit beside `index.html` and share its
-stylesheets, tokens and footer. They carry **no** `#backdrop` and **no** gate: a legal
-page is running text, the photograph would only cost legibility and 241KB, and an
-Impressum is meant to be reachable. `data-page="legal"` on `<html>` puts the page on
+stylesheets, tokens and footer. They carry **no** `#backdrop`: a legal page is running
+text and the photograph would only cost legibility and 241KB. `data-page="legal"` on `<html>` puts the page on
 cream all the way into the iOS strips.
 
 The Art. 21 objection is set in capitals because the statute is; it is set smaller and
@@ -71,13 +69,13 @@ page never asks for:
 
 | Ships but is not part of the site | |
 |---|---|
-| `README.md` | **names the gate password.** Already in `js/gate.js` by design, but publishing it twice is worse than once |
+| `README.md` | the notes you are reading — not part of the page |
 | `assets/img/magnolia.jpg` | the 3.4MB master — never served by the page, still downloadable |
 | `tools/`, `.github/`, `.gitignore` | build-time only |
 | `assets/*/README.md` | notes for whoever adds the files |
 
 None of it is secret and none of it breaks anything, but it is roughly 3.5MB of dead
-weight on the server and a password sitting at a guessable URL. Two ways out:
+weight on the server. Two ways out:
 
 - **rsync with an exclude list** — a GitHub Action builds nothing and copies only what
   the page needs. This is the cleaner one, and the exclude list is the table above.
@@ -153,42 +151,18 @@ heading a colour that clears the blue. The sky itself stays the flat `--kp-sky`.
 `--text-on-dark-faint` is white at 50%, not 40%: at 40% it lands on 3.79:1 against
 `--kp-ink`, and the labels using it ("Ausverkauft", "Gespielt") are 10–11px.
 
-## Pre-launch gate
+## The site is public
 
-`js/gate.js` puts a password screen in front of the site. Password: `peinekanik`
-(case- and whitespace-tolerant). Unlocking is remembered for the browser session.
+There is no password screen any more. The pre-launch gate — `js/gate.js`, the `#gate`
+block, the `data-locked` attribute, the `kp:unlock` handshake in `js/app.js` and
+`js/gigs.js`, and the `robots: noindex` meta tag on all three pages — is gone, so the
+player and the live dates start on load and search engines are free to index.
 
-**It is a curtain, not a lock.** The site is static, so `js/gate.js` — password
-included — is served to anyone who requests it, and the gate is one devtools click
-away. It keeps a work in progress out of sight; it protects nothing. Hashing the
-password would only make that weakness harder to see, so it is stored in the clear.
-
-Real protection is server-side, and it is usually one setting at the host:
-
-| Host | Where |
-|---|---|
-| Apache | `.htaccess` + `.htpasswd` (HTTP Basic Auth) |
-| Netlify | Site settings → Access control → Password protection |
-| Vercel | Project settings → Deployment protection |
-| Cloudflare Pages | Access policy |
-
-GitHub Pages, where this is hosted, offers none of that — private Pages needs
-Enterprise — so on Pages the curtain is the only option there is.
-
-Impressum and Datenschutz in the footer point at the band's existing pages on
-`keinepanikmusik.de`, which is allowed: they only have to be easy to reach, not to
-live on this domain. Note that the Datenschutz there predates this site and says
-nothing about the Bandsintown request — that needs a paragraph before launch.
-
-**Nothing behind the gate runs.** Both `js/gigs.js` and `js/app.js` wait for the
-`kp:unlock` event: no visitor IP reaches Bandsintown, and the player's duration probe
-does not fetch track metadata, before someone is actually through. `app.js` used to
-run regardless, which made this sentence untrue for the audio request.
-
-**To remove the gate before launch:** delete `js/gate.js`, its `<script>` tag, the
-`data-locked` attribute on `<html>`, the `robots` meta tag, the `#gate` block in
-`index.html`, the gate rules in `css/components.css`, and the `data-locked` checks at
-the bottom of `js/gigs.js` and `js/app.js`.
+If a curtain is ever wanted again, put it in front of the server rather than in the
+page: HTTP Basic Auth (`.htaccess` + `.htpasswd`), or the host's own password setting
+on Netlify, Vercel or Cloudflare Pages. A password in a static file is served to
+anyone who asks for the file, so it never protected anything. GitHub Pages, where this
+is hosted, offers none of that — private Pages needs Enterprise.
 
 ## The backdrop fassung, decided
 
@@ -263,7 +237,7 @@ policy needs no paragraph about Bandsintown at all.
 
 It also took one of the two things this site stored on the device with it: the
 30-minute `sessionStorage` cache is gone, because an HTTP cache is what a static file
-already has. The only remaining storage is the gate's unlock flag.
+already has. With the gate removed too, the site now stores nothing on the device.
 
 | | |
 |---|---|
@@ -398,7 +372,7 @@ file instead, one level up: `../assets/…`.
 - [ ] **Move to Hetzner.** The Datenschutz names Hetzner as the host and promises an
       AVV. On GitHub Pages that section is untrue — and Pages can set no HTTP headers
       and no server-side password either
-- [ ] Gate removed, and with it `robots: noindex`
+- [x] Gate removed, and with it `robots: noindex`
 - [ ] `og:` / `twitter:` tags — they need the final domain for an absolute image URL,
       which is why they are not in `<head>` yet
 - [ ] Newsletter, when it is wired up, gets its own section in the Datenschutz
