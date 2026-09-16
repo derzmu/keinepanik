@@ -8,14 +8,13 @@ runtime — both webfonts and all four platform glyphs are in `assets/`. Open
 ```
 keine-panik-website/
 ├─ index.html            the page — markup only, no styling
-├─ impressum.html        legal, no photograph, no gate
-├─ datenschutz.html      legal, no photograph, no gate
+├─ impressum.html        legal, no photograph
+├─ datenschutz.html      legal, no photograph
 ├─ css/
 │  ├─ base.css           document defaults: html, body, links, headings, backdrop
 │  ├─ components.css     every component class on the page
 │  └─ tokens/            colours, typography, spacing, effects, @font-face
 ├─ js/
-│  ├─ gate.js            the pre-launch password curtain
 │  ├─ app.js             the audio player (and the parked newsletter form)
 │  └─ gigs.js            renders the live dates from assets/gigs.json
 ├─ tools/
@@ -44,10 +43,9 @@ parallel. The order in `index.html` is the cascade order; keep it.
 ## The legal pages
 
 `impressum.html` and `datenschutz.html` sit beside `index.html` and share its
-stylesheets, tokens and footer. They carry **no** `#backdrop` and **no** gate: a legal
-page is running text, the photograph would only cost legibility and 241KB, and an
-Impressum is meant to be reachable. `data-page="legal"` on `<html>` puts the page on
-cream all the way into the iOS strips.
+stylesheets, tokens and footer. They carry **no** `#backdrop`: a legal page is running
+text, and the photograph would only cost legibility and 241KB. `data-page="legal"` on
+`<html>` puts the page on cream all the way into the iOS strips.
 
 The Art. 21 objection is set in capitals because the statute is; it is set smaller and
 boxed so it does not shout down the rest of the page.
@@ -71,7 +69,7 @@ page never asks for:
 
 | Ships but is not part of the site | |
 |---|---|
-| `README.md` | internal notes no visitor needs — and the file people reflexively paste the gate password back into. It does not name it; keep it that way |
+| `README.md` | internal notes no visitor needs — none of it secret, all of it dead weight |
 | `assets/img/magnolia.jpg` | the 3.4MB master — never served by the page, still downloadable |
 | `tools/`, `.github/`, `.gitignore` | build-time only |
 | `assets/*/README.md` | notes for whoever adds the files |
@@ -83,62 +81,6 @@ this actually runs — the list above is `_config.yml`'s `exclude:`, which keeps
 from copying these into the published site at all. `.github/` and `.gitignore` need no
 entry there: both start with a dot, and Jekyll already drops dotfiles and dotfolders
 on its own when no `.nojekyll` is present. Change the table, change `_config.yml`.
-
-`.deployignore`, `.github/workflows/deploy.yml` and `.htaccess` do the same job for a
-possible future move to a plain webserver — rsync instead of a Jekyll build, see
-"Move to Hetzner" below. They sit unused while the site stays on Pages; nothing reads
-them until that move actually happens.
-
-### How it gets there
-
-GitHub stays the repository; Hetzner is only the webserver. Nothing is built: rsync
-carries the same files git holds, minus `.deployignore`. `--delete-excluded` means a
-file that lands on that list stops being served on the next deploy rather than
-lingering.
-
-The workflow runs on every push to `main` **and** on `workflow_run` after `gigs`.
-That second trigger is not belt and braces. `gigs` commits with `GITHUB_TOKEN`, and
-commits made with that token raise no push event — `gigs.yml` depends on exactly that
-so it cannot loop on its own commit. A deploy listening only for pushes would
-therefore never see the hourly dates: they would keep updating in the repository and
-freeze on the server, with nothing failing to say so.
-
-**Before the first real deploy**, mark the target directory over SSH so `HETZNER_PATH`
-cannot silently point at the wrong site — the hosting account holds more than one
-domain, and `--delete` does not ask twice:
-
-```
-touch /path/konsoleH/names/for/keinepanikmusik.de/.keinepanik-webroot
-```
-
-`deploy.yml` checks for that file before it runs rsync and refuses — loudly, before
-touching anything — if it is not there. See `.keinepanik-webroot` for the full story.
-
-It needs five repository secrets, and refuses to run rather than half-deploy if one
-is missing:
-
-| Secret | |
-|---|---|
-| `HETZNER_SSH_HOST` | the host rsync connects to |
-| `HETZNER_SSH_USER` | the hosting login |
-| `HETZNER_SSH_KEY` | private half of a keypair made for this and nothing else; the public half goes in the login's `authorized_keys` |
-| `HETZNER_KNOWN_HOSTS` | output of `ssh-keyscan -p <port> <host>`. Pinned rather than `StrictHostKeyChecking=no`: the runner is a fresh machine every time and would otherwise trust whatever answers |
-| `HETZNER_PATH` | absolute webroot path, **with a trailing slash** |
-
-Optional repository *variable* `HETZNER_SSH_PORT` if the host is not on 22.
-
-Run it once from the Actions tab first — `dry_run` is on by default and lists what
-would change without transferring anything. `HETZNER_PATH` pointing at a home
-directory instead of the webroot, together with `--delete`, is the one mistake worth
-catching on a dry run.
-
-`.htaccess` ships with the site and carries what Pages could never set: HTTPS
-redirect, a `'self'`-only CSP, `no-referrer`, HSTS, `Options -Indexes`, and the
-cache rules — `gigs.json` and the markup revalidate, the photographs and fonts do
-not. It also holds a commented-out Basic Auth block for the window between "the site
-is on Hetzner" and "the site is public", which is a real lock: Apache checks it
-before serving a byte, so unlike `js/gate.js` there is no password in anything the
-visitor receives.
 
 ## The design system
 
@@ -206,46 +148,6 @@ heading a colour that clears the blue. The sky itself stays the flat `--kp-sky`.
 
 `--text-on-dark-faint` is white at 50%, not 40%: at 40% it lands on 3.79:1 against
 `--kp-ink`, and the labels using it ("Ausverkauft", "Gespielt") are 10–11px.
-
-## Pre-launch gate
-
-`js/gate.js` puts a password screen in front of the site. The password is the
-`PASSWORD` constant at the top of that file and is deliberately **not** repeated here:
-this README ships to the webroot on any host that checks the repository out, and
-`/README.md` is a far more guessable URL than a line inside a script. Matching is case-
-and whitespace-tolerant; unlocking is remembered for the browser session.
-
-**It is a curtain, not a lock.** The site is static, so `js/gate.js` — password
-included — is served to anyone who requests it, and the gate is one devtools click
-away. It keeps a work in progress out of sight; it protects nothing. Hashing the
-password would only make that weakness harder to see, so it is stored in the clear.
-
-Real protection is server-side, and it is usually one setting at the host:
-
-| Host | Where |
-|---|---|
-| Apache | `.htaccess` + `.htpasswd` (HTTP Basic Auth) |
-| Netlify | Site settings → Access control → Password protection |
-| Vercel | Project settings → Deployment protection |
-| Cloudflare Pages | Access policy |
-
-GitHub Pages, where this is hosted, offers none of that — private Pages needs
-Enterprise — so on Pages the curtain is the only option there is.
-
-Impressum and Datenschutz in the footer point at the band's existing pages on
-`keinepanikmusik.de`, which is allowed: they only have to be easy to reach, not to
-live on this domain. Note that the Datenschutz there predates this site and says
-nothing about the Bandsintown request — that needs a paragraph before launch.
-
-**Nothing behind the gate runs.** Both `js/gigs.js` and `js/app.js` wait for the
-`kp:unlock` event: no visitor IP reaches Bandsintown, and the player's duration probe
-does not fetch track metadata, before someone is actually through. `app.js` used to
-run regardless, which made this sentence untrue for the audio request.
-
-**To remove the gate before launch:** delete `js/gate.js`, its `<script>` tag, the
-`data-locked` attribute on `<html>`, the `robots` meta tag, the `#gate` block in
-`index.html`, the gate rules in `css/components.css`, and the `data-locked` checks at
-the bottom of `js/gigs.js` and `js/app.js`.
 
 ## The backdrop fassung, decided
 
@@ -320,7 +222,8 @@ policy needs no paragraph about Bandsintown at all.
 
 It also took one of the two things this site stored on the device with it: the
 30-minute `sessionStorage` cache is gone, because an HTTP cache is what a static file
-already has. The only remaining storage is the gate's unlock flag.
+already has. The gate's unlock flag was the other; with the gate gone, this site
+keeps nothing in the browser at all.
 
 | | |
 |---|---|
@@ -458,43 +361,21 @@ file instead, one level up: `../assets/…`.
 
 ### The address
 
-`keinepanikmusik.de`, without the `www`. Neither reason for a `www` applies here — an
-apex needs an A record rather than a CNAME, which a fixed hosting IP is, and the
-cookie-scope argument needs cookies, which this site does not set. What is left is the
-one that counts for a band: it goes on a flyer, and nobody has to say "w-w-w-dot".
+`keinepanikmusik.de`, without the `www`. An apex domain needs an A (or ALIAS/ANAME)
+record rather than a CNAME, and the cookie-scope argument for `www` needs cookies,
+which this site does not set. What is left is the one that counts for a band: it
+goes on a flyer, and nobody has to say "w-w-w-dot".
 
-`www` answers and carries the certificate, but only redirects. The spelling is written
-down in three places and they have to agree, or the page is counted twice: the rewrite
-in `.htaccess`, `<link rel="canonical">`, and `og:url` on all three pages.
+**Not connected yet.** Pages currently serves this at the default `github.io`
+address; `<link rel="canonical">` and `og:url` on all three pages already point at
+`https://keinepanikmusik.de/` so that work is not repeated later, but nothing makes
+that address real yet. Moving it over is a `CNAME` file in the repository root plus
+DNS: the four A records GitHub publishes for apex domains (or an ALIAS/ANAME if the
+registrar offers one), and a `CNAME` record for `www`. Pages then issues the
+certificate and redirects `www` to the apex itself — nothing to configure by hand.
+The one thing to carry over first is the domain's **MX records**, or
+`booking@keinepanikmusik.de` stops receiving mail the moment DNS changes.
 
-### Move to Hetzner — the order is not arbitrary
-
-The Datenschutz names Hetzner as the host and states that an AVV is in place. On
-GitHub Pages that section is simply untrue, which is the reason this move exists;
-the headers and the real password lock are the bonus.
-
-1. **Book the package and sign the AVV** in the Hetzner console. Without the AVV the
-   move fixes the hoster and leaves the sentence about the contract still false.
-2. **Set the five secrets, run `deploy` with `dry_run` on**, read the file list, then
-   run it for real. The site is now on Hetzner, still at the provider address.
-3. **Uncomment the Basic Auth block in `.htaccess`** and delete `js/gate.js` in the
-   same change. Swapping the curtain for the lock in one step means the work in
-   progress is never briefly open.
-4. **Point the domain at it** and switch TLS on. If the domain moves to Hetzner
-   rather than just its A record, carry the **MX records over first** — otherwise
-   `booking@keinepanikmusik.de` stops receiving mail the moment DNS propagates.
-5. **Check the live site**: both webfonts, the four glyphs, the downloads, the audio,
-   and that `gigs.json` really does change on the server within the hour.
-6. **Turn GitHub Pages off**, and only then remove `robots: noindex`. The other way
-   round, a search engine indexes the github.io copy — and that copy then rots at a
-   URL nobody is watching.
-7. **Remove Basic Auth.** This is the launch.
-
-Removing the gate is not only deleting `js/gate.js` and its `<script>` tag: the
-`data-locked` attribute, the `#gate` block, the gate rules in `css/components.css`
-and the `kp:unlock` waits at the bottom of `js/gigs.js` and `js/app.js` go with it.
-Miss the last two and the page loads with no live dates and a dead player, silently
-— they are waiting for an event that can no longer fire.
 - [ ] Newsletter, when it is wired up, gets its own section in the Datenschutz
 - [ ] The bottom edge of the photograph faded to the sky colour
 - [ ] Decide the sky band: leave the white type as it is, or darken the four glyph
