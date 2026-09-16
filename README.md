@@ -75,16 +75,52 @@ page never asks for:
 | `assets/img/magnolia.jpg` | the 3.4MB master — never served by the page, still downloadable |
 | `tools/`, `.github/`, `.gitignore` | build-time only |
 | `assets/*/README.md` | notes for whoever adds the files |
+| `assets/fonts/*.ttf` | the sources the woff2 were made from — only the woff2 is linked |
 
 None of it is secret and none of it breaks anything, but it is roughly 3.5MB of dead
-weight on the server and a password sitting at a guessable URL. Two ways out:
+weight on the server, and `/README.md` is a guessable URL. So the list above is not
+advice — it is `.deployignore`, which `.github/workflows/deploy.yml` hands to rsync.
+Change one, change the other.
 
-- **rsync with an exclude list** — a GitHub Action builds nothing and copies only what
-  the page needs. This is the cleaner one, and the exclude list is the table above.
-- **`git pull` into the webroot** — simplest, and then add a server rule denying
-  `/.git`, `/README.md`, `/tools`, `/.github`. On nginx that is one `location` block.
+### How it gets there
 
-Either way the deploy stays a copy of the repository; there is nothing to build.
+GitHub stays the repository; Hetzner is only the webserver. Nothing is built: rsync
+carries the same files git holds, minus `.deployignore`. `--delete-excluded` means a
+file that lands on that list stops being served on the next deploy rather than
+lingering.
+
+The workflow runs on every push to `main` **and** on `workflow_run` after `gigs`.
+That second trigger is not belt and braces. `gigs` commits with `GITHUB_TOKEN`, and
+commits made with that token raise no push event — `gigs.yml` depends on exactly that
+so it cannot loop on its own commit. A deploy listening only for pushes would
+therefore never see the hourly dates: they would keep updating in the repository and
+freeze on the server, with nothing failing to say so.
+
+It needs five repository secrets, and refuses to run rather than half-deploy if one
+is missing:
+
+| Secret | |
+|---|---|
+| `HETZNER_SSH_HOST` | the host rsync connects to |
+| `HETZNER_SSH_USER` | the hosting login |
+| `HETZNER_SSH_KEY` | private half of a keypair made for this and nothing else; the public half goes in the login's `authorized_keys` |
+| `HETZNER_KNOWN_HOSTS` | output of `ssh-keyscan -p <port> <host>`. Pinned rather than `StrictHostKeyChecking=no`: the runner is a fresh machine every time and would otherwise trust whatever answers |
+| `HETZNER_PATH` | absolute webroot path, **with a trailing slash** |
+
+Optional repository *variable* `HETZNER_SSH_PORT` if the host is not on 22.
+
+Run it once from the Actions tab first — `dry_run` is on by default and lists what
+would change without transferring anything. `HETZNER_PATH` pointing at a home
+directory instead of the webroot, together with `--delete`, is the one mistake worth
+catching on a dry run.
+
+`.htaccess` ships with the site and carries what Pages could never set: HTTPS
+redirect, a `'self'`-only CSP, `no-referrer`, HSTS, `Options -Indexes`, and the
+cache rules — `gigs.json` and the markup revalidate, the photographs and fonts do
+not. It also holds a commented-out Basic Auth block for the window between "the site
+is on Hetzner" and "the site is public", which is a real lock: Apache checks it
+before serving a byte, so unlike `js/gate.js` there is no password in anything the
+visitor receives.
 
 ## The design system
 
@@ -398,12 +434,37 @@ file instead, one level up: `../assets/…`.
 
 - [ ] Newsletter: only bring it back once a provider is behind it — see above
 - [ ] The four files in `assets/downloads/` added (the rows 404 until then)
-- [ ] **Move to Hetzner.** The Datenschutz names Hetzner as the host and promises an
-      AVV. On GitHub Pages that section is untrue — and Pages can set no HTTP headers
-      and no server-side password either
-- [ ] Gate removed, and with it `robots: noindex`
 - [ ] `og:` / `twitter:` tags — they need the final domain for an absolute image URL,
       which is why they are not in `<head>` yet
+
+### Move to Hetzner — the order is not arbitrary
+
+The Datenschutz names Hetzner as the host and states that an AVV is in place. On
+GitHub Pages that section is simply untrue, which is the reason this move exists;
+the headers and the real password lock are the bonus.
+
+1. **Book the package and sign the AVV** in the Hetzner console. Without the AVV the
+   move fixes the hoster and leaves the sentence about the contract still false.
+2. **Set the five secrets, run `deploy` with `dry_run` on**, read the file list, then
+   run it for real. The site is now on Hetzner, still at the provider address.
+3. **Uncomment the Basic Auth block in `.htaccess`** and delete `js/gate.js` in the
+   same change. Swapping the curtain for the lock in one step means the work in
+   progress is never briefly open.
+4. **Point the domain at it** and switch TLS on. If the domain moves to Hetzner
+   rather than just its A record, carry the **MX records over first** — otherwise
+   `booking@keinepanikmusik.de` stops receiving mail the moment DNS propagates.
+5. **Check the live site**: both webfonts, the four glyphs, the downloads, the audio,
+   and that `gigs.json` really does change on the server within the hour.
+6. **Turn GitHub Pages off**, and only then remove `robots: noindex`. The other way
+   round, a search engine indexes the github.io copy — and that copy then rots at a
+   URL nobody is watching.
+7. **Remove Basic Auth.** This is the launch.
+
+Removing the gate is not only deleting `js/gate.js` and its `<script>` tag: the
+`data-locked` attribute, the `#gate` block, the gate rules in `css/components.css`
+and the `kp:unlock` waits at the bottom of `js/gigs.js` and `js/app.js` go with it.
+Miss the last two and the page loads with no live dates and a dead player, silently
+— they are waiting for an event that can no longer fire.
 - [ ] Newsletter, when it is wired up, gets its own section in the Datenschutz
 - [ ] The bottom edge of the photograph faded to the sky colour
 - [ ] Decide the sky band: leave the white type as it is, or darken the four glyph
