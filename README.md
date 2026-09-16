@@ -78,9 +78,16 @@ page never asks for:
 | `assets/fonts/*.ttf` | the sources the woff2 were made from — only the woff2 is linked |
 
 None of it is secret and none of it breaks anything, but it is roughly 3.5MB of dead
-weight on the server, and `/README.md` is a guessable URL. So the list above is not
-advice — it is `.deployignore`, which `.github/workflows/deploy.yml` hands to rsync.
-Change one, change the other.
+weight on the server, and `/README.md` is a guessable URL. On GitHub Pages — where
+this actually runs — the list above is `_config.yml`'s `exclude:`, which keeps Jekyll
+from copying these into the published site at all. `.github/` and `.gitignore` need no
+entry there: both start with a dot, and Jekyll already drops dotfiles and dotfolders
+on its own when no `.nojekyll` is present. Change the table, change `_config.yml`.
+
+`.deployignore`, `.github/workflows/deploy.yml` and `.htaccess` do the same job for a
+possible future move to a plain webserver — rsync instead of a Jekyll build, see
+"Move to Hetzner" below. They sit unused while the site stays on Pages; nothing reads
+them until that move actually happens.
 
 ### How it gets there
 
