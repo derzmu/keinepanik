@@ -8,11 +8,29 @@
 # Without this, /assets/downloads/ and /assets/audio/ are browsable index pages.
 Options -Indexes
 
-# ─── HTTPS ───────────────────────────────────────────────────────────────────
+# ─── One address, and it is the short one ──────────────────────────────
+# keinepanikmusik.de is canonical: it is what goes on a flyer, and nobody has to say
+# "w-w-w-dot" out loud. www answers, but only with a redirect. The same spelling has
+# to appear in og:url and <link rel="canonical"> too, or a search engine counts the
+# page twice.
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # www first, and straight to https, so http://www is one hop rather than two.
+  RewriteCond %{HTTP_HOST} ^www\.keinepanikmusik\.de$ [NC]
+  RewriteRule ^ https://keinepanikmusik.de%{REQUEST_URI} [R=301,L]
+
+  # Everything else upgrades to https on whatever host it arrived at. Deliberately
+  # not hard-coded to the domain: during the move the site answers at the Hetzner
+  # provider address, and a redirect to keinepanikmusik.de before DNS points here
+  # would send every test straight back to the old host.
   RewriteCond %{HTTPS} !=on
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # If the site ends up in a redirect loop ("too many redirects") the TLS is being
+  # terminated on a proxy in front of Apache, which never sets HTTPS=on. Then it is
+  # the forwarded header that knows, and the condition above becomes:
+  #   RewriteCond %{HTTP:X-Forwarded-Proto} !https
 </IfModule>
 
 # ─── Headers ─────────────────────────────────────────────────────────────────

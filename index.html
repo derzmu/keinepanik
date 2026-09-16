@@ -8,6 +8,28 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>keine Panik.</title>
 <meta name="description" content="keine Panik. — deutschsprachiger Indie-Pop aus Waging am See. Songs, Live-Termine und Downloads.">
+<!-- Link previews are fetched by someone else's server, which has nothing to resolve
+     a relative path against — every URL below is absolute. The host is the apex, the
+     same one .htaccess redirects www to and the same one in rel=canonical; three
+     spellings of one address is how a page gets counted twice.
+     twitter:title, :description and :image are deliberately absent: X falls back to
+     the og: values, and a second copy only drifts out of step. -->
+<link rel="canonical" href="https://keinepanikmusik.de/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="keine Panik.">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://keinepanikmusik.de/">
+<meta property="og:title" content="keine Panik.">
+<meta property="og:description" content="keine Panik. — deutschsprachiger Indie-Pop aus Waging am See. Songs, Live-Termine und Downloads.">
+<!-- The photograph is 2:3 and most previews crop to roughly 1.91:1, so what gets shown
+     is a horizontal band out of the middle. It survives that because it is a field of
+     blossom with no subject to behead — but a purpose-made 1200×630 would preview
+     better, and is the one asset this repository would have to draw rather than crop. -->
+<meta property="og:image" content="https://keinepanikmusik.de/assets/img/magnolia-1200.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1800">
+<meta property="og:image:alt" content="Magnolienblüten vor blauem Himmel">
+<meta name="twitter:card" content="summary_large_image">
 <!-- Tints the browser chrome in the sky colour, so the band iOS paints above the
      page matches the photograph's top row the same way the root background does. -->
 <meta name="theme-color" content="#5eaacc">

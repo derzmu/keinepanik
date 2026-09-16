@@ -434,8 +434,20 @@ file instead, one level up: `../assets/…`.
 
 - [ ] Newsletter: only bring it back once a provider is behind it — see above
 - [ ] The four files in `assets/downloads/` added (the rows 404 until then)
-- [ ] `og:` / `twitter:` tags — they need the final domain for an absolute image URL,
-      which is why they are not in `<head>` yet
+- [ ] A purpose-made 1200×630 `og:image`. The backdrop stands in for now; it is 2:3 and
+      previews crop to roughly 1.91:1, which it survives only because it is a field of
+      blossom with nothing in it to behead
+
+### The address
+
+`keinepanikmusik.de`, without the `www`. Neither reason for a `www` applies here — an
+apex needs an A record rather than a CNAME, which a fixed hosting IP is, and the
+cookie-scope argument needs cookies, which this site does not set. What is left is the
+one that counts for a band: it goes on a flyer, and nobody has to say "w-w-w-dot".
+
+`www` answers and carries the certificate, but only redirects. The spelling is written
+down in three places and they have to agree, or the page is counted twice: the rewrite
+in `.htaccess`, `<link rel="canonical">`, and `og:url` on all three pages.
 
 ### Move to Hetzner — the order is not arbitrary
 
