@@ -96,6 +96,17 @@ so it cannot loop on its own commit. A deploy listening only for pushes would
 therefore never see the hourly dates: they would keep updating in the repository and
 freeze on the server, with nothing failing to say so.
 
+**Before the first real deploy**, mark the target directory over SSH so `HETZNER_PATH`
+cannot silently point at the wrong site — the hosting account holds more than one
+domain, and `--delete` does not ask twice:
+
+```
+touch /path/konsoleH/names/for/keinepanikmusik.de/.keinepanik-webroot
+```
+
+`deploy.yml` checks for that file before it runs rsync and refuses — loudly, before
+touching anything — if it is not there. See `.keinepanik-webroot` for the full story.
+
 It needs five repository secrets, and refuses to run rather than half-deploy if one
 is missing:
 

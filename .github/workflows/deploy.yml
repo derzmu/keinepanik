@@ -86,6 +86,27 @@ jobs:
           printf '%s\n' "$KEY"   > ~/.ssh/id_deploy
           chmod 600 ~/.ssh/id_deploy ~/.ssh/known_hosts
 
+      # --delete makes HETZNER_PATH the most dangerous string in this workflow, and the
+      # account holds more than one domain. So the directory has to identify itself
+      # before anything is written to it: see .keinepanik-webroot.
+      - name: Confirm the target is this site's webroot
+        env:
+          HOST: ${{ secrets.HETZNER_SSH_HOST }}
+          USER_: ${{ secrets.HETZNER_SSH_USER }}
+          PATH_: ${{ secrets.HETZNER_PATH }}
+          PORT: ${{ vars.HETZNER_SSH_PORT || 22 }}
+        run: |
+          if ssh -p "$PORT" -i ~/.ssh/id_deploy -o IdentitiesOnly=yes -o BatchMode=yes \
+                 "$USER_@$HOST" "test -f \"$PATH_/.keinepanik-webroot\""; then
+            echo "Marker found. $PATH_ is the keine Panik. webroot."
+          else
+            echo "::error::No .keinepanik-webroot in $PATH_ — refusing to rsync --delete into it."
+            echo "Check in konsoleH which directory serves keinepanikmusik.de. If this path"
+            echo "is that directory, mark it once over SSH:"
+            echo "    touch \"$PATH_/.keinepanik-webroot\""
+            exit 1
+          fi
+
       - name: rsync to the webroot
         env:
           HOST: ${{ secrets.HETZNER_SSH_HOST }}
