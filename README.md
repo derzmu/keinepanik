@@ -71,7 +71,7 @@ page never asks for:
 
 | Ships but is not part of the site | |
 |---|---|
-| `README.md` | **names the gate password.** Already in `js/gate.js` by design, but publishing it twice is worse than once |
+| `README.md` | internal notes no visitor needs — and the file people reflexively paste the gate password back into. It does not name it; keep it that way |
 | `assets/img/magnolia.jpg` | the 3.4MB master — never served by the page, still downloadable |
 | `tools/`, `.github/`, `.gitignore` | build-time only |
 | `assets/*/README.md` | notes for whoever adds the files |
@@ -155,8 +155,11 @@ heading a colour that clears the blue. The sky itself stays the flat `--kp-sky`.
 
 ## Pre-launch gate
 
-`js/gate.js` puts a password screen in front of the site. Password: `peinekanik`
-(case- and whitespace-tolerant). Unlocking is remembered for the browser session.
+`js/gate.js` puts a password screen in front of the site. The password is the
+`PASSWORD` constant at the top of that file and is deliberately **not** repeated here:
+this README ships to the webroot on any host that checks the repository out, and
+`/README.md` is a far more guessable URL than a line inside a script. Matching is case-
+and whitespace-tolerant; unlocking is remembered for the browser session.
 
 **It is a curtain, not a lock.** The site is static, so `js/gate.js` — password
 included — is served to anyone who requests it, and the gate is one devtools click
