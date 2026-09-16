@@ -4,10 +4,6 @@
  * element. Nothing here invents a running time. A track is playable when it
  * carries data-src and the file behind it actually loads; anything else is
  * announced as "bald" rather than pretending to play.
- *
- * Nothing in here runs behind the pre-launch gate — see the bottom of the file.
- * The duration probe fetches metadata from every track file, which is a request
- * on a page the visitor has not been let into yet.
  */
 function initPlayer() {
   const audio = document.getElementById('audio');
@@ -194,17 +190,9 @@ function initNewsletter() {
   });
 }
 
-/* Behind the pre-launch gate nothing here runs — the duration probe would fetch
-   track metadata for a visitor who has not been let in yet. Same handshake as
-   js/gigs.js: gate.js clears data-locked synchronously for a remembered session,
-   and fires kp:unlock when someone gets through. */
 function start() {
   initPlayer();
   initNewsletter();
 }
 
-if (document.documentElement.hasAttribute('data-locked')) {
-  document.addEventListener('kp:unlock', start, { once: true });
-} else {
-  start();
-}
+start();

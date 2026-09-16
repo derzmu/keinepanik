@@ -35,7 +35,7 @@
 --size-cover:clamp(96px,26vw,132px);
 --size-mark:clamp(120px,34vw,220px);
 --size-wordmark:clamp(130px,40vw,200px);
---size-wordmark-sm:clamp(112px,32vw,160px);  /* the footer sits quieter than the gate */
+--size-wordmark-sm:clamp(112px,32vw,160px);  /* the footer's own, quieter size */
 --wordmark-max:80%;             /* never edge-to-edge, however narrow the screen */
 --size-action-min:72px;         /* press actions all match the widest label, "Laden" */
 --backdrop-drop:120px;          /* how far the photograph hangs below the fold on a phone */

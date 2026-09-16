@@ -8,14 +8,13 @@ runtime — both webfonts and all four platform glyphs are in `assets/`. Open
 ```
 keine-panik-website/
 ├─ index.html            the page — markup only, no styling
-├─ impressum.html        legal, no photograph, no gate
-├─ datenschutz.html      legal, no photograph, no gate
+├─ impressum.html        legal, no photograph
+├─ datenschutz.html      legal, no photograph
 ├─ css/
 │  ├─ base.css           document defaults: html, body, links, headings, backdrop
 │  ├─ components.css     every component class on the page
 │  └─ tokens/            colours, typography, spacing, effects, @font-face
 ├─ js/
-│  ├─ gate.js            the pre-launch password curtain
 │  ├─ app.js             the audio player (and the parked newsletter form)
 │  └─ gigs.js            renders the live dates from assets/gigs.json
 ├─ tools/
@@ -44,10 +43,9 @@ parallel. The order in `index.html` is the cascade order; keep it.
 ## The legal pages
 
 `impressum.html` and `datenschutz.html` sit beside `index.html` and share its
-stylesheets, tokens and footer. They carry **no** `#backdrop` and **no** gate: a legal
-page is running text, the photograph would only cost legibility and 241KB, and an
-Impressum is meant to be reachable. `data-page="legal"` on `<html>` puts the page on
-cream all the way into the iOS strips.
+stylesheets, tokens and footer. They carry **no** `#backdrop`: a legal page is running
+text, and the photograph would only cost legibility and 241KB. `data-page="legal"` on
+`<html>` puts the page on cream all the way into the iOS strips.
 
 The Art. 21 objection is set in capitals because the statute is; it is set smaller and
 boxed so it does not shout down the rest of the page.
@@ -71,20 +69,18 @@ page never asks for:
 
 | Ships but is not part of the site | |
 |---|---|
-| `README.md` | **names the gate password.** Already in `js/gate.js` by design, but publishing it twice is worse than once |
+| `README.md` | internal notes no visitor needs — none of it secret, all of it dead weight |
 | `assets/img/magnolia.jpg` | the 3.4MB master — never served by the page, still downloadable |
 | `tools/`, `.github/`, `.gitignore` | build-time only |
 | `assets/*/README.md` | notes for whoever adds the files |
+| `assets/fonts/*.ttf` | the sources the woff2 were made from — only the woff2 is linked |
 
 None of it is secret and none of it breaks anything, but it is roughly 3.5MB of dead
-weight on the server and a password sitting at a guessable URL. Two ways out:
-
-- **rsync with an exclude list** — a GitHub Action builds nothing and copies only what
-  the page needs. This is the cleaner one, and the exclude list is the table above.
-- **`git pull` into the webroot** — simplest, and then add a server rule denying
-  `/.git`, `/README.md`, `/tools`, `/.github`. On nginx that is one `location` block.
-
-Either way the deploy stays a copy of the repository; there is nothing to build.
+weight on the server, and `/README.md` is a guessable URL. On GitHub Pages — where
+this actually runs — the list above is `_config.yml`'s `exclude:`, which keeps Jekyll
+from copying these into the published site at all. `.github/` and `.gitignore` need no
+entry there: both start with a dot, and Jekyll already drops dotfiles and dotfolders
+on its own when no `.nojekyll` is present. Change the table, change `_config.yml`.
 
 ## The design system
 
@@ -152,43 +148,6 @@ heading a colour that clears the blue. The sky itself stays the flat `--kp-sky`.
 
 `--text-on-dark-faint` is white at 50%, not 40%: at 40% it lands on 3.79:1 against
 `--kp-ink`, and the labels using it ("Ausverkauft", "Gespielt") are 10–11px.
-
-## Pre-launch gate
-
-`js/gate.js` puts a password screen in front of the site. Password: `peinekanik`
-(case- and whitespace-tolerant). Unlocking is remembered for the browser session.
-
-**It is a curtain, not a lock.** The site is static, so `js/gate.js` — password
-included — is served to anyone who requests it, and the gate is one devtools click
-away. It keeps a work in progress out of sight; it protects nothing. Hashing the
-password would only make that weakness harder to see, so it is stored in the clear.
-
-Real protection is server-side, and it is usually one setting at the host:
-
-| Host | Where |
-|---|---|
-| Apache | `.htaccess` + `.htpasswd` (HTTP Basic Auth) |
-| Netlify | Site settings → Access control → Password protection |
-| Vercel | Project settings → Deployment protection |
-| Cloudflare Pages | Access policy |
-
-GitHub Pages, where this is hosted, offers none of that — private Pages needs
-Enterprise — so on Pages the curtain is the only option there is.
-
-Impressum and Datenschutz in the footer point at the band's existing pages on
-`keinepanikmusik.de`, which is allowed: they only have to be easy to reach, not to
-live on this domain. Note that the Datenschutz there predates this site and says
-nothing about the Bandsintown request — that needs a paragraph before launch.
-
-**Nothing behind the gate runs.** Both `js/gigs.js` and `js/app.js` wait for the
-`kp:unlock` event: no visitor IP reaches Bandsintown, and the player's duration probe
-does not fetch track metadata, before someone is actually through. `app.js` used to
-run regardless, which made this sentence untrue for the audio request.
-
-**To remove the gate before launch:** delete `js/gate.js`, its `<script>` tag, the
-`data-locked` attribute on `<html>`, the `robots` meta tag, the `#gate` block in
-`index.html`, the gate rules in `css/components.css`, and the `data-locked` checks at
-the bottom of `js/gigs.js` and `js/app.js`.
 
 ## The backdrop fassung, decided
 
@@ -263,7 +222,8 @@ policy needs no paragraph about Bandsintown at all.
 
 It also took one of the two things this site stored on the device with it: the
 30-minute `sessionStorage` cache is gone, because an HTTP cache is what a static file
-already has. The only remaining storage is the gate's unlock flag.
+already has. The gate's unlock flag was the other; with the gate gone, this site
+keeps nothing in the browser at all.
 
 | | |
 |---|---|
@@ -395,12 +355,27 @@ file instead, one level up: `../assets/…`.
 
 - [ ] Newsletter: only bring it back once a provider is behind it — see above
 - [ ] The four files in `assets/downloads/` added (the rows 404 until then)
-- [ ] **Move to Hetzner.** The Datenschutz names Hetzner as the host and promises an
-      AVV. On GitHub Pages that section is untrue — and Pages can set no HTTP headers
-      and no server-side password either
-- [ ] Gate removed, and with it `robots: noindex`
-- [ ] `og:` / `twitter:` tags — they need the final domain for an absolute image URL,
-      which is why they are not in `<head>` yet
+- [ ] A purpose-made 1200×630 `og:image`. The backdrop stands in for now; it is 2:3 and
+      previews crop to roughly 1.91:1, which it survives only because it is a field of
+      blossom with nothing in it to behead
+
+### The address
+
+`keinepanikmusik.de`, without the `www`. An apex domain needs an A (or ALIAS/ANAME)
+record rather than a CNAME, and the cookie-scope argument for `www` needs cookies,
+which this site does not set. What is left is the one that counts for a band: it
+goes on a flyer, and nobody has to say "w-w-w-dot".
+
+**Not connected yet.** Pages currently serves this at the default `github.io`
+address; `<link rel="canonical">` and `og:url` on all three pages already point at
+`https://keinepanikmusik.de/` so that work is not repeated later, but nothing makes
+that address real yet. Moving it over is a `CNAME` file in the repository root plus
+DNS: the four A records GitHub publishes for apex domains (or an ALIAS/ANAME if the
+registrar offers one), and a `CNAME` record for `www`. Pages then issues the
+certificate and redirects `www` to the apex itself — nothing to configure by hand.
+The one thing to carry over first is the domain's **MX records**, or
+`booking@keinepanikmusik.de` stops receiving mail the moment DNS changes.
+
 - [ ] Newsletter, when it is wired up, gets its own section in the Datenschutz
 - [ ] The bottom edge of the photograph faded to the sky colour
 - [ ] Decide the sky band: leave the white type as it is, or darken the four glyph

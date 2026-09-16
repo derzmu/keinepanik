@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" data-locked>
+<html lang="de">
 <head>
 <meta charset="utf-8">
 <!-- viewport-fit=cover lets the page paint into the status-bar and home-indicator
@@ -8,6 +8,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>keine Panik.</title>
 <meta name="description" content="keine Panik. — deutschsprachiger Indie-Pop aus Waging am See. Songs, Live-Termine und Downloads.">
+<!-- Link previews are fetched by someone else's server, which has nothing to resolve
+     a relative path against — every URL below is absolute. The host is the apex,
+     matching <link rel="canonical"> below — see README, "The address", for why.
+     twitter:title, :description and :image are deliberately absent: X falls back to
+     the og: values, and a second copy only drifts out of step. -->
+<link rel="canonical" href="https://keinepanikmusik.de/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="keine Panik.">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://keinepanikmusik.de/">
+<meta property="og:title" content="keine Panik.">
+<meta property="og:description" content="keine Panik. — deutschsprachiger Indie-Pop aus Waging am See. Songs, Live-Termine und Downloads.">
+<!-- The photograph is 2:3 and most previews crop to roughly 1.91:1, so what gets shown
+     is a horizontal band out of the middle. It survives that because it is a field of
+     blossom with no subject to behead — but a purpose-made 1200×630 would preview
+     better, and is the one asset this repository would have to draw rather than crop. -->
+<meta property="og:image" content="https://keinepanikmusik.de/assets/img/magnolia-1200.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1800">
+<meta property="og:image:alt" content="Magnolienblüten vor blauem Himmel">
+<meta name="twitter:card" content="summary_large_image">
 <!-- Tints the browser chrome in the sky colour, so the band iOS paints above the
      page matches the photograph's top row the same way the root background does. -->
 <meta name="theme-color" content="#5eaacc">
@@ -17,8 +38,6 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<!-- Not public yet. Remove this line together with the gate. -->
-<meta name="robots" content="noindex,nofollow">
 <!-- Loaded as separate links rather than through @import in styles.css: @import is
      serialised, so the browser had to fetch and parse one file before it learned
      about the next. Seven stylesheets, seven round trips in the critical path.
@@ -31,8 +50,6 @@
 <link rel="stylesheet" href="css/tokens/effects.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
-<!-- Render-blocking on purpose: an unlocked session must not see the gate flash past. -->
-<script src="js/gate.js"></script>
 </head>
 <body>
 <!-- srcset lets a phone fetch 241KB instead of the 916KB full-width copy. sizes has to
@@ -48,19 +65,6 @@
              assets/img/magnolia-2304.jpg 2304w"
      sizes="(max-width: 647px) 143vw, 100vw"
      alt="" aria-hidden="true" fetchpriority="high">
-
-<div class="gate" id="gate">
-<div class="gate__panel">
-<span class="wordmark wordmark--gate" role="img" aria-label="keine Panik."></span>
-<p class="gate__lead">Die Seite ist noch nicht öffentlich.</p>
-<form class="gate__form" id="gate-form">
-<label class="gate__label caps" for="gate-input">Passwort</label>
-<input class="field" id="gate-input" type="password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" required>
-<button class="submit" type="submit">Rein</button>
-<p class="gate__error" id="gate-error" role="alert" hidden>Passt nicht. Nochmal.</p>
-</form>
-</div>
-</div>
 
 <main>
 

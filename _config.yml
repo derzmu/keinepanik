@@ -1,0 +1,21 @@
+# Pages builds this repository with Jekyll (no .nojekyll file), which already
+# drops dotfiles and dotfolders — .git, .github, .gitignore — from the published
+# site on its own. It does NOT drop plain files, so without this list README.md,
+# tools/, the notes beside the audio and downloads, and the 3.4MB master photograph
+# would all still be reachable at their repo path — the exposure the README's
+# "Ships but is not part of the site" table describes.
+#
+# This is the GitHub Pages-native way to close that gap: no deploy step, no
+# secrets, nothing to run. It changes only what Jekyll copies into the published
+# site — every file stays exactly as tracked in the repository and in tools/ for
+# local use; validate.yml and gigs.yml check the repo out directly and never see
+# this file.
+#
+# Verify after the next Pages build: https://<pages-url>/README.md should 404.
+exclude:
+  - README.md
+  - tools/
+  - assets/audio/README.md
+  - assets/downloads/README.md
+  - assets/img/magnolia.jpg
+  - assets/fonts/*.ttf
