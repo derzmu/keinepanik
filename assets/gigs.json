@@ -1,6 +1,25 @@
 {
-  "fetchedAt": "2026-08-26T11:27:38.193Z",
-  "upcoming": [],
+  "fetchedAt": "2026-09-28T21:43:55.842Z",
+  "upcoming": [
+    {
+      "datetime": "2026-11-21T19:00:00",
+      "title": "Black Moon Festival 2026",
+      "url": "https://www.bandsintown.com/e/108965906?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
+      "venue": {
+        "name": "Black Moon Festival 2026",
+        "city": "Übersee",
+        "country": "Germany",
+        "location": "Übersee, Germany"
+      },
+      "offers": [
+        {
+          "type": "Tickets",
+          "url": "https://www.bandsintown.com/t/108965906?app_id=497c6d21b4d5cea98fff71063aae4f4c&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=ticket",
+          "status": "available"
+        }
+      ]
+    }
+  ],
   "past": [
     {
       "datetime": "2026-07-31T20:00:00",
