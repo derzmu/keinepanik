@@ -1,4 +1,4 @@
-# keine Panik. — Einseiter
+# keine panik. — Einseiter
 
 Static one-page site. No build step, no framework, nothing loaded from a CDN at
 runtime — both webfonts and all four platform glyphs are in `assets/`. Open
