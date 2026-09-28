@@ -10,7 +10,7 @@ Expected, under exactly these names:
 |---|---|---|
 | `keine-panik-fotos.zip` | Fotos — JPG, druckfähig | **fehlt noch** |
 | `keine-panik-logo.zip` | Logo — Wortmarke und Signet, hell und dunkel, SVG/PNG/PDF | **fehlt noch** |
-| `keine-panik-promotexte.pdf` | Promotexte — Kurz- und Langversion | **fehlt noch** |
+| `keine-panik-promotexte.zip` | Promotexte — Kurz-, Langversion, Oneliner, TXT | da |
 | `keine-panik-rider.pdf` | Rider — Technik und Backline | **fehlt noch** |
 
 Until a file is here its row 404s on click. Renaming a file means renaming it in
@@ -31,7 +31,7 @@ and band photos change when there is a new shoot — roughly once a year:
 |---|---|
 | photo pack | ~35MB |
 | logo pack | a few MB |
-| the two PDFs | small |
+| rider PDF, promo-text ZIP | small |
 | **per photo update** | **~35MB added to the history, permanently** |
 
 Three shoots over the life of this site is around 100MB. GitHub warns at 50MB for a
